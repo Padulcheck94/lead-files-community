@@ -1914,7 +1914,7 @@ PyObject * playerRegisterEmotionIcon(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CGraphicImage * pImage = (CGraphicImage *)CResourceManager::Instance().GetResourcePointer(szFileName);
-	m_kMap_iEmotionIndex_pkIconImage.insert(make_pair(iIndex, pImage));
+	m_kMap_iEmotionIndex_pkIconImage.insert(std::make_pair(iIndex, pImage));
 
 	return Py_BuildNone();
 }

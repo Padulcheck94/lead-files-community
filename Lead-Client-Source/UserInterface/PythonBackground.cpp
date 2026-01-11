@@ -863,7 +863,7 @@ void CPythonBackground::SetXMaxTree(int iGrade)
 
 void CPythonBackground::CreateTargetEffect(DWORD dwID, DWORD dwChrVID)
 {
-	m_kMap_dwTargetID_dwChrID.insert(make_pair(dwID, dwChrVID));
+	m_kMap_dwTargetID_dwChrID.insert(std::make_pair(dwID, dwChrVID));
 }
 
 void CPythonBackground::CreateTargetEffect(DWORD dwID, long lx, long ly)
@@ -887,7 +887,7 @@ void CPythonBackground::CreateTargetEffect(DWORD dwID, long lx, long ly)
 		SReserveTargetEffect ReserveTargetEffect;
 		ReserveTargetEffect.ilx = ilx;
 		ReserveTargetEffect.ily = ily;
-		m_kMap_dwID_kReserveTargetEffect.insert(make_pair(dwID, ReserveTargetEffect));
+		m_kMap_dwID_kReserveTargetEffect.insert(std::make_pair(dwID, ReserveTargetEffect));
 		return;
 	}
 

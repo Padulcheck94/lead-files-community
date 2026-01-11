@@ -28,7 +28,7 @@ volatile int _AVOID_FLOATING_POINT_LIBRARY_BUG = _fltused;
 #pragma comment(linker, "/NODEFAULTLIB:libci.lib")
 
 #pragma comment( lib, "version.lib" )
-#pragma comment( lib, "python22.lib" )
+#pragma comment( lib, "python27.lib" )
 #pragma comment( lib, "imagehlp.lib" )
 #pragma comment( lib, "devil.lib" )
 #pragma comment( lib, "granny2.lib" )
@@ -305,7 +305,7 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 
 		std::string stCmdLine;
 		const int CmdSize = 3;
-		vector<std::string> stVec;
+		std::vector<std::string> stVec;
 		SplitLine(lpCmdLine,seperator,&stVec);
 		if (CmdSize == stVec.size() && stVec[0]==loginMark)
 		{
@@ -335,7 +335,7 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 		}
 	}
 	{
-		vector<std::string> stVec;
+		std::vector<std::string> stVec;
 		SplitLine(lpCmdLine," " ,&stVec);
 
 		if (stVec.size() != 0 && "--pause-before-create-window" == stVec[0])

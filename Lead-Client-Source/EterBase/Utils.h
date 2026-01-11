@@ -123,7 +123,7 @@ void string_join(const std::string& sep, const C& container, std::string* ret)
             capacity += (*i).length();
     }
 
-    string buf;
+    std::string buf;
     buf.reserve(capacity);
 
     // join strings

@@ -84,7 +84,7 @@ CPythonChat::SChatLine::~SChatLine()
 
 int CPythonChat::CreateChatSet(DWORD dwID)
 {
-	m_ChatSetMap.insert(make_pair(dwID, TChatSet()));
+	m_ChatSetMap.insert(std::make_pair(dwID, TChatSet()));
 	return dwID;
 }
 

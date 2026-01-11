@@ -1,5 +1,5 @@
 #pragma once
-#include <Python-2.2/frameobject.h>
+#include <Python27/frameobject.h>
 
 #include "../eterBase/Singleton.h"
 

@@ -424,7 +424,7 @@ BOOL CActorInstance::__NormalAttackProcess(CActorInstance & rVictim)
 						{
 							THittedInstanceMap HittedInstanceMap;
 							HittedInstanceMap.insert(std::make_pair(&rVictim, GetLocalTime()+pad->fInvisibleTime));
-							//HittedInstanceMap.insert(make_pair(&rVictim, GetLocalTime()+HIT_COOL_TIME));
+							//HittedInstanceMap.insert(std::make_pair(&rVictim, GetLocalTime()+HIT_COOL_TIME));
 							m_HitDataMap.insert(std::make_pair(&c_rHitData, HittedInstanceMap));
 
 							//Tracef(" ----------- First Hit\n");
@@ -432,7 +432,7 @@ BOOL CActorInstance::__NormalAttackProcess(CActorInstance & rVictim)
 						else
 						{
 							itHitData->second.insert(std::make_pair(&rVictim, GetLocalTime()+pad->fInvisibleTime));
-							//itHitData->second.insert(make_pair(&rVictim, GetLocalTime()+HIT_COOL_TIME));
+							//itHitData->second.insert(std::make_pair(&rVictim, GetLocalTime()+HIT_COOL_TIME));
 
 							//Tracef(" ----------- Next Hit : %d\n", itHitData->second.size());
 

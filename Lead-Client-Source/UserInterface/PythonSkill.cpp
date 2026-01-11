@@ -98,9 +98,9 @@ bool CPythonSkill::RegisterSkillTable(const char * c_szFileName)
 	textFileLoader.Bind(kFile.Size(), pvData);
 
 	// OVERWRITE_SKILLPROTO_POLY
-	string src_poly_rand;
-	string src_poly_atk;
-	string src_poly_mwep;
+	std::string src_poly_rand;
+	std::string src_poly_atk;
+	std::string src_poly_mwep;
 	// END_OF_OVERWRITE_SKILLPROTO_POLY
 
 	CTokenVector TokenVector;
@@ -312,7 +312,7 @@ bool CPythonSkill::RegisterSkillDesc(const char * c_szFileName)
 			continue;
 		}
 
-		m_SkillDataMap.insert(make_pair(iSkillIndex, TSkillData()));
+		m_SkillDataMap.insert(std::make_pair(iSkillIndex, TSkillData()));
 		TSkillData & rSkillData = m_SkillDataMap[iSkillIndex];
 
 		// Vnum
@@ -952,93 +952,93 @@ CPythonSkill::CPythonSkill()
 	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("ARROW", SKILL_NEED_WEAPON_ARROW));
 	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("EMPTY_HAND", SKILL_NEED_WEAPON_EMPTY_HAND));
 
-	m_SkillWeaponTypeIndexMap.insert(make_pair(std::string("SWORD"), CItemData::WEAPON_SWORD));
-	m_SkillWeaponTypeIndexMap.insert(make_pair(std::string("DAGGER"), CItemData::WEAPON_DAGGER));
-	m_SkillWeaponTypeIndexMap.insert(make_pair(std::string("BOW"), CItemData::WEAPON_BOW));
-	m_SkillWeaponTypeIndexMap.insert(make_pair(std::string("TWO_HANDED"), CItemData::WEAPON_TWO_HANDED));
-	m_SkillWeaponTypeIndexMap.insert(make_pair(std::string("DOUBLE_SWORD"), CItemData::WEAPON_DAGGER));
-	m_SkillWeaponTypeIndexMap.insert(make_pair(std::string("BELL"), CItemData::WEAPON_BELL));
-	m_SkillWeaponTypeIndexMap.insert(make_pair(std::string("FAN"), CItemData::WEAPON_FAN));
-	m_SkillWeaponTypeIndexMap.insert(make_pair(std::string("ARROW"), CItemData::WEAPON_ARROW));
+	m_SkillWeaponTypeIndexMap.insert(std::make_pair(std::string("SWORD"), CItemData::WEAPON_SWORD));
+	m_SkillWeaponTypeIndexMap.insert(std::make_pair(std::string("DAGGER"), CItemData::WEAPON_DAGGER));
+	m_SkillWeaponTypeIndexMap.insert(std::make_pair(std::string("BOW"), CItemData::WEAPON_BOW));
+	m_SkillWeaponTypeIndexMap.insert(std::make_pair(std::string("TWO_HANDED"), CItemData::WEAPON_TWO_HANDED));
+	m_SkillWeaponTypeIndexMap.insert(std::make_pair(std::string("DOUBLE_SWORD"), CItemData::WEAPON_DAGGER));
+	m_SkillWeaponTypeIndexMap.insert(std::make_pair(std::string("BELL"), CItemData::WEAPON_BELL));
+	m_SkillWeaponTypeIndexMap.insert(std::make_pair(std::string("FAN"), CItemData::WEAPON_FAN));
+	m_SkillWeaponTypeIndexMap.insert(std::make_pair(std::string("ARROW"), CItemData::WEAPON_ARROW));
 
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("chain"), POINT_NONE));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("HR"), POINT_HIT_RATE));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("LV"), POINT_LEVEL));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("Level"), POINT_LEVEL));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("MaxHP"), POINT_MAX_HP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("MaxSP"), POINT_MAX_SP));	
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("MinMWEP"), POINT_MIN_WEP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("MaxMWEP"), POINT_MAX_WEP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("MinWEP"), POINT_MIN_WEP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("MaxWEP"), POINT_MAX_WEP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("MinATK"), POINT_MIN_ATK));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("MaxATK"), POINT_MAX_ATK));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("ATKSPD"), POINT_ATT_SPEED));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("AttackPower"), POINT_MIN_ATK));	
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("AtkMin"), POINT_MIN_ATK));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("AtkMax"), POINT_MAX_ATK));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("DefencePower"), POINT_DEF_GRADE));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("DEF"), POINT_DEF_GRADE));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("MWEP"), POINT_MAGIC_ATT_GRADE));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("chain"), POINT_NONE));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("HR"), POINT_HIT_RATE));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("LV"), POINT_LEVEL));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("Level"), POINT_LEVEL));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("MaxHP"), POINT_MAX_HP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("MaxSP"), POINT_MAX_SP));	
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("MinMWEP"), POINT_MIN_WEP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("MaxMWEP"), POINT_MAX_WEP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("MinWEP"), POINT_MIN_WEP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("MaxWEP"), POINT_MAX_WEP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("MinATK"), POINT_MIN_ATK));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("MaxATK"), POINT_MAX_ATK));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("ATKSPD"), POINT_ATT_SPEED));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("AttackPower"), POINT_MIN_ATK));	
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("AtkMin"), POINT_MIN_ATK));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("AtkMax"), POINT_MAX_ATK));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("DefencePower"), POINT_DEF_GRADE));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("DEF"), POINT_DEF_GRADE));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("MWEP"), POINT_MAGIC_ATT_GRADE));
 
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("MagicAttackPower"), POINT_MAGIC_ATT_GRADE));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("INT"), POINT_IQ));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("STR"), POINT_ST));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("DEX"), POINT_DX));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("CON"), POINT_HT));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("MagicAttackPower"), POINT_MAGIC_ATT_GRADE));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("INT"), POINT_IQ));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("STR"), POINT_ST));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("DEX"), POINT_DX));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("CON"), POINT_HT));
 
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("minatk"), POINT_MIN_ATK));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("maxatk"), POINT_MAX_ATK));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("minmtk"), POINT_MIN_WEP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("maxmtk"), POINT_MAX_WEP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("minatk"), POINT_MIN_ATK));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("maxatk"), POINT_MAX_ATK));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("minmtk"), POINT_MIN_WEP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("maxmtk"), POINT_MAX_WEP));
 
 	// GUILD_SKILL_DISPLAY_BUG_FIX
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("maxhp"), POINT_MAX_HP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("maxsp"), POINT_MAX_SP));	
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("odef"), POINT_DEF_GRADE));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("maxhp"), POINT_MAX_HP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("maxsp"), POINT_MAX_SP));	
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("odef"), POINT_DEF_GRADE));
 	// END_OF_GUILD_SKILL_DISPLAY_BUG_FIX
 
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("minwep"), POINT_MIN_WEP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("maxwep"), POINT_MAX_WEP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("minmwep"), POINT_MIN_MAGIC_WEP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("maxmwep"), POINT_MAX_MAGIC_WEP));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("lv"), POINT_LEVEL));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("ar"), POINT_HIT_RATE));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("iq"), POINT_IQ));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("str"), POINT_ST));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("dex"), POINT_DX));
-	SSkillData::ms_StatusNameMap.insert(make_pair(std::string("con"), POINT_HT));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("minwep"), POINT_MIN_WEP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("maxwep"), POINT_MAX_WEP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("minmwep"), POINT_MIN_MAGIC_WEP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("maxmwep"), POINT_MAX_MAGIC_WEP));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("lv"), POINT_LEVEL));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("ar"), POINT_HIT_RATE));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("iq"), POINT_IQ));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("str"), POINT_ST));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("dex"), POINT_DX));
+	SSkillData::ms_StatusNameMap.insert(std::make_pair(std::string("con"), POINT_HT));
 	
 	/////
 
-	SSkillData::ms_NewMinStatusNameMap.insert(make_pair(std::string("atk"), POINT_MIN_ATK));
-	SSkillData::ms_NewMinStatusNameMap.insert(make_pair(std::string("mtk"), POINT_MIN_WEP));
-	SSkillData::ms_NewMinStatusNameMap.insert(make_pair(std::string("wep"), POINT_MIN_WEP));
-	SSkillData::ms_NewMinStatusNameMap.insert(make_pair(std::string("lv"), POINT_LEVEL));
-	SSkillData::ms_NewMinStatusNameMap.insert(make_pair(std::string("ar"), POINT_HIT_RATE));
-	SSkillData::ms_NewMinStatusNameMap.insert(make_pair(std::string("iq"), POINT_IQ));
-	SSkillData::ms_NewMinStatusNameMap.insert(make_pair(std::string("str"), POINT_ST));
-	SSkillData::ms_NewMinStatusNameMap.insert(make_pair(std::string("dex"), POINT_DX));
-	SSkillData::ms_NewMinStatusNameMap.insert(make_pair(std::string("con"), POINT_HT));
+	SSkillData::ms_NewMinStatusNameMap.insert(std::make_pair(std::string("atk"), POINT_MIN_ATK));
+	SSkillData::ms_NewMinStatusNameMap.insert(std::make_pair(std::string("mtk"), POINT_MIN_WEP));
+	SSkillData::ms_NewMinStatusNameMap.insert(std::make_pair(std::string("wep"), POINT_MIN_WEP));
+	SSkillData::ms_NewMinStatusNameMap.insert(std::make_pair(std::string("lv"), POINT_LEVEL));
+	SSkillData::ms_NewMinStatusNameMap.insert(std::make_pair(std::string("ar"), POINT_HIT_RATE));
+	SSkillData::ms_NewMinStatusNameMap.insert(std::make_pair(std::string("iq"), POINT_IQ));
+	SSkillData::ms_NewMinStatusNameMap.insert(std::make_pair(std::string("str"), POINT_ST));
+	SSkillData::ms_NewMinStatusNameMap.insert(std::make_pair(std::string("dex"), POINT_DX));
+	SSkillData::ms_NewMinStatusNameMap.insert(std::make_pair(std::string("con"), POINT_HT));
 
-	SSkillData::ms_NewMaxStatusNameMap.insert(make_pair(std::string("atk"), POINT_MAX_ATK));
-	SSkillData::ms_NewMaxStatusNameMap.insert(make_pair(std::string("mtk"), POINT_MAX_WEP));
-	SSkillData::ms_NewMinStatusNameMap.insert(make_pair(std::string("wep"), POINT_MAX_WEP));
-	SSkillData::ms_NewMaxStatusNameMap.insert(make_pair(std::string("lv"), POINT_LEVEL));
-	SSkillData::ms_NewMaxStatusNameMap.insert(make_pair(std::string("ar"), POINT_HIT_RATE));
-	SSkillData::ms_NewMaxStatusNameMap.insert(make_pair(std::string("iq"), POINT_IQ));
-	SSkillData::ms_NewMaxStatusNameMap.insert(make_pair(std::string("str"), POINT_ST));
-	SSkillData::ms_NewMaxStatusNameMap.insert(make_pair(std::string("dex"), POINT_DX));
-	SSkillData::ms_NewMaxStatusNameMap.insert(make_pair(std::string("con"), POINT_HT));	
+	SSkillData::ms_NewMaxStatusNameMap.insert(std::make_pair(std::string("atk"), POINT_MAX_ATK));
+	SSkillData::ms_NewMaxStatusNameMap.insert(std::make_pair(std::string("mtk"), POINT_MAX_WEP));
+	SSkillData::ms_NewMinStatusNameMap.insert(std::make_pair(std::string("wep"), POINT_MAX_WEP));
+	SSkillData::ms_NewMaxStatusNameMap.insert(std::make_pair(std::string("lv"), POINT_LEVEL));
+	SSkillData::ms_NewMaxStatusNameMap.insert(std::make_pair(std::string("ar"), POINT_HIT_RATE));
+	SSkillData::ms_NewMaxStatusNameMap.insert(std::make_pair(std::string("iq"), POINT_IQ));
+	SSkillData::ms_NewMaxStatusNameMap.insert(std::make_pair(std::string("str"), POINT_ST));
+	SSkillData::ms_NewMaxStatusNameMap.insert(std::make_pair(std::string("dex"), POINT_DX));
+	SSkillData::ms_NewMaxStatusNameMap.insert(std::make_pair(std::string("con"), POINT_HT));	
 
-	m_PathNameMap.insert(make_pair(std::string("WARRIOR"), std::string("warrior")));
-	m_PathNameMap.insert(make_pair(std::string("ASSASSIN"), std::string("assassin")));
-	m_PathNameMap.insert(make_pair(std::string("SURA"), std::string("sura")));
-	m_PathNameMap.insert(make_pair(std::string("SHAMAN"), std::string("shaman")));
-	m_PathNameMap.insert(make_pair(std::string("PASSIVE"), std::string("passive")));
-	m_PathNameMap.insert(make_pair(std::string("SUPPORT"), std::string("common/support")));
-	m_PathNameMap.insert(make_pair(std::string("GUILD"), std::string("common/guild")));
-	m_PathNameMap.insert(make_pair(std::string("HORSE"), std::string("common/horse")));
+	m_PathNameMap.insert(std::make_pair(std::string("WARRIOR"), std::string("warrior")));
+	m_PathNameMap.insert(std::make_pair(std::string("ASSASSIN"), std::string("assassin")));
+	m_PathNameMap.insert(std::make_pair(std::string("SURA"), std::string("sura")));
+	m_PathNameMap.insert(std::make_pair(std::string("SHAMAN"), std::string("shaman")));
+	m_PathNameMap.insert(std::make_pair(std::string("PASSIVE"), std::string("passive")));
+	m_PathNameMap.insert(std::make_pair(std::string("SUPPORT"), std::string("common/support")));
+	m_PathNameMap.insert(std::make_pair(std::string("GUILD"), std::string("common/guild")));
+	m_PathNameMap.insert(std::make_pair(std::string("HORSE"), std::string("common/horse")));
 }
 CPythonSkill::~CPythonSkill()
 {

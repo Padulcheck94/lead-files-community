@@ -264,7 +264,7 @@ bool CInstanceBase::NEW_GetInstanceVectorInCircleRange(float fSkillDistance, std
 			if (m_GraphicThingInstance.IsClickableDistanceDestInstance(pkInstEach->m_GraphicThingInstance, fSkillDistance))
 			{
 				float fEachInstDistance=NEW_GetDistanceFromDestInstance(*pkInstEach);
-				kMap_pkInstNear.insert(make_pair(fEachInstDistance, pkInstEach));
+				kMap_pkInstNear.insert(std::make_pair(fEachInstDistance, pkInstEach));
 			}
 		}
 	}
