@@ -5,13 +5,14 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include <windows.h>
+
 #pragma warning(disable:4786)
 #pragma warning(disable:4100)
 
 #pragma warning(disable:4201)
 #include <mss.h>
 #pragma warning(default:4201)
-#include <windows.h>
 
 //#include <crtdbg.h>
 
