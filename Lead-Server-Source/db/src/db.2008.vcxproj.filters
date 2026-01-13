@@ -55,16 +55,10 @@
     <ClCompile Include="GuildManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ItemAwardManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ItemIDRangeManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LoginData.cpp">
@@ -132,16 +126,10 @@
     <ClInclude Include="GuildManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="HB.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ItemAwardManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ItemIDRangeManager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Lock.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="LoginData.h">

@@ -735,16 +735,10 @@
     <ClInclude Include="login_data.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="login_sim.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="lua_incl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="lzo_manager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="malloc_allocator.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="map_location.h">
