@@ -119,7 +119,7 @@ void string_join(const std::string& sep, const C& container, std::string* ret)
     
     // calculate string sequence
     {
-        for (C::const_iterator i = container.begin(); i != container.end(); ++i)
+        for (typename C::const_iterator i = container.begin(); i != container.end(); ++i)
             capacity += (*i).length();
     }
 
@@ -128,8 +128,8 @@ void string_join(const std::string& sep, const C& container, std::string* ret)
 
     // join strings
     {
-        C::const_iterator cur = container.begin();
-        C::const_iterator end = container.end();
+        typename C::const_iterator cur = container.begin();
+        typename C::const_iterator end = container.end();
         --end;
 
         while (cur != end)

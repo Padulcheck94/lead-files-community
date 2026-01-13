@@ -92,7 +92,7 @@ struct stl_sz_less
 template<typename TContainer>
 inline void stl_wipe(TContainer& container)
 {
-	for (TContainer::iterator i = container.begin(); i != container.end(); ++i)
+	for (typename TContainer::iterator i = container.begin(); i != container.end(); ++i)
 	{
 		delete *i;
 		*i = NULL;
@@ -124,7 +124,7 @@ inline unsigned long htmlColorStringToARGB(TString str)
 template<typename TContainer>
 inline void stl_wipe_second(TContainer& container)
 {
-	for (TContainer::iterator i = container.begin(); i != container.end(); ++i)
+	for (typename TContainer::iterator i = container.begin(); i != container.end(); ++i)
 	{
 		delete i->second;
 	}
@@ -156,7 +156,7 @@ void DeleteVectorItem(std::vector<T> * pVector, unsigned long dwIndex)
 		return;
 	}
 
-	std::vector<T>::iterator itor = pVector->begin();
+	typename std::vector<T>::iterator itor = pVector->begin();
 	for (unsigned long i = 0; i < dwIndex; ++i)
 		++itor;
 
@@ -177,10 +177,10 @@ void DeleteVectorItem(T * pVector, unsigned long dwStartIndex, unsigned long dwE
 		return;
 	}
 
-	T::iterator itorStart = pVector->begin();
+	typename T::iterator itorStart = pVector->begin();
 	for (unsigned long i = 0; i < dwStartIndex; ++i)
 		++itorStart;
-	T::iterator itorEnd = pVector->begin();
+	typename T::iterator itorEnd = pVector->begin();
 	for (unsigned long j = 0; j < dwEndIndex; ++j)
 		++itorEnd;
 
@@ -190,7 +190,7 @@ void DeleteVectorItem(T * pVector, unsigned long dwStartIndex, unsigned long dwE
 template <typename T>
 void DeleteVectorItem(std::vector<T> * pVector, T pItem)
 {
-	std::vector<T>::iterator itor = pVector->begin();
+	typename std::vector<T>::iterator itor = pVector->begin();
 	for (; itor != pVector->end(); ++itor)
 	{
 		if (pItem == *itor)
@@ -211,7 +211,7 @@ void DeleteVectorItem(std::vector<T> * pVector, T pItem)
 template <typename T>
 void DeleteListItem(std::list<T> * pList, T pItem)
 {
-	std::list<T>::iterator itor = pList->begin();
+	typename std::list<T>::iterator itor = pList->begin();
 	for (; itor != pList->end(); ++itor)
 	{
 		if (pItem == *itor)
