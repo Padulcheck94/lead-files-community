@@ -588,9 +588,6 @@
     <ClInclude Include="char_manager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="check_server.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="cipher.h">
       <Filter>Source Files</Filter>
     </ClInclude>

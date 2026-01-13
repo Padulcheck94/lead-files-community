@@ -11,10 +11,6 @@
 #include "auth_brazil.h"
 #include "db.h"
 
-#ifndef __WIN32__
-	#include "limit_time.h"
-#endif
-
 extern time_t get_global_time();
 extern int openid_server;
 

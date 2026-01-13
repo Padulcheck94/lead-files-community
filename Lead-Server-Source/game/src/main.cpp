@@ -64,9 +64,6 @@
 #include "XTrapManager.h"
 #include "DragonSoul.h"
 #include <boost/bind.hpp>
-#ifndef __WIN32__
-	#include "limit_time.h"
-#endif
 
 #ifdef __AUCTION__
 #include "auction_manager.h"
@@ -242,13 +239,6 @@ void heartbeat(LPHEART ht, int pulse)
 	// 1ÃÊ¸¶´Ù
 	if (!(pulse % ht->passes_per_sec))
 	{
-#ifdef ENABLE_LIMIT_TIME
-		if ((unsigned)get_global_time() >= GLOBAL_LIMIT_TIME)
-		{
-			g_bShutdown = true;
-		}
-#endif
-
 		if (g_bAuthServer && LC_IsBrazil() && !test_server)
 			auth_brazil_log();
 
@@ -664,13 +654,6 @@ int start(int argc, char **argv)
 #if defined(__FreeBSD__) && defined(DEBUG_ALLOC)
 	_malloc_message = WriteMallocMessage;
 #endif
-#ifdef ENABLE_LIMIT_TIME
-	if ((unsigned)get_global_time() >= GLOBAL_LIMIT_TIME)
-	{
-		return 0;
-	}
-#endif
-
 	while ((ch = getopt(argc, argv, "npverltI")) != -1)
 	{
 		char* ep = NULL;
