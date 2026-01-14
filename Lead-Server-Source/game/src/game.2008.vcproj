@@ -1091,10 +1091,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\questlua_danceevent.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\questlua_dragonlair.cpp"
 				>
 			</File>
