@@ -53,7 +53,6 @@ class CAccountConnector : public CNetworkStream, public CSingleton<CAccountConne
 		bool __AuthState_RecvAuthSuccess_OpenID();
 #endif /* USE_OPENID */
 		bool __AuthState_RecvAuthFailure();
-		bool __AuthState_RecvRunupMatrixQuiz();
 		bool __AuthState_RecvPanamaPack();
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 		bool __AuthState_RecvKeyAgreement();
