@@ -45,7 +45,6 @@
 #include "monarch.h"
 #include "polymorph.h"
 #include "blend_item.h"
-#include "castle.h"
 #include "ani.h"
 #include "BattleArena.h"
 #include "horsename_manager.h"

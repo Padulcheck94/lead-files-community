@@ -45,7 +45,6 @@
 #include "mob_manager.h"
 #include "mining.h"
 #include "monarch.h"
-#include "castle.h"
 #include "arena.h"
 #include "dev_log.h"
 #include "horsename_manager.h"
@@ -5063,10 +5062,6 @@ void CHARACTER::SetTarget(LPCHARACTER pkChrTarget)
 	if (m_pkChrTarget == pkChrTarget)
 		return;
 
-	// CASTLE
-	if (IS_CASTLE_MAP(GetMapIndex()) && !IsGM())
-		return;
-	// CASTLE
 
 	if (m_pkChrTarget)
 		m_pkChrTarget->m_set_pkChrTargetedBy.erase(this);

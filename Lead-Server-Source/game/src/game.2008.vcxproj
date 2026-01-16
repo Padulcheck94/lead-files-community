@@ -91,7 +91,6 @@
     <ClCompile Include="buffer_manager.cpp" />
     <ClCompile Include="buff_on_attributes.cpp" />
     <ClCompile Include="building.cpp" />
-    <ClCompile Include="castle.cpp" />
     <ClCompile Include="char.cpp" />
     <ClCompile Include="char_affect.cpp" />
     <ClCompile Include="char_battle.cpp" />
@@ -264,7 +263,6 @@
     <ClInclude Include="buffer_manager.h" />
     <ClInclude Include="buff_on_attributes.h" />
     <ClInclude Include="building.h" />
-    <ClInclude Include="castle.h" />
     <ClInclude Include="char.h" />
     <ClInclude Include="char_manager.h" />
     <ClInclude Include="check_server.h" />

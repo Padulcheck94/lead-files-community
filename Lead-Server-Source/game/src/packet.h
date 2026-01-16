@@ -312,7 +312,6 @@ enum
 	HEADER_GG_BLOCK_CHAT			= 22,
 
 	HEADER_GG_BLOCK_EXCEPTION		= 24,
-	HEADER_GG_SIEGE					= 25,
 	HEADER_GG_MONARCH_NOTICE		= 26,
 	HEADER_GG_MONARCH_TRANSFER		= 27,
 	HEADER_GG_PCBANG_UPDATE			= 28,
@@ -2131,12 +2130,6 @@ enum
 
 
 
-typedef struct tag_GGSiege
-{
-	BYTE	bHeader;
-	BYTE	bEmpire;
-	BYTE	bTowerCount;
-} TPacketGGSiege;
 
 typedef struct SPacketGGMonarchTransfer
 {

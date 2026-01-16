@@ -7,7 +7,6 @@
 #include "start_position.h"
 #include "config.h"
 #include "mob_manager.h"
-#include "castle.h"
 #include "dev_log.h"
 #include "char.h"
 #include "char_manager.h"
@@ -333,28 +332,6 @@ namespace quest
 		{
 			long x = ch->GetX();
 			long y = ch->GetY();
-#if 0
-			if (11505 == mob_vnum)	// 황금두꺼비
-			{
-				//군주 국고 검사
-				if (!CMonarch::instance().IsMoneyOk(CASTLE_FROG_PRICE, ch->GetEmpire()))
-				{
-					int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("국고에 돈이 부족합니다. 현재 : %u 필요금액 : %u"), NationMoney, CASTLE_FROG_PRICE);
-					return 0;
-				}
-
-				mob = castle_spawn_frog(ch->GetEmpire());
-
-				if (mob)
-				{
-					// 국고감소
-					CMonarch::instance().SendtoDBDecMoney(CASTLE_FROG_PRICE, ch->GetEmpire(), ch);
-					castle_save();
-				}
-			}
-			else
-#endif
 			{
 				mob = CHARACTER_MANAGER::instance().SpawnMob(mob_vnum, ch->GetMapIndex(), x, y, 0, pkMob->m_table.bType == CHAR_TYPE_STONE, -1);
 			}
@@ -377,105 +354,7 @@ namespace quest
 		return 1;
 	}
 
-	int spawn_guard(lua_State * L)
-	{
-		// mob_level(0-2), region(0~3)
-		if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2))
-		{
-			sys_err("invalid argument");
-			return 0;
-		}
 
-		DWORD	group_vnum		= (DWORD)lua_tonumber(L,1);
-		int		region_index	= (int)lua_tonumber(L, 2);
-		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr(); 
-		if (!ch)
-			return 0;
-
-		/*-----
-		const CMob * pkMob = NULL;
-		if (!(pkMob = CMobManager::Instance().Get(mob_vnum)))
-
-		if (pkMob == NULL)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "No such mob by that vnum");
-			return 0;
-		}
-		-----*/
-		
-		if (false==ch->IsMonarch())
-		{
-			if (!ch->IsGM())
-			{
-				ch->ChatPacket(CHAT_TYPE_INFO ,LC_TEXT("군주의 자격을 가지고 있지 않습니다"));
-				sys_err("No Monarch pid %d ", ch->GetPlayerID());
-				return 0;
-			}
-		}
-
-		if (false==castle_is_my_castle(ch->GetEmpire(), ch->GetMapIndex()))
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("성에서만 사용할 수 있는 기능입니다."));
-			return 0;
-		}
-
-		//DWORD 			dwQuestIdx 	= CQuestManager::instance().GetCurrentPC()->GetCurrentQuestIndex();
-
-		LPCHARACTER		guard_leader = NULL;
-		{
-			int	money_need = castle_cost_of_hiring_guard(group_vnum);
-
-			//군주 국고 검사
-			if (!CMonarch::instance().IsMoneyOk(money_need, ch->GetEmpire()))
-			{
-				int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("국고에 돈이 부족합니다. 현재 : %u 필요금액 : %u"), NationMoney, money_need);
-				return 0;
-			}
-			guard_leader = castle_spawn_guard(ch->GetEmpire(), group_vnum, region_index);
-
-			if (guard_leader)
-			{
-				// 국고감소
-				CMonarch::instance().SendtoDBDecMoney(money_need, ch->GetEmpire(), ch);
-				castle_save();
-			}
-		}
-
-		return 1;
-	}
-
-	int frog_to_empire_money(lua_State * L)
-	{
-		LPCHARACTER ch	= CQuestManager::instance().GetCurrentCharacterPtr(); 
-
-		if (NULL==ch)
-			return false;
-
-		if (!ch->IsMonarch())
-		{
-			if (!ch->IsGM())
-			{
-				ch->ChatPacket(CHAT_TYPE_INFO ,LC_TEXT("군주의 자격을 가지고 있지 않습니다"));
-				sys_err("No Monarch pid %d ", ch->GetPlayerID());
-				return 0;
-			}
-		}
-
-		if (castle_frog_to_empire_money(ch))
-		{
-			int empire_money = CMonarch::instance().GetMoney(ch->GetEmpire());
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("TEST : 황금두꺼비가 국고로 환원되었습니다."));
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("TEST : 현재 국고 : %d"), empire_money);
-			castle_save();
-			return 1;
-		}
-		else
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("TEST : 황금두꺼비를 국고로 환원할 수 없습니다."));
-			return 0;
-		}
-	}
 
 	int monarch_warp(lua_State * L)
 	{
@@ -967,7 +846,6 @@ namespace quest
 			{ "monarchdefenseup",		monarch_defenseup	},
 			{ "spawnmob",				spawn_mob			},
 			{ "spawnguard",				spawn_guard			},
-//			{ "frog_to_empire_money",	frog_to_empire_money		},
 			{ "warp",					monarch_warp 		},
 			{ "transfer",				monarch_transfer	},
 			{ "transfer2",				monarch_transfer2	},

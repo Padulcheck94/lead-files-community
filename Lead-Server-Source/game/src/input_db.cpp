@@ -31,7 +31,6 @@
 
 #include "monarch.h"
 #include "affect.h"
-#include "castle.h"
 #include "block_country.h"
 #include "motion.h"
 
@@ -991,8 +990,6 @@ void CInputDB::Boot(const char* data)
 
 	CPCBangManager::instance().RequestUpdateIPList(0);
 
-	// castle_boot
-	castle_boot();
 
 	// request blocked_country_ip
 	{

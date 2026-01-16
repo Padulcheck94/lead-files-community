@@ -13,7 +13,6 @@
 #include "unique_item.h"
 #include "xmas_event.h"
 #include "affect.h"
-#include "castle.h"
 #include "dev_log.h"
 #include "locale_service.h"
 #include "questmanager.h"
@@ -505,12 +504,6 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			BlockChat(c_pData);
 			break;
 
-		case HEADER_GG_SIEGE:
-			{
-				TPacketGGSiege* pSiege = (TPacketGGSiege*)c_pData;
-				castle_siege(pSiege->bEmpire, pSiege->bTowerCount);
-			}
-			break;
 
 		case HEADER_GG_MONARCH_NOTICE:
 			if ((iExtraLen = MonarchNotice(d, c_pData, m_iBufferLeft)) < 0)

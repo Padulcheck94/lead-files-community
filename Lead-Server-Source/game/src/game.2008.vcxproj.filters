@@ -52,7 +52,6 @@
     <ClCompile Include="building.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="castle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="char.cpp">
@@ -557,7 +556,6 @@
     <ClInclude Include="building.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="castle.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="char.h">

@@ -31,7 +31,6 @@
 #include "monarch.h"
 #include "polymorph.h"
 #include "blend_item.h"
-#include "castle.h"
 #include "BattleArena.h"
 #include "arena.h"
 #include "dev_log.h"
@@ -115,8 +114,6 @@ bool IS_SUMMONABLE_ZONE(int map_index)
 	if (IS_MONKEY_DUNGEON(map_index))
 		return false;
 	// ¼º
-	if (IS_CASTLE_MAP(map_index))
-		return false;
 
 	switch (map_index)
 	{

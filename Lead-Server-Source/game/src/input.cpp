@@ -15,7 +15,6 @@
 #include "fishing.h"
 #include "TrafficProfiler.h"
 #include "priv_manager.h"
-#include "castle.h"
 #include "dev_log.h"
 
 extern time_t get_global_time();
