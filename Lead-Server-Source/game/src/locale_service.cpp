@@ -1245,7 +1245,6 @@ bool LC_InitLocalization( const std::string& szLocal )
 		g_eLocalType = LC_ENGLISH;
 	else if ( !g_stLocal.compare("hongkong") )
 		g_eLocalType = LC_HONGKONG;
-	else if (!g_stLocal.compare("newcibn") )
 	else if ( !g_stLocal.compare("germany") )
 		g_eLocalType = LC_GERMANY;
 	else if ( !g_stLocal.compare("korea") )

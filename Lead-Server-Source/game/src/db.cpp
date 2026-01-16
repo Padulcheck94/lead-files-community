@@ -295,44 +295,76 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
 					int col = 0;
 
-					// PASSWORD('%s'), password, securitycode, social_id, id, status
+					// PASSWORD('%s'), password, social_id, id, status
 					char szEncrytPassword[45 + 1];
 					char szPassword[45 + 1];
-						char szSocialID[SOCIAL_ID_MAX_LEN + 1];
+					char szSocialID[SOCIAL_ID_MAX_LEN + 1];
 					char szStatus[ACCOUNT_STATUS_MAX_LEN + 1];
 					DWORD dwID = 0;
 
 					if (!row[col])
-				{
-					col++;
-				}
-				else
-				{
-					col++;
-				}
-					
+					{
+						sys_err("error column %d", col);
+						M2_DELETE(pinfo);
+					   	break;
+					}
+
 					strlcpy(szEncrytPassword, row[col++], sizeof(szEncrytPassword));
 
 					if (!row[col])
-				{
-					col++;
-				}
-				else
-				{
-					col++;
-				}
-					else
 					{
-					}
+					   	sys_err("error column %d", col);
+						M2_DELETE(pinfo);
+					   	break;
+				   	}
+
+					strlcpy(szPassword, row[col++], sizeof(szPassword));
 
 					if (!row[col])
-				{
-					col++;
-				}
-				else
-				{
-					col++;
-				}
+				   	{
+						sys_err("error column %d", col);
+						M2_DELETE(pinfo);
+						break;
+				   	}
+
+					strlcpy(szSocialID, row[col++], sizeof(szSocialID));
+
+					if (!row[col])
+				   	{
+					   	sys_err("error column %d", col);
+						M2_DELETE(pinfo);
+					   	break;
+				   	}
+
+					str_to_number(dwID, row[col++]);
+
+					if (!row[col])
+					{
+					   	sys_err("error column %d", col);
+						M2_DELETE(pinfo);
+						break;
+				   	}
+
+					strlcpy(szStatus, row[col++], sizeof(szStatus));
+
+					BYTE bNotAvail = 0;
+					str_to_number(bNotAvail, row[col++]);
+
+					int aiPremiumTimes[PREMIUM_MAX_NUM];
+					memset(&aiPremiumTimes, 0, sizeof(aiPremiumTimes));
+
+					char szCreateDate[256] = "00000000";
+
+					if (!g_iUseLocale)
+					{
+						str_to_number(aiPremiumTimes[PREMIUM_EXP], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_ITEM], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_SAFEBOX], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_AUTOLOOT], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_FISH_MIND], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_MARRIAGE_FAST], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_GOLD], row[col++]);
+					}
 					else
 					{
 						str_to_number(aiPremiumTimes[PREMIUM_EXP], row[col++]);
@@ -362,7 +394,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 					if (true == LC_IsBrazil())
 					{
-						nPasswordDiff = 0; // 占쏙옙占쏙옙占 占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙橘占싫 체크占쏙옙 占쏙옙占쏙옙 占십는댐옙.
+						nPasswordDiff = 0; // 占쏙옙占쏙옙占 占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙橘占싫 체크占쏙옙 占쏙옙占쏙옙 占십는댐옙.
 					}
 
 					if (nPasswordDiff)
@@ -492,25 +524,59 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					strlcpy(szEncrytPassword, row[col++], sizeof(szEncrytPassword));
 
 					if (!row[col])
-				{
-					col++;
-				}
-				else
-				{
-					col++;
-				}
-					else
 					{
-					}
+					   	sys_err("error column %d", col);
+						M2_DELETE(pinfo);
+					   	break;
+				   	}
+
+					strlcpy(szPassword, row[col++], sizeof(szPassword));
 
 					if (!row[col])
-				{
-					col++;
-				}
-				else
-				{
-					col++;
-				}
+				   	{
+						sys_err("error column %d", col);
+						M2_DELETE(pinfo);
+						break;
+				   	}
+
+					strlcpy(szSocialID, row[col++], sizeof(szSocialID));
+
+					if (!row[col])
+				   	{
+					   	sys_err("error column %d", col);
+						M2_DELETE(pinfo);
+					   	break;
+				   	}
+
+					str_to_number(dwID, row[col++]);
+
+					if (!row[col])
+					{
+					   	sys_err("error column %d", col);
+						M2_DELETE(pinfo);
+						break;
+				   	}
+
+					strlcpy(szStatus, row[col++], sizeof(szStatus));
+
+					BYTE bNotAvail = 0;
+					str_to_number(bNotAvail, row[col++]);
+
+					int aiPremiumTimes[PREMIUM_MAX_NUM];
+					memset(&aiPremiumTimes, 0, sizeof(aiPremiumTimes));
+
+					char szCreateDate[256] = "00000000";
+
+					if (!g_iUseLocale)
+					{
+						str_to_number(aiPremiumTimes[PREMIUM_EXP], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_ITEM], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_SAFEBOX], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_AUTOLOOT], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_FISH_MIND], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_MARRIAGE_FAST], row[col++]);
+						str_to_number(aiPremiumTimes[PREMIUM_GOLD], row[col++]);
+					}
 					else
 					{
 						str_to_number(aiPremiumTimes[PREMIUM_EXP], row[col++]);
@@ -540,10 +606,10 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 					if (true == LC_IsBrazil())
 					{
-						nPasswordDiff = 0; // 占쏙옙占쏙옙占 占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙橘占싫 체크占쏙옙 占쏙옙占쏙옙 占십는댐옙.
+						nPasswordDiff = 0; // 占쏙옙占쏙옙占 占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙橘占싫 체크占쏙옙 占쏙옙占쏙옙 占십는댐옙.
 					}
 
-					//OpenID : OpenID 占쏙옙 占쏙옙占, 占쏙옙橘占싫 체크占쏙옙 占쏙옙占쏙옙 占십는댐옙.
+					//OpenID : OpenID 占쏙옙 占쏙옙占, 占쏙옙橘占싫 체크占쏙옙 占쏙옙占쏙옙 占십는댐옙.
 					if (openid_server)
 					{
 						nPasswordDiff = 0;
@@ -897,15 +963,6 @@ void VCardUse(LPCHARACTER CardOwner, LPCHARACTER CardTaker, LPITEM item)
 	ITEM_MANAGER::instance().RemoveItem(item);
 
 	sys_log(0, "VCARD_TAKE: %u %s -> %s", p.dwID, CardOwner->GetName(), CardTaker->GetName());
-}
-
-void DBManager::RequestBlockException(const char *login, int cmd)
-{
-	TPacketBlockException packet;
-
-	packet.cmd = cmd;
-	strlcpy(packet.login, login, sizeof(packet.login));
-	db_clientdesc->DBPacket(HEADER_GD_BLOCK_EXCEPTION, 0, &packet, sizeof(packet));
 }
 
 size_t DBManager::EscapeString(char* dst, size_t dstSize, const char *src, size_t srcSize)

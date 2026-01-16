@@ -283,9 +283,6 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			else
 				stResult = "YES";
 		}
-			else
-				stResult = "YES";
-		}
 		//else if (!stBuf.compare("SHOWMETHEMONEY"))
 		else if (stBuf == g_stAdminPagePassword)
 		{
@@ -388,8 +385,6 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 					std::string msg = stBuf.substr(7, 50);
 					LogManager::instance().CharLog(0, 0, 0, 1, "NOTICE", msg.c_str(), d->GetHostName());
 					BroadcastNotice(msg.c_str());
-				}
-				}
 				}
 				else if (!stBuf.compare("SHUTDOWN"))
 				{

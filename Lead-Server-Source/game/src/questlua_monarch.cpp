@@ -845,7 +845,6 @@ namespace quest
 			{ "monarchpowerup",			monarch_powerup		},
 			{ "monarchdefenseup",		monarch_defenseup	},
 			{ "spawnmob",				spawn_mob			},
-			{ "spawnguard",				spawn_guard			},
 			{ "warp",					monarch_warp 		},
 			{ "transfer",				monarch_transfer	},
 			{ "transfer2",				monarch_transfer2	},

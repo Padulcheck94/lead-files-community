@@ -2405,7 +2405,7 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 		// 결혼 보너스
 		iExp += iExp * to->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_EXP_BONUS) / 100;
 	}
-	else if (/*LC_IsNewCIBN() || */LC_IsBrazil())
+	else if (LC_IsBrazil())
 	{
 		// 아이템 몰: 경험치 결제
 		if (to->GetPremiumRemainSeconds(PREMIUM_EXP) > 0)

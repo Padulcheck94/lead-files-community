@@ -55,7 +55,6 @@ bool LC_IsYMIR();
 bool LC_IsJapan();
 bool LC_IsEnglish();
 bool LC_IsHongKong();
-bool LC_IsNewCIBN();
 bool LC_IsGermany();
 bool LC_IsKorea();
 bool LC_IsEurope();
