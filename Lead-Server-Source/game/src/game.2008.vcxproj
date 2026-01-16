@@ -90,13 +90,11 @@
     <ClCompile Include="buffer_manager.cpp" />
     <ClCompile Include="buff_on_attributes.cpp" />
     <ClCompile Include="building.cpp" />
-    <ClCompile Include="castle.cpp" />
     <ClCompile Include="char.cpp" />
     <ClCompile Include="char_affect.cpp" />
     <ClCompile Include="char_battle.cpp" />
     <ClCompile Include="char_change_empire.cpp" />
     <ClCompile Include="char_dragonsoul.cpp" />
-    <ClCompile Include="char_hackshield.cpp" />
     <ClCompile Include="char_horse.cpp" />
     <ClCompile Include="char_item.cpp" />
     <ClCompile Include="char_manager.cpp" />
@@ -140,8 +138,6 @@
     <ClCompile Include="guild.cpp" />
     <ClCompile Include="guild_manager.cpp" />
     <ClCompile Include="guild_war.cpp" />
-    <ClCompile Include="HackShield.cpp" />
-    <ClCompile Include="HackShield_Impl.cpp" />
     <ClCompile Include="horsename_manager.cpp" />
     <ClCompile Include="horse_rider.cpp" />
     <ClCompile Include="input.cpp" />
@@ -151,7 +147,6 @@
     <ClCompile Include="input_main.cpp" />
     <ClCompile Include="input_p2p.cpp" />
     <ClCompile Include="input_teen.cpp" />
-    <ClCompile Include="input_udp.cpp" />
     <ClCompile Include="ip_ban.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="item_addon.cpp" />
@@ -178,13 +173,11 @@
     <ClCompile Include="mob_manager.cpp" />
     <ClCompile Include="monarch.cpp" />
     <ClCompile Include="motion.cpp" />
-    <ClCompile Include="over9refine.cpp" />
     <ClCompile Include="OXEvent.cpp" />
     <ClCompile Include="p2p.cpp" />
     <ClCompile Include="packet_info.cpp" />
     <ClCompile Include="panama.cpp" />
     <ClCompile Include="party.cpp" />
-    <ClCompile Include="passpod.cpp" />
     <ClCompile Include="pcbang.cpp" />
     <ClCompile Include="PetSystem.cpp" />
     <ClCompile Include="polymorph.cpp" />
@@ -196,7 +189,6 @@
     <ClCompile Include="questlua_arena.cpp" />
     <ClCompile Include="questlua_ba.cpp" />
     <ClCompile Include="questlua_building.cpp" />
-    <ClCompile Include="questlua_danceevent.cpp" />
     <ClCompile Include="questlua_dragonlair.cpp" />
     <ClCompile Include="questlua_dragonsoul.cpp" />
     <ClCompile Include="questlua_dungeon.cpp" />
@@ -247,7 +239,6 @@
     <ClCompile Include="war_map.cpp" />
     <ClCompile Include="wedding.cpp" />
     <ClCompile Include="xmas_event.cpp" />
-    <ClCompile Include="XTrapManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="affect.h" />
@@ -269,7 +260,6 @@
     <ClInclude Include="buffer_manager.h" />
     <ClInclude Include="buff_on_attributes.h" />
     <ClInclude Include="building.h" />
-    <ClInclude Include="castle.h" />
     <ClInclude Include="char.h" />
     <ClInclude Include="char_manager.h" />
     <ClInclude Include="check_server.h" />
@@ -306,8 +296,6 @@
     <ClInclude Include="group_text_parse_tree.h" />
     <ClInclude Include="guild.h" />
     <ClInclude Include="guild_manager.h" />
-    <ClInclude Include="HackShield.h" />
-    <ClInclude Include="HackShield_Impl.h" />
     <ClInclude Include="horsename_manager.h" />
     <ClInclude Include="horse_rider.h" />
     <ClInclude Include="IFileMonitor.h" />
@@ -333,14 +321,12 @@
     <ClInclude Include="mob_manager.h" />
     <ClInclude Include="monarch.h" />
     <ClInclude Include="motion.h" />
-    <ClInclude Include="over9refine.h" />
     <ClInclude Include="OXEvent.h" />
     <ClInclude Include="p2p.h" />
     <ClInclude Include="packet.h" />
     <ClInclude Include="packet_info.h" />
     <ClInclude Include="panama.h" />
     <ClInclude Include="party.h" />
-    <ClInclude Include="passpod.h" />
     <ClInclude Include="pcbang.h" />
     <ClInclude Include="PetSystem.h" />
     <ClInclude Include="polymorph.h" />
@@ -384,7 +370,6 @@
     <ClInclude Include="war_map.h" />
     <ClInclude Include="wedding.h" />
     <ClInclude Include="xmas_event.h" />
-    <ClInclude Include="XTrapManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="any_function.inc" />

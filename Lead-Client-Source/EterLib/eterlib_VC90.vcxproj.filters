@@ -206,13 +206,10 @@
     <ClCompile Include="NetAddress.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="NetDatagram.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="NetDatagramReceiver.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="NetDatagramSender.cpp">
       <Filter>Network</Filter>
     </ClCompile>
     <ClCompile Include="NetDevice.cpp">
@@ -442,13 +439,10 @@
     <ClInclude Include="NetAddress.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="NetDatagram.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="NetDatagramReceiver.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="NetDatagramSender.h">
       <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="NetDevice.h">

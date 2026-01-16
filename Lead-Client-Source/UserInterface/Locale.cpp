@@ -12,7 +12,6 @@ const char* LSS_JAPAN		= "JAPAN";
 const char* LSS_ENGLISH		= "ENGLISH";
 const char* LSS_HONGKONG	= "HONGKONG";
 const char* LSS_TAIWAN		= "TAIWAN";
-const char* LSS_NEWCIBN		= "NEWCIBN";
 const char* LSS_EUROPE		= "EUROPE";
 const char* LSS_GLOBAL		= "GLOBAL";
 
@@ -183,7 +182,7 @@ bool LocaleService_IsCHEONMA()
 
 // END_OF_CHEONMA
 
-#if defined(LOCALE_SERVICE_EUROPE) || defined(LOCALE_SERVICE_BRAZIL) || defined(LOCALE_SERVICE_CANADA) || defined(LOCALE_SERVICE_SINGAPORE) || defined(LOCALE_SERVICE_VIETNAM) || defined(LOCALE_SERVICE_TAIWAN) || defined(LOCALE_SERVICE_NEWCIBN)
+#if defined(LOCALE_SERVICE_EUROPE) || defined(LOCALE_SERVICE_BRAZIL) || defined(LOCALE_SERVICE_CANADA) || defined(LOCALE_SERVICE_SINGAPORE) || defined(LOCALE_SERVICE_VIETNAM) || defined(LOCALE_SERVICE_TAIWAN) 
 #define _LSS_USE_LOCALE_CFG			1
 #define _LSS_SERVICE_NAME			LSS_EUROPE
 #elif defined(LOCALE_SERVICE_ITALY)
@@ -216,8 +215,6 @@ bool LocaleService_IsCHEONMA()
 #define _LSS_SERVICE_CODEPAGE		CP_CHINESE_TRAD
 #define _LSS_SERVICE_LOCALE_NAME	"taiwan"
 #define _LSS_SERVICE_LOCALE_PATH	"locale/taiwan"
-#elif defined(LOCALE_SERVICE_NEWCIBN)
-#define _LSS_SERVICE_NAME			LSS_NEWCIBN
 #define _LSS_SERVICE_CODEPAGE		CP_CHINESE_SIMPLE
 #define _LSS_SERVICE_LOCALE_NAME	"newcibn"
 #define _LSS_SERVICE_LOCALE_PATH	"locale/newcibn"
@@ -283,7 +280,6 @@ struct SLOCALEDATA
 	{ LSS_JAPAN,	"japan",		932,	"testtesttesttest"	},		// Japan
 	{ LSS_EUROPE,	"br",			1252,	"testtesttesttest"	},		// OnGame (Brazil)
 	{ LSS_HONGKONG,	"hongkong",		950,	"testtesttesttest"	},		// HongKong & Taiwan
-	{ LSS_NEWCIBN,	"newcibn",		936,	"testtesttesttest"	},		// CIBN (Free world)
 	{ LSS_ENGLISH,	"english",		949,	"testtesttesttest"	},		// English (Obsoleted)
 	{ LSS_YMIR,		"kr",			949,	"testtesttesttest"	},		// Korea (Obsoleted)
 	{ NULL,			NULL,			0,		"testtesttesttest"	}
@@ -396,7 +392,6 @@ bool LocaleService_IsENGLISH()	{ return (stricmp( LocaleService_GetName(), LSS_E
 bool LocaleService_IsEUROPE()	{ return (stricmp( LocaleService_GetName(), LSS_EUROPE ) == 0);		}
 bool LocaleService_IsHONGKONG()	{ return (stricmp( LocaleService_GetName(), LSS_HONGKONG ) == 0);	}
 bool LocaleService_IsTAIWAN()	{ return (stricmp( LocaleService_GetName(), LSS_TAIWAN ) == 0);		}
-bool LocaleService_IsNEWCIBN()	{ return (stricmp( LocaleService_GetName(), LSS_NEWCIBN ) == 0);	}
 
 #if defined(LOCALE_SERVICE_WE_JAPAN)
 BOOL LocaleService_IsLeadByte( const char chByte )

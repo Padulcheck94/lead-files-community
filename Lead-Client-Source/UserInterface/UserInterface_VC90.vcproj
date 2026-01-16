@@ -1454,10 +1454,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Locale_inc_NEWCIBN.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Locale_inc_SG.h"
 				>
 			</File>
@@ -1514,15 +1510,12 @@
 				>
 			</File>
 			<File
-				RelativePath="PythonNetworkDatagram.cpp"
 				>
 			</File>
 			<File
-				RelativePath="PythonNetworkDatagram.h"
 				>
 			</File>
 			<File
-				RelativePath="PythonNetworkDatagramModule.cpp"
 				>
 			</File>
 			<File
@@ -1606,39 +1599,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Hackshield.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Hackshield.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HackshieldLicense.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HackshieldLicense_metin2.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HackshieldLicense_metin2client.h"
-				>
-			</File>
-			<File
 				RelativePath=".\NProtectGameGuard.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\NProtectGameGuard.h"
-				>
-			</File>
-			<File
-				RelativePath=".\WiseLogicXTrap.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\WiseLogicXTrap.h"
 				>
 			</File>
 		</Filter>

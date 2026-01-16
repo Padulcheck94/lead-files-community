@@ -1,5 +1,4 @@
 #include "stdafx.h" 
-#include "../../common/billing.h"
 #include "config.h"
 #include "desc_client.h"
 #include "desc_manager.h"
@@ -14,7 +13,6 @@
 #include "unique_item.h"
 #include "xmas_event.h"
 #include "affect.h"
-#include "castle.h"
 #include "dev_log.h"
 #include "locale_service.h"
 #include "questmanager.h"
@@ -371,8 +369,6 @@ void CInputP2P::LoginPing(LPDESC d, const char * c_pData)
 {
 	TPacketGGLoginPing * p = (TPacketGGLoginPing *) c_pData;
 
-	SendBillingExpire(p->szLogin, BILLING_DAY, 0, NULL);
-
 	if (!g_pkAuthMasterDesc) // If I am master, I have to broadcast
 		P2P_MANAGER::instance().Send(p, sizeof(TPacketGGLoginPing), d);
 }
@@ -508,12 +504,6 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			BlockChat(c_pData);
 			break;
 
-		case HEADER_GG_SIEGE:
-			{
-				TPacketGGSiege* pSiege = (TPacketGGSiege*)c_pData;
-				castle_siege(pSiege->bEmpire, pSiege->bTowerCount);
-			}
-			break;
 
 		case HEADER_GG_MONARCH_NOTICE:
 			if ((iExtraLen = MonarchNotice(d, c_pData, m_iBufferLeft)) < 0)

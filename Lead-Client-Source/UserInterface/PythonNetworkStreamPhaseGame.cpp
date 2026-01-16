@@ -614,14 +614,6 @@ void CPythonNetworkStream::GamePhase()
 				break;
 #endif
 
-			case HEADER_GC_HS_REQUEST:
-				ret = RecvHSCheckRequest();
-				break;
-
-			case HEADER_GC_XTRAP_CS1_REQUEST:
-				ret = RecvXTrapVerifyRequest();
-				break;
-
 			case HEADER_GC_SPECIFIC_EFFECT:
 				ret = RecvSpecificEffect();
 				break;

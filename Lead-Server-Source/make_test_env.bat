@@ -26,7 +26,6 @@ mklink /D ymir ..\..\..\..\..\dist\dev\Test\Server\locale\ymir
 mklink /D canada ..\..\..\..\..\dist\ca\Test\Server\locale\canada
 mklink /D brazil ..\..\..\..\..\dist\br\Test\Server\locale\brazil
 mklink /D taiwan ..\..\..\..\..\dist\tw\Test\Server\locale\taiwan
-mklink /D NEWCIBN ..\..\..\..\..\dist\NEWCIBN\Test\Server\locale\NEWCIBN
 mklink /D we_korea ..\..\..\..\..\dist\we_korea\Test\Server\locale\we_korea
 cd ..
 cd ..

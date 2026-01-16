@@ -15,7 +15,6 @@
 #include "questmanager.h"
 #include "questlua.h"
 #include "locale_service.h"
-#include "XTrapManager.h"
 
 #ifndef __GNUC__
 #include <boost/bind.hpp>

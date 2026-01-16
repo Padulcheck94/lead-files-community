@@ -178,7 +178,6 @@
     <ClCompile Include="GameType.cpp" />
     <ClCompile Include="GuildMarkDownloader.cpp" />
     <ClCompile Include="GuildMarkUploader.cpp" />
-    <ClCompile Include="Hackshield.cpp" />
     <ClCompile Include="InstanceBase.cpp" />
     <ClCompile Include="InstanceBaseBattle.cpp" />
     <ClCompile Include="InstanceBaseEffect.cpp" />
@@ -226,8 +225,6 @@
     <ClCompile Include="PythonMessenger.cpp" />
     <ClCompile Include="PythonMiniMap.cpp" />
     <ClCompile Include="PythonMiniMapModule.cpp" />
-    <ClCompile Include="PythonNetworkDatagram.cpp" />
-    <ClCompile Include="PythonNetworkDatagramModule.cpp" />
     <ClCompile Include="PythonNetworkStream.cpp" />
     <ClCompile Include="PythonNetworkStreamCommand.cpp" />
     <ClCompile Include="PythonNetworkStreamEvent.cpp" />
@@ -267,7 +264,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="UserInterface.cpp" />
-    <ClCompile Include="WiseLogicXTrap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractApplication.h" />
@@ -282,10 +278,6 @@
     <ClInclude Include="GameType.h" />
     <ClInclude Include="GuildMarkDownloader.h" />
     <ClInclude Include="GuildMarkUploader.h" />
-    <ClInclude Include="Hackshield.h" />
-    <ClInclude Include="HackshieldLicense.h" />
-    <ClInclude Include="HackshieldLicense_metin2.h" />
-    <ClInclude Include="HackshieldLicense_metin2client.h" />
     <ClInclude Include="InstanceBase.h" />
     <ClInclude Include="InsultChecker.h" />
     <ClInclude Include="Locale.h" />
@@ -300,7 +292,6 @@
     <ClInclude Include="Locale_inc_JP.h" />
     <ClInclude Include="Locale_inc_KO.h" />
     <ClInclude Include="Locale_inc_KO_DEV.h" />
-    <ClInclude Include="Locale_inc_NEWCIBN.h" />
     <ClInclude Include="Locale_inc_SG.h" />
     <ClInclude Include="Locale_inc_VI.h" />
     <ClInclude Include="MarkImage.h" />
@@ -323,7 +314,6 @@
     <ClInclude Include="PythonItem.h" />
     <ClInclude Include="PythonMessenger.h" />
     <ClInclude Include="PythonMiniMap.h" />
-    <ClInclude Include="PythonNetworkDatagram.h" />
     <ClInclude Include="PythonNetworkStream.h" />
     <ClInclude Include="PythonNonPlayer.h" />
     <ClInclude Include="PythonPlayer.h" />
@@ -338,7 +328,6 @@
     <ClInclude Include="ServerStateChecker.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="Test.h" />
-    <ClInclude Include="WiseLogicXTrap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\colorInfo.py" />

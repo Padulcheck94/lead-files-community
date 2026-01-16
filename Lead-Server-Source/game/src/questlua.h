@@ -30,7 +30,6 @@ namespace quest
 	extern void RegisterOXEventFunctionTable();
 	extern void RegisterMgmtFunctionTable();
 	extern void RegisterBattleArenaFunctionTable();
-	extern void RegisterDanceEventFunctionTable();
 	extern void RegisterDragonLairFunctionTable();
 	extern void RegisterSpeedServerFunctionTable();
 	extern void RegisterDragonSoulFunctionTable();

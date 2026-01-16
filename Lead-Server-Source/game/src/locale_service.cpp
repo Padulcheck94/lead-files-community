@@ -1246,7 +1246,6 @@ bool LC_InitLocalization( const std::string& szLocal )
 	else if ( !g_stLocal.compare("hongkong") )
 		g_eLocalType = LC_HONGKONG;
 	else if (!g_stLocal.compare("newcibn") )
-		g_eLocalType = LC_NEWCIBN;
 	else if ( !g_stLocal.compare("germany") )
 		g_eLocalType = LC_GERMANY;
 	else if ( !g_stLocal.compare("korea") )
@@ -1323,7 +1322,6 @@ bool LC_IsYMIR()		{ return LC_GetLocalType() == LC_YMIR ? true : false; }
 bool LC_IsJapan()		{ return LC_GetLocalType() == LC_JAPAN ? true : false; }
 bool LC_IsEnglish()		{ return LC_GetLocalType() == LC_ENGLISH ? true : false; } 
 bool LC_IsHongKong()	{ return LC_GetLocalType() == LC_HONGKONG ? true : false; }
-bool LC_IsNewCIBN()		{ return LC_GetLocalType() == LC_NEWCIBN ? true : false; }
 bool LC_IsGermany()		{ return LC_GetLocalType() == LC_GERMANY ? true : false; }
 bool LC_IsKorea()		{ return LC_GetLocalType() == LC_KOREA ? true : false; }
 bool LC_IsCanada()		{ return LC_GetLocalType() == LC_CANADA ? false : false; }
@@ -1368,7 +1366,6 @@ bool LC_IsEurope()
 		case LC_WE_KOREA:	// 한국이지만 UK 버전 기반이므로 여기 넣음
 		case LC_TAIWAN:		// 대만이지만 WE_KOREA 버전 기반이므로 여기 넣음
 		case LC_JAPAN:		// 일본이지만 WE(World Edition -_-) 버전이므로 여기 넣음
-		case LC_NEWCIBN:
 		case LC_CANADA:	// 캐나다 GF에서 서비스 시작
 			return true;
 	}

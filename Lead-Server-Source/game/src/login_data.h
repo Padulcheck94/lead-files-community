@@ -15,12 +15,6 @@ class CLoginData
 		void		SetLogin(const char * c_pszLogin);
 		const char *	GetLogin();
 
-		void            SetBillType(BYTE bType);
-		DWORD           GetBillID();
-
-		void            SetBillID(DWORD dwID);
-		BYTE            GetBillType();
-
 		void            SetConnectedPeerHandle(DWORD dwHandle);
 		DWORD		GetConnectedPeerHandle();
 
@@ -29,12 +23,6 @@ class CLoginData
 
 		void		SetIP(const char * c_pszIP);
 		const char *	GetIP();
-
-		void		SetRemainSecs(long l);
-		long		GetRemainSecs();
-
-		void		SetBilling(bool bOn);
-		bool		IsBilling();
 
 		void		SetDeleted(bool bSet);
 		bool		IsDeleted();
@@ -47,13 +35,9 @@ class CLoginData
 	private:
 		DWORD           m_dwKey;
 		DWORD           m_adwClientKey[4];
-		BYTE            m_bBillType;
-		DWORD           m_dwBillID;
 		DWORD           m_dwConnectedPeerHandle;
 		DWORD           m_dwLogonTime;
-		long		m_lRemainSecs;
 		char		m_szIP[MAX_HOST_LENGTH+1];
-		bool		m_bBilling;
 		bool		m_bDeleted;
 		std::string	m_stLogin;
 		int		m_aiPremiumTimes[PREMIUM_MAX_NUM];

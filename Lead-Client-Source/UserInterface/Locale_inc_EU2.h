@@ -1,6 +1,5 @@
 #define LOCALE_SERVICE_EUROPE				// À¯·´
 
-//#define USE_AHNLAB_HACKSHIELD
 
 //#define CHECK_LATEST_DATA_FILES
 

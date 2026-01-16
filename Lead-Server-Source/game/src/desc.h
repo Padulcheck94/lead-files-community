@@ -46,14 +46,14 @@ class CLoginKey
 };
 
 
-// sequence ¹ö±× Ã£±â¿ë µ¥ÀÌÅ¸
+// sequence ë²„ê·¸ ì°¾ê¸°ìš© ë°ì´íƒ€
 struct seq_t
 {
 	BYTE	hdr;
 	BYTE	seq;
 };
 typedef std::vector<seq_t>	seq_vector_t;
-// sequence ¹ö±× Ã£±â¿ë µ¥ÀÌÅ¸
+// sequence ë²„ê·¸ ì°¾ê¸°ìš© ë°ì´íƒ€
 
 class DESC
 {
@@ -111,12 +111,10 @@ class DESC
 
 		const struct sockaddr_in & GetAddr()		{ return m_SockAddr;	}
 
-		void			   UDPGrant(const struct sockaddr_in & c_rSockAddr);
-		const struct sockaddr_in & GetUDPAddr()		{ return m_UDPSockAddr; }
 
 		void			Log(const char * format, ...);
 
-		// ÇÚµå½¦ÀÌÅ© (½Ã°£ µ¿±âÈ­)
+		// í•¸ë“œì‰ì´í¬ (ì‹œê°„ ë™ê¸°í™”)
 		void			StartHandshake(DWORD _dw);
 		void			SendHandshake(DWORD dwCurTime, long lNewDelta);
 		bool			HandshakeProcess(DWORD dwTime, long lDelta, bool bInfiniteRetry=false);
@@ -137,7 +135,7 @@ class DESC
 		const DWORD *	GetDecryptionKey() const { return &m_adwDecryptionKey[0]; }
 #endif
 
-		// Á¦±¹
+		// ì œêµ­
 		BYTE			GetEmpire();
 
 		// for p2p
@@ -146,7 +144,7 @@ class DESC
 		void			DisconnectOfSameLogin();
 
 		void			SetAdminMode();
-		bool			IsAdminMode();		// Handshake ¿¡¼­ ¾îµå¹Î ¸í·ÉÀ» ¾µ¼öÀÖ³ª?
+		bool			IsAdminMode();		// Handshake ì—ì„œ ì–´ë“œë¯¼ ëª…ë ¹ì„ ì“¸ìˆ˜ìˆë‚˜?
 
 		void			SetPong(bool b);
 		bool			IsPong();
@@ -157,6 +155,8 @@ class DESC
 		void			SendLoginSuccessPacket();
 		//void			SendServerStatePacket(int nIndex);
 
+
+
 		void			SetPanamaKey(DWORD dwKey)	{m_dwPanamaKey = dwKey;}
 		DWORD			GetPanamaKey() const		{ return m_dwPanamaKey; }
 
@@ -165,9 +165,6 @@ class DESC
 		DWORD			GetLoginKey();
 
 		void			AssembleCRCMagicCube(BYTE bProcPiece, BYTE bFilePiece);
-
-		void			SetBillingExpireSecond(DWORD dwSec);
-		DWORD			GetBillingExpireSecond();
 
 		void			SetClientVersion(const char * c_pszTimestamp) { m_stClientVersion = c_pszTimestamp; }
 		const char *		GetClientVersion() { return m_stClientVersion.c_str(); }
@@ -214,7 +211,6 @@ class DESC
 		TAccountTable		m_accountTable;
 
 		struct sockaddr_in	m_SockAddr;
-		struct sockaddr_in 	m_UDPSockAddr;
 
 		FILE *			m_pLogFile;
 		std::string		m_stRelayName;
@@ -223,10 +219,11 @@ class DESC
 		WORD			m_wP2PPort;
 		BYTE			m_bP2PChannel;
 
-		bool			m_bAdminMode; // Handshake ¿¡¼­ ¾îµå¹Î ¸í·ÉÀ» ¾µ¼öÀÖ³ª?
+		bool			m_bAdminMode; // Handshake ì—ì„œ ì–´ë“œë¯¼ ëª…ë ¹ì„ ì“¸ìˆ˜ìˆë‚˜?
 		bool			m_bPong;
 
 		int			m_iCurrentSequence;
+
 
 		CLoginKey *		m_pkLoginKey;
 		DWORD			m_dwLoginKey;
@@ -237,7 +234,6 @@ class DESC
 		DWORD                   m_dwFileCRC;
 		bool			m_bHackCRCQuery;
 
-		DWORD			m_dwBillingExpireSecond;
 		std::string		m_stClientVersion;
 
 		std::string		m_Login;
@@ -260,7 +256,10 @@ class DESC
 	public:
 		LPEVENT			m_pkDisconnectEvent;
 
+	protected:
+
 	public:
+
 		void SetLogin( const std::string & login ) { m_Login = login; }
 		void SetLogin( const char * login ) { m_Login = login; }
 		const std::string& GetLogin() { return m_Login; }
@@ -272,7 +271,7 @@ class DESC
 		void RawPacket(const void * c_pvData, int iSize);
 		void ChatPacket(BYTE type, const char * format, ...);
 
-		/* ½ÃÄö½º ¹ö±× Ã£±â¿ë ÄÚµå */
+		/* ì‹œí€€ìŠ¤ ë²„ê·¸ ì°¾ê¸°ìš© ì½”ë“œ */
 	public:
 		seq_vector_t	m_seq_vector;
 		void			push_seq (BYTE hdr, BYTE seq);

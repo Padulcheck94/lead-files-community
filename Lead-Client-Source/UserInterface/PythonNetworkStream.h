@@ -154,7 +154,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool SendQuickSlotDelPacket(BYTE wpos);
 		bool SendQuickSlotMovePacket(BYTE wpos, BYTE change_pos);
 
-		// PointReset °³ ÀÓ½Ã
+		// PointReset ê°œ ìž„ì‹œ
 		bool SendPointResetPacket();
 
 		// Shop
@@ -257,7 +257,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		// CRC Report
 		bool __SendCRCReportPacket();
 
-		// ¿ëÈ«¼® °­È­
+		// ìš©í™ì„ ê°•í™”
 		bool SendDragonSoulRefinePacket(BYTE bRefineType, TItemPos* pos);
 
 		// Handshake
@@ -281,7 +281,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		void __TEST_SetSkillGroupFake(int iIndex);
 
 	//////////////////////////////////////////////////////////////////////////
-	// Phase °ü·Ã
+	// Phase ê´€ë ¨
 	//////////////////////////////////////////////////////////////////////////
 	public:
 		void SetOffLinePhase();
@@ -295,7 +295,6 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		// Login Phase
 		bool SendLoginPacket(const char * c_szName, const char * c_szPassword);
 		bool SendLoginPacketNew(const char * c_szName, const char * c_szPassword);
-		bool SendNEWCIBNPasspodAnswerPacket(const char * answer);
 		bool SendDirectEnterPacket(const char * c_szName, const char * c_szPassword, UINT uChrSlot);
 
 		bool SendEnterGame();
@@ -317,7 +316,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool SendMessengerRemovePacket(const char * c_szKey, const char * c_szName);
 
 	protected:
-		bool OnProcess();	// StateµéÀ» ½ÇÁ¦·Î ½ÇÇàÇÑ´Ù.
+		bool OnProcess();	// Stateë“¤ì„ ì‹¤ì œë¡œ ì‹¤í–‰í•œë‹¤.
 		void OffLinePhase();
 		void HandShakePhase();
 		void LoginPhase();
@@ -397,8 +396,6 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool __RecvLoginSuccessPacket4();
 		bool __RecvLoginFailurePacket();
 		bool __RecvEmpirePacket();
-		bool __RecvNEWCIBNPasspodRequestPacket();
-		bool __RecvNEWCIBNPasspodFailurePacket();
 		bool __RecvLoginKeyPacket();
 
 		// Select Phase
@@ -529,10 +526,10 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		// Use Potion
 		bool RecvSpecialEffect();
 
-		// ¼­¹ö¿¡¼­ ÁöÁ¤ÇÑ ÀÌÆÑÆ® ¹ßµ¿ ÆÐÅ¶.
+		// ì„œë²„ì—ì„œ ì§€ì •í•œ ì´íŒ©íŠ¸ ë°œë™ íŒ¨í‚·.
 		bool RecvSpecificEffect();
 		
-		// ¿ëÈ¥¼® °ü·Ã
+		// ìš©í˜¼ì„ ê´€ë ¨
 		bool RecvDragonSoulRefine();
 
 		// MiniMap Info
@@ -550,15 +547,11 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		// Channel
 		bool RecvChannelPacket();
 
-		//Security
-		bool RecvHSCheckRequest();
-		bool RecvXTrapVerifyRequest();
-
 	protected:
-		// ÀÌ¸ðÆ¼ÄÜ
+		// ì´ëª¨í‹°ì½˜
 		bool ParseEmoticon(const char * pChatMsg, DWORD * pdwEmoticon);
 
-		// ÆÄÀÌ½ãÀ¸·Î º¸³»´Â ÄÝµé
+		// íŒŒì´ì¬ìœ¼ë¡œ ë³´ë‚´ëŠ” ì½œë“¤
 		void OnConnectFailure();
 		void OnScriptEventStart(int iSkin, int iIndex);
 		

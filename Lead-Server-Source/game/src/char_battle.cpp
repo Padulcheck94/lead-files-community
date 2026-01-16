@@ -28,7 +28,6 @@
 #include "monarch.h"
 #include "exchange.h"
 #include "shop_manager.h"
-#include "castle.h"
 #include "dev_log.h"
 #include "ani.h"
 #include "BattleArena.h"
@@ -188,10 +187,6 @@ bool CHARACTER::Attack(LPCHARACTER pkVictim, BYTE bType)
 	if (!CanMove())
 		return false;
 
-	// CASTLE
-	if (IS_CASTLE_MAP(GetMapIndex()) && false == castle_can_attack(this, pkVictim))
-		return false;
-	// CASTLE
 
 	DWORD dwCurrentTime = get_dword_time();
 
@@ -1267,8 +1262,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			!isUnderGuildWar &&
 			IsPC() &&
 			!isDuel &&
-			!isForked &&
-			!IS_CASTLE_MAP(GetMapIndex()))
+			!isForked)
 	{
 		if (GetGMLevel() == GM_PLAYER || test_server)
 		{
@@ -1276,17 +1270,6 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		}
 	}
 
-	// CASTLE_SIEGE
-	if (IS_CASTLE_MAP(GetMapIndex()))
-	{
-		if (CASTLE_FROG_VNUM == GetRaceNum())
-			castle_frog_die(this, pkKiller);
-		else if (castle_is_guard_vnum(GetRaceNum()))
-			castle_guard_die(this, pkKiller);
-		else if (castle_is_tower_vnum(GetRaceNum()))
-			castle_tower_die(this, pkKiller);
-	}
-	// CASTLE_SIEGE
 
 	if (true == isForked)
 	{

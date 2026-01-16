@@ -4158,7 +4158,6 @@
 				>
 			</File>
 			<File
-				RelativePath="NetDatagram.cpp"
 				>
 				<FileConfiguration
 					Name="MfcRelease|Win32"
@@ -4224,11 +4223,9 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="NetDatagram.h"
 				>
 			</File>
 			<File
-				RelativePath="NetDatagramReceiver.cpp"
 				>
 				<FileConfiguration
 					Name="MfcRelease|Win32"
@@ -4294,11 +4291,9 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="NetDatagramReceiver.h"
 				>
 			</File>
 			<File
-				RelativePath="NetDatagramSender.cpp"
 				>
 				<FileConfiguration
 					Name="MfcRelease|Win32"
@@ -4364,7 +4359,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="NetDatagramSender.h"
 				>
 			</File>
 			<File

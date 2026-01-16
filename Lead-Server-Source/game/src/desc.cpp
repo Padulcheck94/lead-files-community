@@ -16,7 +16,6 @@
 #include "guild_manager.h"
 #include "TrafficProfiler.h"
 #include "locale_service.h"
-#include "HackShield.h"
 #include "log.h"
 
 extern int max_bytes_written;
@@ -62,7 +61,6 @@ void DESC::Initialize()
 	memset( &m_accountTable, 0, sizeof(m_accountTable) );
 
 	memset( &m_SockAddr, 0, sizeof(m_SockAddr) );
-	memset( &m_UDPSockAddr, 0, sizeof(m_UDPSockAddr) );
 
 	m_pLogFile = NULL;
 
@@ -79,6 +77,7 @@ void DESC::Initialize()
 
 	m_iCurrentSequence = 0;
 
+
 	m_pkLoginKey = NULL;
 	m_dwLoginKey = 0;
 	m_dwPanamaKey = 0;
@@ -92,8 +91,6 @@ void DESC::Initialize()
 	m_dwProcCRC = 0;
 	m_dwFileCRC = 0;
 	m_bHackCRCQuery = 0;
-
-	m_dwBillingExpireSecond = 0;
 
 	m_outtime = 0;
 	m_playtime = 0;
@@ -223,7 +220,7 @@ bool DESC::Setup(LPFDWATCH _fdw, socket_t _fd, const struct sockaddr_in & c_rSoc
 	//if (LC_IsEurope() == true || LC_IsNewCIBN())
 	//	m_lpOutputBuffer = buffer_new(DEFAULT_PACKET_BUFFER_SIZE * 2);
 	//else
-	//NOTE: ÀÌ°É ³ª¶óº°·Î ´Ù¸£°Ô Àâ¾Æ¾ßÇÒ ÀÌÀ¯°¡ ÀÖ³ª?
+	//NOTE: ì´ê±¸ ë‚˜ë¼ë³„ë¡œ ë‹¤ë¥´ê²Œ ìž¡ì•„ì•¼í•  ì´ìœ ê°€ ìžˆë‚˜?
 	m_lpOutputBuffer = buffer_new(DEFAULT_PACKET_BUFFER_SIZE * 2);
 
 	m_iMinInputBufferLen = MAX_INPUT_LEN >> 1;
@@ -296,7 +293,7 @@ int DESC::ProcessInput()
 
 		int iBytesProceed = 0;
 
-		// false°¡ ¸®ÅÏ µÇ¸é ´Ù¸¥ phase·Î ¹Ù²ï °ÍÀÌ¹Ç·Î ´Ù½Ã ÇÁ·Î¼¼½º·Î µ¹ÀÔÇÑ´Ù!
+		// falseê°€ ë¦¬í„´ ë˜ë©´ ë‹¤ë¥¸ phaseë¡œ ë°”ë€ ê²ƒì´ë¯€ë¡œ ë‹¤ì‹œ í”„ë¡œì„¸ìŠ¤ë¡œ ëŒìž…í•œë‹¤!
 		while (!m_pInputProcessor->Process(this, buffer_read_peek(m_lpInputBuffer), buffer_size(m_lpInputBuffer), iBytesProceed))
 		{
 			buffer_read_proceed(m_lpInputBuffer, iBytesProceed);
@@ -310,7 +307,7 @@ int DESC::ProcessInput()
 	{
 		int iBytesProceed = 0;
 
-		// false°¡ ¸®ÅÏ µÇ¸é ´Ù¸¥ phase·Î ¹Ù²ï °ÍÀÌ¹Ç·Î ´Ù½Ã ÇÁ·Î¼¼½º·Î µ¹ÀÔÇÑ´Ù!
+		// falseê°€ ë¦¬í„´ ë˜ë©´ ë‹¤ë¥¸ phaseë¡œ ë°”ë€ ê²ƒì´ë¯€ë¡œ ë‹¤ì‹œ í”„ë¡œì„¸ìŠ¤ë¡œ ëŒìž…í•œë‹¤!
 		while (!m_pInputProcessor->Process(this, buffer_read_peek(m_lpInputBuffer), buffer_size(m_lpInputBuffer), iBytesProceed))
 		{
 			buffer_read_proceed(m_lpInputBuffer, iBytesProceed);
@@ -323,9 +320,9 @@ int DESC::ProcessInput()
 	{
 		int iSizeBuffer = buffer_size(m_lpInputBuffer);
 
-		// 8¹ÙÀÌÆ® ´ÜÀ§·Î¸¸ Ã³¸®ÇÑ´Ù. 8¹ÙÀÌÆ® ´ÜÀ§¿¡ ºÎÁ·ÇÏ¸é Àß¸øµÈ ¾ÏÈ£È­ ¹öÆÛ¸¦ º¹È£È­
-		// ÇÒ °¡´É¼ºÀÌ ÀÖÀ¸¹Ç·Î Â©¶ó¼­ Ã³¸®ÇÏ±â·Î ÇÑ´Ù.
-		if (iSizeBuffer & 7) // & 7Àº % 8°ú °°´Ù. 2ÀÇ ½Â¼ö¿¡¼­¸¸ °¡´É
+		// 8ë°”ì´íŠ¸ ë‹¨ìœ„ë¡œë§Œ ì²˜ë¦¬í•œë‹¤. 8ë°”ì´íŠ¸ ë‹¨ìœ„ì— ë¶€ì¡±í•˜ë©´ ìž˜ëª»ëœ ì•”í˜¸í™” ë²„í¼ë¥¼ ë³µí˜¸í™”
+		// í•  ê°€ëŠ¥ì„±ì´ ìžˆìœ¼ë¯€ë¡œ ì§¤ë¼ì„œ ì²˜ë¦¬í•˜ê¸°ë¡œ í•œë‹¤.
+		if (iSizeBuffer & 7) // & 7ì€ % 8ê³¼ ê°™ë‹¤. 2ì˜ ìŠ¹ìˆ˜ì—ì„œë§Œ ê°€ëŠ¥
 			iSizeBuffer -= iSizeBuffer & 7;
 
 		if (iSizeBuffer > 0)
@@ -343,7 +340,7 @@ int DESC::ProcessInput()
 
 			int iBytesProceed = 0;
 
-			// false°¡ ¸®ÅÏ µÇ¸é ´Ù¸¥ phase·Î ¹Ù²ï °ÍÀÌ¹Ç·Î ´Ù½Ã ÇÁ·Î¼¼½º·Î µ¹ÀÔÇÑ´Ù!
+			// falseê°€ ë¦¬í„´ ë˜ë©´ ë‹¤ë¥¸ phaseë¡œ ë°”ë€ ê²ƒì´ë¯€ë¡œ ë‹¤ì‹œ í”„ë¡œì„¸ìŠ¤ë¡œ ëŒìž…í•œë‹¤!
 			while (!m_pInputProcessor->Process(this, buffer_read_peek(lpBufferDecrypt), buffer_size(lpBufferDecrypt), iBytesProceed))
 			{
 				if (iBytesProceed > iSizeBuffer)
@@ -419,12 +416,12 @@ void DESC::Packet(const void * c_pvData, int iSize)
 {
 	assert(iSize > 0);
 
-	if (m_iPhase == PHASE_CLOSE) // ²÷´Â »óÅÂ¸é º¸³»Áö ¾Ê´Â´Ù.
+	if (m_iPhase == PHASE_CLOSE) // ëŠëŠ” ìƒíƒœë©´ ë³´ë‚´ì§€ ì•ŠëŠ”ë‹¤.
 		return;
 
 	if (m_stRelayName.length() != 0)
 	{
-		// Relay ÆÐÅ¶Àº ¾ÏÈ£È­ÇÏÁö ¾Ê´Â´Ù.
+		// Relay íŒ¨í‚·ì€ ì•”í˜¸í™”í•˜ì§€ ì•ŠëŠ”ë‹¤.
 		TPacketGGRelay p;
 
 		p.bHeader = HEADER_GG_RELAY;
@@ -493,7 +490,7 @@ void DESC::Packet(const void * c_pvData, int iSize)
 			}
 			else
 			{
-				// ¾ÏÈ£È­¿¡ ÇÊ¿äÇÑ ÃæºÐÇÑ ¹öÆÛ Å©±â¸¦ È®º¸ÇÑ´Ù.
+				// ì•”í˜¸í™”ì— í•„ìš”í•œ ì¶©ë¶„í•œ ë²„í¼ í¬ê¸°ë¥¼ í™•ë³´í•œë‹¤.
 				/* buffer_adjust_size(m_lpOutputBuffer, iSize + 8); */
 				DWORD * pdwWritePoint = (DWORD *) buffer_write_peek(m_lpOutputBuffer);
 
@@ -536,7 +533,7 @@ void DESC::SetPhase(int _phase)
 	switch (m_iPhase)
 	{
 		case PHASE_CLOSE:
-			// ¸Þ½ÅÀú°¡ Ä³¸¯ÅÍ´ÜÀ§°¡ µÇ¸é¼­ »èÁ¦
+			// ë©”ì‹ ì €ê°€ ìºë¦­í„°ë‹¨ìœ„ê°€ ë˜ë©´ì„œ ì‚­ì œ
 			//MessengerManager::instance().Logout(GetAccountTable().login);
 			m_pInputProcessor = &m_inputClose;
 			break;
@@ -546,8 +543,8 @@ void DESC::SetPhase(int _phase)
 			break;
 
 		case PHASE_SELECT:
-			// ¸Þ½ÅÀú°¡ Ä³¸¯ÅÍ´ÜÀ§°¡ µÇ¸é¼­ »èÁ¦
-			//MessengerManager::instance().Logout(GetAccountTable().login); // ÀÇµµÀûÀ¸·Î break ¾È°Ë
+			// ë©”ì‹ ì €ê°€ ìºë¦­í„°ë‹¨ìœ„ê°€ ë˜ë©´ì„œ ì‚­ì œ
+			//MessengerManager::instance().Logout(GetAccountTable().login); // ì˜ë„ì ìœ¼ë¡œ break ì•ˆê²€
 		case PHASE_LOGIN:
 		case PHASE_LOADING:
 #ifndef _IMPROVED_PACKET_ENCRYPTION_
@@ -581,18 +578,6 @@ void DESC::BindAccountTable(TAccountTable * pAccountTable)
 	DESC_MANAGER::instance().ConnectAccount(m_accountTable.login, this);
 }
 
-void DESC::UDPGrant(const struct sockaddr_in & c_rSockAddr)
-{
-	m_UDPSockAddr = c_rSockAddr;
-
-	TPacketGCBindUDP pack;
-
-	pack.header	= HEADER_GC_BINDUDP;
-	pack.addr	= m_UDPSockAddr.sin_addr.s_addr;
-	pack.port	= m_UDPSockAddr.sin_port;
-
-	Packet(&pack, sizeof(TPacketGCBindUDP));
-}
 
 void DESC::Log(const char * format, ...)
 {
@@ -879,7 +864,7 @@ void DESC::DisconnectOfSameLogin()
 		if (m_pkDisconnectEvent)
 			return;
 
-		GetCharacter()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´Ù¸¥ ÄÄÇ»ÅÍ¿¡¼­ ·Î±×ÀÎ ÇÏ¿© Á¢¼ÓÀ» Á¾·á ÇÕ´Ï´Ù."));
+		GetCharacter()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‹¤ë¥¸ ì»´í“¨í„°ì—ì„œ ë¡œê·¸ì¸ í•˜ì—¬ ì ‘ì†ì„ ì¢…ë£Œ í•©ë‹ˆë‹¤."));
 		DelayedDisconnect(5);
 	}
 	else
@@ -960,6 +945,10 @@ void DESC::SendLoginSuccessPacket()
 //	this->Packet(&rp, sizeof(rp));
 //	//printf("STATE_CHECK PACKET PROCESSED.\n");
 //}
+
+
+
+
 
 void DESC::SetLoginKey(DWORD dwKey)
 {
@@ -1043,16 +1032,6 @@ void DESC::AssembleCRCMagicCube(BYTE bProcPiece, BYTE bFilePiece)
 		m_dwFileCRC = 0;
 		m_bCRCMagicCubeIdx = 0;
 	}
-}
-
-void DESC::SetBillingExpireSecond(DWORD dwSec)
-{
-	m_dwBillingExpireSecond = dwSec;
-}
-
-DWORD DESC::GetBillingExpireSecond()
-{
-	return m_dwBillingExpireSecond;
 }
 
 void DESC::push_seq(BYTE hdr, BYTE seq)
