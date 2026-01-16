@@ -691,7 +691,6 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 		case QID_DB_STRING:
 			{
 				m_map_dbstring.clear();
-				m_vec_GreetMessage.clear();
 
 				for (uint i = 0; i < pMsg->Get()->uiNumRows; ++i)
 				{
@@ -701,16 +700,6 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					{
 						m_map_dbstring.insert(make_pair(std::string(row[0]), std::string(row[1])));
 						sys_log(0, "DBSTR '%s' '%s'", row[0], row[1]);
-					}
-				}
-				if (m_map_dbstring.find("GREET") != m_map_dbstring.end())
-				{
-					std::istringstream is(m_map_dbstring["GREET"]);
-					while (!is.eof())
-					{
-						std::string str;
-						getline(is, str);
-						m_vec_GreetMessage.push_back(str);
 					}
 				}
 			}
@@ -924,11 +913,6 @@ const std::string& DBManager::GetDBString(const std::string& key)
 	if (it == m_map_dbstring.end())
 		return null_str;
 	return it->second;
-}
-
-const std::vector<std::string>& DBManager::GetGreetMessage()
-{
-	return m_vec_GreetMessage;
 }
 
 void DBManager::SendMoneyLog(BYTE type, DWORD vnum, int gold)

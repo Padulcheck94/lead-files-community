@@ -96,7 +96,6 @@ class DBManager : public singleton<DBManager>
 
 		void			LoadDBString();
 		const std::string &	GetDBString(const std::string& key);
-		const std::vector<std::string> & GetGreetMessage();
 
 		template<class Functor> void FuncQuery(Functor f, const char * c_pszFormat, ...); // 결과를 f인자로 호출함 (SQLMsg *) 알아서 해제됨
 		template<class Functor> void FuncAfterQuery(Functor f, const char * c_pszFormat, ...); // 끝나고 나면 f가 호출됨 void			f(void) 형태
@@ -111,7 +110,6 @@ class DBManager : public singleton<DBManager>
 		bool					m_bIsConnect;
 
 		std::map<std::string, std::string>	m_map_dbstring;
-		std::vector<std::string>		m_vec_GreetMessage;
 		std::map<DWORD, CLoginData *>		m_map_pkLoginData;
 };
 
