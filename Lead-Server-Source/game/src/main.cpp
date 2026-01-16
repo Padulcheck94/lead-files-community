@@ -497,9 +497,6 @@ int main(int argc, char **argv)
 	if ( g_bTrafficProfileOn )
 		TrafficProfiler::instance().Initialize( TRAFFIC_PROFILE_FLUSH_CYCLE, "ProfileLog" );
 
-	//if game server
-	if (!g_bAuthServer)
-
 #if defined (__FreeBSD__) && defined(__FILEMONITOR__)
 	PFN_FileChangeListener pPackageNotifyFunc =  &(DESC_MANAGER::NotifyClientPackageFileChanged);
 	//FileMonitorFreeBSD::Instance().AddWatch( strPackageCryptInfoName, pPackageNotifyFunc );
