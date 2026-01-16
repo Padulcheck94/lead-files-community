@@ -183,9 +183,6 @@
     <ClCompile Include="MSWindow.cpp" />
     <ClCompile Include="Mutex.cpp" />
     <ClCompile Include="NetAddress.cpp" />
-    <ClCompile Include="NetDatagram.cpp" />
-    <ClCompile Include="NetDatagramReceiver.cpp" />
-    <ClCompile Include="NetDatagramSender.cpp" />
     <ClCompile Include="NetDevice.cpp" />
     <ClCompile Include="NetPacketHeaderMap.cpp" />
     <ClCompile Include="NetStream.cpp" />
@@ -264,9 +261,6 @@
     <ClInclude Include="MSWindow.h" />
     <ClInclude Include="Mutex.h" />
     <ClInclude Include="NetAddress.h" />
-    <ClInclude Include="NetDatagram.h" />
-    <ClInclude Include="NetDatagramReceiver.h" />
-    <ClInclude Include="NetDatagramSender.h" />
     <ClInclude Include="NetDevice.h" />
     <ClInclude Include="NetPacketHeaderMap.h" />
     <ClInclude Include="NetStream.h" />

@@ -85,7 +85,6 @@ class MainStream(object):
 		net.SetHandler(self)
 		net.SetTCPRecvBufferSize(128*1024)
 		net.SetTCPSendBufferSize(4096)
-		net.SetUDPRecvBufferSize(4096)
 
 		self.id=""
 		self.pwd=""
@@ -261,7 +260,6 @@ class MainStream(object):
 		else:
 			net.ConnectTCP(self.addr, self.port)
 
-		#net.ConnectUDP(IP, Port)
 
 	def SetConnectInfo(self, addr, port, account_addr=0, account_port=0):
 		self.addr = addr

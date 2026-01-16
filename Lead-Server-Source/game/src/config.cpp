@@ -33,7 +33,6 @@ int		save_event_second_cycle = passes_per_sec * 120;	// 3분
 int		ping_event_second_cycle = passes_per_sec * 60;
 bool	g_bNoMoreClient = false;
 bool	g_bNoRegen = false;
-bool	g_bNoPasspod = false;
 
 // TRAFFIC_PROFILER
 bool		g_bTrafficProfileOn = false;
@@ -68,8 +67,6 @@ BYTE		g_bAuthServer = false;
 
 bool		g_bCheckClientVersion = true;
 string	g_stClientVersion = "1215955205";
-
-BYTE		g_bBilling = false;
 
 string	g_stAuthMasterIP;
 WORD		g_wAuthMasterPort = 0;
@@ -119,13 +116,6 @@ void		LoadStateUserCount();
 void		LoadValidCRCList();
 bool		LoadClientVersion();
 bool            g_protectNormalPlayer   = false;        // 범법자가 "평화모드" 인 일반유저를 공격하지 못함
-bool            g_noticeBattleZone      = false;        // 중립지대에 입장하면 안내메세지를 알려줌
-
-bool		isHackShieldEnable = false;
-int			HackShield_FirstCheckWaitTime = passes_per_sec * 30;
-int			HackShield_CheckCycleTime = passes_per_sec * 180;
-
-bool		bXTrapEnabled = false;
 
 int gPlayerMaxLevel = 99;
 
@@ -937,11 +927,6 @@ void config_init(const string& st_localeServiceName)
 			continue;
 		}
 
-		TOKEN("billing")
-		{
-			g_bBilling = true;
-		}
-
 		TOKEN("quest_dir")
 		{
 			sys_log(0, "QUEST_DIR SETTING : %s", value_string);
@@ -1046,50 +1031,6 @@ void config_init(const string& st_localeServiceName)
 		TOKEN("protect_normal_player")
 		{
 			str_to_number(g_protectNormalPlayer, value_string);
-		}
-		TOKEN("notice_battle_zone")
-		{
-			str_to_number(g_noticeBattleZone, value_string);
-		}
-
-		TOKEN("hackshield_enable")
-		{
-			int flag = 0;
-
-			str_to_number(flag, value_string);
-
-			//if (1 == flag && LC_IsEurope() )
-			if (1 == flag)
-			{
-				isHackShieldEnable = true;
-			}
-		}
-
-		TOKEN("hackshield_first_check_time")
-		{
-			int secs = 30;
-			str_to_number(secs, value_string);
-
-			HackShield_FirstCheckWaitTime = passes_per_sec * secs;
-		}
-
-		TOKEN("hackshield_check_cycle_time")
-		{
-			int secs = 180;
-			str_to_number(secs, value_string);
-
-			HackShield_CheckCycleTime = passes_per_sec * secs;
-		}
-
-		TOKEN("xtrap_enable")
-		{
-			int flag = 0;
-			str_to_number(flag, value_string);
-
-			if (1 == flag )
-			{
-				bXTrapEnabled = true;
-			}
 		}
 
 		TOKEN("pk_protect_level")

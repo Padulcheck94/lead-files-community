@@ -20,8 +20,6 @@ extern WORD db_port;
 extern char teen_addr[ADDRESS_MAX_LEN + 1];
 extern WORD teen_port;
 
-extern char passpod_addr[ADDRESS_MAX_LEN + 1];
-extern WORD passpod_port;
 
 extern int passes_per_sec;
 extern int save_event_second_cycle;
@@ -67,7 +65,6 @@ extern void		LoadStateUserCount();
 extern bool	g_bEmpireWhisper;
 
 extern BYTE	g_bAuthServer;
-extern BYTE	g_bBilling;
 
 extern BYTE	PK_PROTECT_LEVEL;
 
@@ -103,14 +100,8 @@ extern int VIEW_BONUS_RANGE;
 
 extern bool g_bCheckMultiHack;
 extern bool g_protectNormalPlayer;      // 범법자가 "평화모드" 인 일반유저를 공격하지 못함
-extern bool g_noticeBattleZone;         // 중립지대에 입장하면 안내메세지를 알려줌
 
 extern DWORD g_GoldDropTimeLimitValue;
-
-extern bool isHackShieldEnable;
-extern int  HackShield_FirstCheckWaitTime;
-extern int  HackShield_CheckCycleTime;
-extern bool bXTrapEnabled;
 
 extern int gPlayerMaxLevel;
 

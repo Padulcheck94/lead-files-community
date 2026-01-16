@@ -7,7 +7,6 @@ bool		LocaleService_IsJAPAN();
 bool		LocaleService_IsENGLISH();
 bool		LocaleService_IsHONGKONG();
 bool		LocaleService_IsTAIWAN();
-bool		LocaleService_IsNEWCIBN();
 bool		LocaleService_IsEUROPE();
 bool		LocaleService_IsWorldEdition();
 

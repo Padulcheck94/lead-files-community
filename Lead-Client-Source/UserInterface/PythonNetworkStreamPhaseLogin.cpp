@@ -4,9 +4,6 @@
 #include "Test.h"
 #include "AccountConnector.h"
 
-#include "Hackshield.h"
-#include "WiseLogicXTrap.h"
-
 // Login ---------------------------------------------------------------------------
 void CPythonNetworkStream::LoginPhase()
 {
@@ -41,14 +38,8 @@ void CPythonNetworkStream::LoginPhase()
 				return;
 			break;
 
-		case HEADER_GC_NEWCIBN_PASSPOD_REQUEST:
-			if (__RecvNEWCIBNPasspodRequestPacket())
-				return;
-			break;
-		case HEADER_GC_NEWCIBN_PASSPOD_FAILURE:
-			if (__RecvNEWCIBNPasspodFailurePacket())
-				return;
-			break;
+
+
 
 
 		case HEADER_GC_LOGIN_KEY:
@@ -108,7 +99,7 @@ void CPythonNetworkStream::SetLoginPhase()
 		else
 			SendLoginPacket(m_stID.c_str(), m_stPassword.c_str());
 
-		// ºñ¹Ð¹øÈ£¸¦ ¸Þ¸ð¸®¿¡ °è¼Ó °®°í ÀÖ´Â ¹®Á¦°¡ ÀÖ¾î¼­, »ç¿ë Áï½Ã ³¯¸®´Â °ÍÀ¸·Î º¯°æ
+		// ë¹„ë°€ë²ˆí˜¸ë¥¼ ë©”ëª¨ë¦¬ì— ê³„ì† ê°–ê³  ìžˆëŠ” ë¬¸ì œê°€ ìžˆì–´ì„œ, ì‚¬ìš© ì¦‰ì‹œ ë‚ ë¦¬ëŠ” ê²ƒìœ¼ë¡œ ë³€ê²½
 		ClearLoginInfo();
 		CAccountConnector & rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();
@@ -120,7 +111,7 @@ void CPythonNetworkStream::SetLoginPhase()
 		else
 			SendLoginPacket(m_stID.c_str(), m_stPassword.c_str());
 
-		// ºñ¹Ð¹øÈ£¸¦ ¸Þ¸ð¸®¿¡ °è¼Ó °®°í ÀÖ´Â ¹®Á¦°¡ ÀÖ¾î¼­, »ç¿ë Áï½Ã ³¯¸®´Â °ÍÀ¸·Î º¯°æ
+		// ë¹„ë°€ë²ˆí˜¸ë¥¼ ë©”ëª¨ë¦¬ì— ê³„ì† ê°–ê³  ìžˆëŠ” ë¬¸ì œê°€ ìžˆì–´ì„œ, ì‚¬ìš© ì¦‰ì‹œ ë‚ ë¦¬ëŠ” ê²ƒìœ¼ë¡œ ë³€ê²½
 		ClearLoginInfo();
 		CAccountConnector & rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();
@@ -295,40 +286,16 @@ bool CPythonNetworkStream::SendLoginPacketNew(const char * c_szName, const char 
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvNEWCIBNPasspodRequestPacket()
-{
-	TPacketGCNEWCIBNPasspodRequest kRequestPacket;
-	if (!Recv(sizeof(kRequestPacket), &kRequestPacket))
-		return false;
-
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));	
-	return true;
-}
-
-bool CPythonNetworkStream::__RecvNEWCIBNPasspodFailurePacket()
-{
-	TPacketGCNEWCIBNPasspodFailure kFailurePacket;
-	if (!Recv(sizeof(kFailurePacket), &kFailurePacket))
-		return false;
-
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodFailure", Py_BuildValue("()"));	
-	return true;
-}
 
 
-bool CPythonNetworkStream::SendNEWCIBNPasspodAnswerPacket(const char * answer)
-{
-	TPacketCGNEWCIBNPasspodAnswer answerPacket;
-	answerPacket.bHeader = HEADER_CG_NEWCIBN_PASSPOD_ANSWER;
-	strncpy(answerPacket.szAnswer, answer, NEWCIBN_PASSPOD_ANSWER_MAX_LEN);
-	answerPacket.szAnswer[NEWCIBN_PASSPOD_ANSWER_MAX_LEN] = '\0';	
-	if (!Send(sizeof(answerPacket), &answerPacket))
-	{
-		TraceError("SendNEWCIBNPasspodAnswerPacket");
-		return false;
-	}
-	return SendSequence();
-}
+
+
+
+
+
+#define ROW(rows, i) ((rows >> ((4 - i - 1) * 8)) & 0x000000FF)
+#define COL(cols, i) ((cols >> ((4 - i - 1) * 8)) & 0x000000FF)
+
 
 bool CPythonNetworkStream::__RecvLoginKeyPacket()
 {

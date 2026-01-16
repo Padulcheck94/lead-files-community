@@ -98,9 +98,7 @@ enum
 
 	HEADER_GD_AUTH_LOGIN		= 100,
 	HEADER_GD_LOGIN_BY_KEY		= 101,
-	HEADER_GD_BILLING_EXPIRE	= 104,
 	HEADER_GD_VCARD				= 105,
-	HEADER_GD_BILLING_CHECK		= 106,
 	HEADER_GD_MALL_LOAD			= 107,
 
 	HEADER_GD_MYSHOP_PRICELIST_UPDATE	= 108,		///< 가격정보 갱신 요청
@@ -235,11 +233,7 @@ enum
 
 	HEADER_DG_CHANGE_CHARACTER_PRIV	= 127,
 
-	HEADER_DG_BILLING_REPAIR		= 128,
-	HEADER_DG_BILLING_EXPIRE		= 129,
-	HEADER_DG_BILLING_LOGIN		= 130,
 	HEADER_DG_VCARD			= 131,
-	HEADER_DG_BILLING_CHECK		= 132,
 
 	HEADER_DG_CREATE_OBJECT		= 140,
 	HEADER_DG_DELETE_OBJECT		= 141,
@@ -287,37 +281,11 @@ enum
 
 	HEADER_DG_MAP_LOCATIONS		= 0xfe,
 	HEADER_DG_P2P			= 0xff,
-
-	HEADER_GP_CONFIRM_PASSPOD = 1,
-	HEADER_PG_CONFIRM_PASSPOD = 2,
-
-};
-
-enum E_PASSPOD
-{
-	E_PASSPOD_SUCCESS = 0,
-	E_PASSPOD_FAILED_PASSPOD_ERROR,
-	E_PASSPOD_FAILED_USER_NOT_FOUND,
-	E_PASSPOD_FAILED_SYSTEM_NOT_FOUND,
-	E_PASSPOD_FAILED_TOKEN_DISABLED,
-	E_PASSPOD_FAILED_EMPTY,
 };
 
 
-typedef struct SRequestConfirmPasspod
-{
-	int pid;
-	char passpod[MAX_PASSPOD + 1];
-	char login[LOGIN_MAX_LEN + 1];
 
-} RequestConfirmPasspod;
 
-typedef struct SResultConfirmPasspod
-{
-	int pid;
-	int ret_code;
-	char login[LOGIN_MAX_LEN + 1];
-} ResultConfirmPasspod;
 /* ----------------------------------------------
  * table
  * ----------------------------------------------
@@ -1048,8 +1016,6 @@ typedef struct SPacketGDAuthLogin
 	char	szLogin[LOGIN_MAX_LEN + 1];
 	char	szSocialID[SOCIAL_ID_MAX_LEN + 1];
 	DWORD	adwClientKey[4];
-	BYTE	bBillType;
-	DWORD	dwBillID;
 	int		iPremiumTimes[PREMIUM_MAX_NUM];
 } TPacketGDAuthLogin;
 
@@ -1161,26 +1127,6 @@ typedef struct SPacketSetEventFlag
 	char	szFlagName[EVENT_FLAG_NAME_MAX_LEN + 1];
 	long	lValue;
 } TPacketSetEventFlag;
-
-typedef struct SPacketBillingLogin
-{
-	DWORD	dwLoginKey;
-	BYTE	bLogin;
-} TPacketBillingLogin;
-
-typedef struct SPacketBillingRepair
-{
-	DWORD	dwLoginKey;
-	char	szLogin[LOGIN_MAX_LEN + 1];
-	char	szHost[MAX_HOST_LENGTH + 1];
-} TPacketBillingRepair;
-
-typedef struct SPacketBillingExpire
-{
-	char	szLogin[LOGIN_MAX_LEN + 1];
-	BYTE	bBillType;
-	DWORD	dwRemainSeconds;
-} TPacketBillingExpire;
 
 typedef struct SPacketLoginOnSetup
 {

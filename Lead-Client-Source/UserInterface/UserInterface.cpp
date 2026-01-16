@@ -16,9 +16,7 @@
 
 #include "CheckLatestFiles.h"
 
-#include "Hackshield.h"
 #include "NProtectGameGuard.h"
-#include "WiseLogicXTrap.h"
 
 extern "C" {  
 extern int _fltused;  
@@ -247,7 +245,6 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 	initgrpText();
 	initwndMgr();
 	/////////////////////////////////////////////
-	initudp();
 	initapp();
 	initsystem();
 	initchr();
@@ -339,10 +336,6 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 
 		if (stVec.size() != 0 && "--pause-before-create-window" == stVec[0])
 		{
-#ifdef XTRAP_CLIENT_ENABLE
-			if (!XTrap_CheckInit())
-				return false;
-#endif
 			system("pause");
 		}
 		if (!pyLauncher.RunFile("system.py"))
@@ -512,9 +505,6 @@ bool __IsOpenIDTestOption(LPSTR lpCmdLine) //클라이언트에서 로그인이 가능하다.
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	if (strstr(lpCmdLine, "--hackshield") != 0)
-		return 0;
-
 #ifdef _DEBUG
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_CRT_DF | _CRTDBG_LEAK_CHECK_DF );
 	//_CrtSetBreakAlloc( 110247 ); 
@@ -524,16 +514,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	LocaleService_LoadConfig("locale.cfg");
 	SetDefaultCodePage(LocaleService_GetCodePage());	
-
-#ifdef XTRAP_CLIENT_ENABLE
-	if (!XTrap_Init())
-		return 0;
-#endif
-
-#ifdef USE_AHNLAB_HACKSHIELD
-	if (!HackShield_Init())
-		return 0;
-#endif
 
 #ifdef USE_NPROTECT_GAMEGUARD
 	if (!GameGuard_Init())
@@ -680,9 +660,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		MessageBox(NULL, gs_szErrorString, ApplicationStringTable_GetStringz(IDS_APP_NAME, "APP_NAME"), MB_ICONSTOP);
 
 Clean:
-#ifdef USE_AHNLAB_HACKSHIELD
-	HackShield_Shutdown();
-#endif
 	SAFE_FREE_GLOBAL(szArgv);
 
 	return 0;

@@ -45,11 +45,8 @@
 #include "monarch.h"
 #include "polymorph.h"
 #include "blend_item.h"
-#include "castle.h"
-#include "passpod.h"
 #include "ani.h"
 #include "BattleArena.h"
-#include "over9refine.h"
 #include "horsename_manager.h"
 #include "pcbang.h"
 #include "MarkManager.h"
@@ -58,10 +55,8 @@
 #include "threeway_war.h"
 #include "auth_brazil.h"
 #include "DragonLair.h"
-#include "HackShield.h"
 #include "skill_power.h"
 #include "SpeedServer.h"
-#include "XTrapManager.h"
 #include "DragonSoul.h"
 #include <boost/bind.hpp>
 
@@ -110,7 +105,6 @@ int             total_bytes_written = 0;
 BYTE		g_bLogLevel = 0;
 
 socket_t	tcp_socket = 0;
-socket_t	udp_socket = 0;
 socket_t	p2p_socket = 0;
 
 LPFDWATCH	main_fdw = NULL;
@@ -251,11 +245,6 @@ void heartbeat(LPHEART ht, int pulse)
 		else
 		{
 			DESC_MANAGER::instance().ProcessExpiredLoginKey();
-			DBManager::instance().FlushBilling();
-			/*
-			   if (!(pulse % (ht->passes_per_sec * 600)))
-			   DBManager::instance().CheckBilling();
-			 */
 		}
 
 		{
@@ -460,15 +449,10 @@ int main(int argc, char **argv)
 	CTableBySkill SkillPowerByLevel;
 	CPolymorphUtils polymorph_utils;
 	CProfiler		profiler;
-	CPasspod		passpod;
 	CBattleArena	ba;
-	COver9RefineManager	o9r;
 	SpamManager		spam_mgr;
 	CThreeWayWar	threeway_war;
 	CDragonLairManager	dl_manager;
-
-	CHackShieldManager	HSManager;
-	CXTrapManager		XTManager;
 
 	CSpeedServerManager SSManager;
 	DSManager dsManager;
@@ -515,37 +499,6 @@ int main(int argc, char **argv)
 
 	//if game server
 	if (!g_bAuthServer)
-	{
-		//hackshield
-		if (isHackShieldEnable)
-		{
-			if (!HSManager.Initialize())
-			{
-				fprintf(stderr, "Failed To Initialize HS");
-				CleanUpForEarlyExit();
-				return 0;
-			}
-		}
-
-		//xtrap
-		if(bXTrapEnabled)
-		{
-			if (!XTManager.LoadXTrapModule())
-			{
-				CleanUpForEarlyExit();
-				return 0;
-			}
-		}
-	}
-
-	// Client PackageCrypt
-
-	//TODO : make it config
-	const std::string strPackageCryptInfoDir = "package/";
-	if( !desc_manager.LoadClientPackageCryptInfo( strPackageCryptInfoDir.c_str() ) )
-	{
-		sys_err("Failed to Load ClientPackageCryptInfo File(%s)", strPackageCryptInfoDir.c_str());	
-	}
 
 #if defined (__FreeBSD__) && defined(__FILEMONITOR__)
 	PFN_FileChangeListener pPackageNotifyFunc =  &(DESC_MANAGER::NotifyClientPackageFileChanged);
@@ -560,8 +513,6 @@ int main(int argc, char **argv)
 
 	if (g_bAuthServer)
 	{
-		DBManager::instance().FlushBilling(true);
-
 		int iLimit = DBManager::instance().CountQuery() / 50;
 		int i = 0;
 
@@ -611,16 +562,6 @@ int main(int argc, char **argv)
 	quest_manager.Destroy();
 	sys_log(0, "<shutdown> Destroying building::CManager...");
 	building_manager.Destroy();
-
-	if (!g_bAuthServer)
-	{
-		if (isHackShieldEnable)
-		{
-			sys_log(0, "<shutdown> Releasing HackShield manager...");
-			HSManager.Release();
-		}
-	}
-
 	sys_log(0, "<shutdown> Flushing TrafficProfiler...");
 	trafficProfiler.Flush();
 
@@ -763,13 +704,6 @@ int start(int argc, char **argv)
 	}
 
 	
-#ifndef __UDP_BLOCK__
-	if ((udp_socket = socket_udp_bind(g_szPublicIP, mother_port)) == INVALID_SOCKET)
-	{
-		perror("socket_udp_bind: udp_socket");
-		return 0;
-	}
-#endif	
 
 	// if internal ip exists, p2p socket uses internal ip, if not use public ip
 	//if ((p2p_socket = socket_tcp_bind(*g_szInternalIP ? g_szInternalIP : g_szPublicIP, p2p_port)) == INVALID_SOCKET)
@@ -780,9 +714,6 @@ int start(int argc, char **argv)
 	}
 
 	fdwatch_add_fd(main_fdw, tcp_socket, NULL, FDW_READ, false);
-#ifndef __UDP_BLOCK__
-	fdwatch_add_fd(main_fdw, udp_socket, NULL, FDW_READ, false);
-#endif
 	fdwatch_add_fd(main_fdw, p2p_socket, NULL, FDW_READ, false);
 
 	db_clientdesc = DESC_MANAGER::instance().CreateConnectionDesc(main_fdw, db_addr, db_port, PHASE_DBCLIENT, true);
@@ -836,9 +767,6 @@ void destroy()
 
 	sys_log(0, "<shutdown> Closing sockets...");
 	socket_close(tcp_socket);
-#ifndef __UDP_BLOCK__
-	socket_close(udp_socket);
-#endif
 	socket_close(p2p_socket);
 
 	sys_log(0, "<shutdown> fdwatch_delete()...");
@@ -967,26 +895,6 @@ int io_loop(LPFDWATCH fdw)
 				fdwatch_clear_event(fdw, p2p_socket, event_idx);
 			}
 			/*
-			else if (FDW_READ == fdwatch_check_event(fdw, udp_socket, event_idx))
-			{
-				char			buf[256];
-				struct sockaddr_in	cliaddr;
-				socklen_t		socklen = sizeof(cliaddr);
-
-				int iBytesRead;
-
-				if ((iBytesRead = socket_udp_read(udp_socket, buf, 256, (struct sockaddr *) &cliaddr, &socklen)) > 0)
-				{
-					static CInputUDP s_inputUDP;
-
-					s_inputUDP.SetSockAddr(cliaddr);
-
-					int iBytesProceed;
-					s_inputUDP.Process(NULL, buf, iBytesRead, iBytesProceed);
-				}
-
-				fdwatch_clear_event(fdw, udp_socket, event_idx);
-			}
 			*/
 			continue; 
 		}

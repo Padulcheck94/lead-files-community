@@ -49,7 +49,6 @@
     <ClCompile Include="building.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="castle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="char.cpp">
@@ -65,9 +64,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="char_dragonsoul.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="char_hackshield.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="char_horse.cpp">
@@ -199,12 +195,6 @@
     <ClCompile Include="guild_war.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HackShield.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HackShield_Impl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="horse_rider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -232,7 +222,6 @@
     <ClCompile Include="input_teen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="input_udp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ip_ban.cpp">
@@ -307,7 +296,6 @@
     <ClCompile Include="motion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="over9refine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OXEvent.cpp">
@@ -323,9 +311,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="party.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="passpod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pcbang.cpp">
@@ -359,9 +344,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="questlua_building.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="questlua_danceevent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="questlua_dragonlair.cpp">
@@ -505,9 +487,6 @@
     <ClCompile Include="xmas_event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XTrapManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -570,7 +549,6 @@
     <ClInclude Include="building.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="castle.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="char.h">
@@ -678,12 +656,6 @@
     <ClInclude Include="guild_manager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="HackShield.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HackShield_Impl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="horse_rider.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -759,7 +731,6 @@
     <ClInclude Include="motion.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="over9refine.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="OXEvent.h">
@@ -778,9 +749,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="party.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="passpod.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="pcbang.h">
@@ -910,9 +878,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="xmas_event.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XTrapManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="check_server.h" />

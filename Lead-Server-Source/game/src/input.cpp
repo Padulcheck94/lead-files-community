@@ -15,12 +15,9 @@
 #include "fishing.h"
 #include "TrafficProfiler.h"
 #include "priv_manager.h"
-#include "castle.h"
 #include "dev_log.h"
-#include "HackShield_Impl.h"
 
 extern time_t get_global_time();
-extern bool g_bNoPasspod;
 
 bool IsEmptyAdminPage()
 {
@@ -286,10 +283,6 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			else
 				stResult = "YES";
 		}
-		else if (!stBuf.compare("IS_PASSPOD_UP"))
-		{
-			if (g_bNoPasspod)
-				stResult = "NO";
 			else
 				stResult = "YES";
 		}
@@ -396,15 +389,7 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 					LogManager::instance().CharLog(0, 0, 0, 1, "NOTICE", msg.c_str(), d->GetHostName());
 					BroadcastNotice(msg.c_str());
 				}
-				else if (!stBuf.compare("CLOSE_PASSPOD"))
-				{
-					g_bNoPasspod = true;
-					stResult += "CLOSE_PASSPOD";
 				}
-				else if (!stBuf.compare("OPEN_PASSPOD"))
-				{
-					g_bNoPasspod = false;
-					stResult += "OPEN_PASSPOD";
 				}
 				else if (!stBuf.compare("SHUTDOWN"))
 				{

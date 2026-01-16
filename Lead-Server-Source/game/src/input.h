@@ -11,7 +11,6 @@ enum
 	INPROC_MAIN,
 	INPROC_DEAD,
 	INPROC_DB,
-	INPROC_UDP,
 	INPROC_P2P,
 	INPROC_AUTH,
 	INPROC_TEEN,
@@ -245,10 +244,6 @@ protected:
 
 	void		SetEventFlag(const char* c_pData);
 
-	void		BillingRepair(const char * c_pData);
-	void		BillingExpire(const char * c_pData);
-	void		BillingLogin(const char * c_pData);
-	void		BillingCheck(const char * c_pData);
 	void		VCard(const char * c_pData);
 
 	void		CreateObject(const char * c_pData);
@@ -297,26 +292,6 @@ protected:
 		DWORD		m_dwHandle;
 };
 
-class CInputUDP : public CInputProcessor
-{
-	public:
-		CInputUDP();
-		virtual bool Process(LPDESC d, const void * c_pvOrig, int iBytes, int & r_iBytesProceed);
-
-		virtual BYTE GetType() { return INPROC_UDP; }
-		void		SetSockAddr(struct sockaddr_in & rSockAddr) { m_SockAddr = rSockAddr; };
-
-	protected:
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
-
-	protected:
-		void		Handshake(LPDESC lpDesc, const char * c_pData);
-		void		StateChecker(const char * c_pData);
-
-	protected:
-		struct sockaddr_in	m_SockAddr;
-		CPacketInfoUDP 		m_packetInfoUDP;
-};
 
 class CInputP2P : public CInputProcessor
 {
@@ -369,7 +344,6 @@ class CInputAuth : public CInputProcessor
 	public:
 		void		Login(LPDESC d, const char * c_pData);
 		void		LoginOpenID(LPDESC d, const char * c_pData);		//2012.07.19 OpenID : ±è¿ë¿í
-		void		PasspodAnswer(LPDESC d, const char * c_pData );
 
 };
 

@@ -1053,27 +1053,21 @@
 				>
 			</File>
 			<File
-				RelativePath="NetDatagram.cpp"
 				>
 			</File>
 			<File
-				RelativePath="NetDatagram.h"
 				>
 			</File>
 			<File
-				RelativePath="NetDatagramReceiver.cpp"
 				>
 			</File>
 			<File
-				RelativePath="NetDatagramReceiver.h"
 				>
 			</File>
 			<File
-				RelativePath="NetDatagramSender.cpp"
 				>
 			</File>
 			<File
-				RelativePath="NetDatagramSender.h"
 				>
 			</File>
 			<File

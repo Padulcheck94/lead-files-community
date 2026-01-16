@@ -1166,9 +1166,6 @@ float CInstanceBase::GetLocalTime()
 }
 
 
-void CInstanceBase::PushUDPState(DWORD dwCmdTime, const TPixelPosition& c_rkPPosDst, float fDstRot, UINT eFunc, UINT uArg)
-{
-}
 
 DWORD	ELTimer_GetServerFrameMSec();
 

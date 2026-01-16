@@ -253,10 +253,8 @@
     <ClCompile Include="PythonExceptionSender.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="PythonNetworkDatagram.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="PythonNetworkDatagramModule.cpp">
       <Filter>Network</Filter>
     </ClCompile>
     <ClCompile Include="PythonNetworkStream.cpp">
@@ -304,13 +302,7 @@
     <ClCompile Include="CheckLatestFiles.cpp">
       <Filter>Security</Filter>
     </ClCompile>
-    <ClCompile Include="Hackshield.cpp">
-      <Filter>Security</Filter>
-    </ClCompile>
     <ClCompile Include="NProtectGameGuard.cpp">
-      <Filter>Security</Filter>
-    </ClCompile>
-    <ClCompile Include="WiseLogicXTrap.cpp">
       <Filter>Security</Filter>
     </ClCompile>
     <ClCompile Include="GameType.cpp" />
@@ -454,9 +446,6 @@
     <ClInclude Include="Locale_inc_KO_DEV.h">
       <Filter>Locale</Filter>
     </ClInclude>
-    <ClInclude Include="Locale_inc_NEWCIBN.h">
-      <Filter>Locale</Filter>
-    </ClInclude>
     <ClInclude Include="Locale_inc_SG.h">
       <Filter>Locale</Filter>
     </ClInclude>
@@ -481,7 +470,6 @@
     <ClInclude Include="PythonExceptionSender.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="PythonNetworkDatagram.h">
       <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="PythonNetworkStream.h">
@@ -496,22 +484,7 @@
     <ClInclude Include="CRC32_inc.h">
       <Filter>Security</Filter>
     </ClInclude>
-    <ClInclude Include="Hackshield.h">
-      <Filter>Security</Filter>
-    </ClInclude>
-    <ClInclude Include="HackshieldLicense.h">
-      <Filter>Security</Filter>
-    </ClInclude>
-    <ClInclude Include="HackshieldLicense_metin2.h">
-      <Filter>Security</Filter>
-    </ClInclude>
-    <ClInclude Include="HackshieldLicense_metin2client.h">
-      <Filter>Security</Filter>
-    </ClInclude>
     <ClInclude Include="NProtectGameGuard.h">
-      <Filter>Security</Filter>
-    </ClInclude>
-    <ClInclude Include="WiseLogicXTrap.h">
       <Filter>Security</Filter>
     </ClInclude>
     <ClInclude Include="GameType.h" />

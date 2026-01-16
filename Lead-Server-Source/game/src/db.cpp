@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include <sstream>
-#include "../../common/billing.h"
 #include "../../common/length.h"
 
 #include "db.h"
@@ -20,38 +19,8 @@
 #include "spam.h"
 #include "auth_brazil.h"
 
-extern bool g_bNoPasspod;
 extern std::string g_stBlockDate;
 extern int openid_server;
-
-//¡ﬂ±π passpod ¿¸øÎ «‘ºˆ 
-bool CheckPasspod(const char * account)
-{
-	char szQuery[1024];
-
-	snprintf(szQuery, sizeof(szQuery), "SELECT ID FROM passpod WHERE Login='%s'", account); 
-	SQLMsg * pMsg = DBManager::instance().DirectQuery(szQuery);
- 	
-	if (!pMsg)
-	{
-		sys_log(0, "cannot get the PASSPOD");
-		delete pMsg;
-		return false;
-	}
-
-	if (pMsg->Get()->uiNumRows == 0)
-	{
-		puts(szQuery);
-		sys_log(0, "[PASSPOD]DirectQuery failed(%s)", szQuery);
-
-		delete pMsg;
-		return false;
-	}
-
-	delete pMsg;
-
-	return true;
-}
 
 
 DBManager::DBManager() : m_bIsConnect(false)
@@ -197,260 +166,8 @@ void DBManager::DeleteLoginData(CLoginData * pkLD)
 
 	sys_log(0, "DeleteLoginData %s %p", pkLD->GetLogin(), pkLD);
 
-	mapLDBilling.erase(pkLD->GetLogin());
-
 	M2_DELETE(it->second);
 	m_map_pkLoginData.erase(it);
-}
-
-void DBManager::SetBilling(DWORD dwKey, bool bOn, bool bSkipPush)
-{
-	std::map<DWORD, CLoginData *>::iterator it = m_map_pkLoginData.find(dwKey);
-
-	if (it == m_map_pkLoginData.end())
-	{
-		sys_err("cannot find login key %u", dwKey);
-		return;
-	}
-
-	CLoginData * ld = it->second;
-
-	itertype(mapLDBilling) it2 = mapLDBilling.find(ld->GetLogin());
-
-	if (it2 != mapLDBilling.end())
-		if (it2->second != ld)
-			DeleteLoginData(it2->second);
-
-	mapLDBilling.insert(std::make_pair(ld->GetLogin(), ld));
-
-	if (ld->IsBilling() && !bOn && !bSkipPush)
-		PushBilling(ld);
-
-	SendLoginPing(ld->GetLogin());
-	ld->SetBilling(bOn);
-}
-
-void DBManager::PushBilling(CLoginData * pkLD)
-{
-	TUseTime t;
-
-	t.dwUseSec = (get_dword_time() - pkLD->GetLogonTime()) / 1000;
-
-	if (t.dwUseSec <= 0)
-		return;
-
-	pkLD->SetLogonTime();
-	long lRemainSecs = pkLD->GetRemainSecs() - t.dwUseSec;
-	pkLD->SetRemainSecs(MAX(0, lRemainSecs));
-
-	t.dwLoginKey = pkLD->GetKey();
-	t.bBillType = pkLD->GetBillType();
-
-	sys_log(0, "BILLING: PUSH %s %u type %u", pkLD->GetLogin(), t.dwUseSec, t.bBillType);
-
-	if (t.bBillType == BILLING_IP_FREE || t.bBillType == BILLING_IP_TIME || t.bBillType == BILLING_IP_DAY)
-		snprintf(t.szLogin, sizeof(t.szLogin), "%u", pkLD->GetBillID());
-	else
-		strlcpy(t.szLogin, pkLD->GetLogin(), sizeof(t.szLogin));
-
-	strlcpy(t.szIP, pkLD->GetIP(), sizeof(t.szIP));
-
-	m_vec_kUseTime.push_back(t);
-}
-
-void DBManager::FlushBilling(bool bForce)
-{
-	if (bForce)
-	{
-		std::map<DWORD, CLoginData *>::iterator it = m_map_pkLoginData.begin();
-
-		while (it != m_map_pkLoginData.end())
-		{
-			CLoginData * pkLD = (it++)->second;
-
-			if (pkLD->IsBilling())    
-				PushBilling(pkLD);
-		}
-	}
-
-	if (!m_vec_kUseTime.empty())
-	{
-		DWORD dwCount = 0;
-
-		std::vector<TUseTime>::iterator it = m_vec_kUseTime.begin();
-
-		while (it != m_vec_kUseTime.end())
-		{
-			TUseTime * p = &(*(it++));
-
-			// DISABLE_OLD_BILLING_CODE
-			if (!g_bBilling)
-			{
-				++dwCount;
-				continue;
-			}
-
-			Query("INSERT GameTimeLog (login, type, logon_time, logout_time, use_time, ip, server) "
-					"VALUES('%s', %u, DATE_SUB(NOW(), INTERVAL %u SECOND), NOW(), %u, '%s', '%s')",
-					p->szLogin, p->bBillType, p->dwUseSec, p->dwUseSec, p->szIP, g_stHostname.c_str());
-			// DISABLE_OLD_BILLING_CODE_END
-
-			switch (p->bBillType)
-			{
-				case BILLING_FREE:
-				case BILLING_IP_FREE:
-					break;
-
-				case BILLING_DAY:
-					{
-						if (!bForce)
-						{
-							TUseTime * pInfo = M2_NEW TUseTime;
-							memcpy(pInfo, p, sizeof(TUseTime));
-							ReturnQuery(QID_BILLING_CHECK, 0, pInfo,
-									"SELECT UNIX_TIMESTAMP(LimitDt)-UNIX_TIMESTAMP(NOW()),LimitTime FROM GameTime WHERE UserID='%s'", p->szLogin);
-						}
-					}
-					break;
-
-				case BILLING_TIME:
-					{
-						Query("UPDATE GameTime SET LimitTime=LimitTime-%u WHERE UserID='%s'", p->dwUseSec, p->szLogin);
-
-						if (!bForce)
-						{
-							TUseTime * pInfo = M2_NEW TUseTime;
-							memcpy(pInfo, p, sizeof(TUseTime));
-							ReturnQuery(QID_BILLING_CHECK, 0, pInfo,
-									"SELECT UNIX_TIMESTAMP(LimitDt)-UNIX_TIMESTAMP(NOW()),LimitTime FROM GameTime WHERE UserID='%s'", p->szLogin);
-						}
-					}
-					break;
-
-				case BILLING_IP_DAY:
-					{
-						if (!bForce)
-						{
-							TUseTime * pInfo = M2_NEW TUseTime;
-							memcpy(pInfo, p, sizeof(TUseTime));
-							ReturnQuery(QID_BILLING_CHECK, 0, pInfo,
-									"SELECT UNIX_TIMESTAMP(LimitDt)-UNIX_TIMESTAMP(NOW()),LimitTime FROM GameTimeIP WHERE ipid=%s", p->szLogin);
-						}
-					}
-					break;
-
-				case BILLING_IP_TIME:
-					{
-						Query("UPDATE GameTimeIP SET LimitTime=LimitTime-%u WHERE ipid=%s", p->dwUseSec, p->szLogin);
-
-						if (!bForce)
-						{
-							TUseTime * pInfo = M2_NEW TUseTime;
-							memcpy(pInfo, p, sizeof(TUseTime));
-							ReturnQuery(QID_BILLING_CHECK, 0, pInfo,
-									"SELECT UNIX_TIMESTAMP(LimitDt)-UNIX_TIMESTAMP(NOW()),LimitTime FROM GameTimeIP WHERE ipid=%s", p->szLogin);
-						}
-					}
-					break;
-			}
-
-			if (!bForce && ++dwCount >= 1000)
-				break;
-		}
-
-		if (dwCount < m_vec_kUseTime.size())
-		{   
-			int nNewSize = m_vec_kUseTime.size() - dwCount;
-			memcpy(&m_vec_kUseTime[0], &m_vec_kUseTime[dwCount], sizeof(TUseTime) * nNewSize);
-			m_vec_kUseTime.resize(nNewSize);
-		}
-		else
-			m_vec_kUseTime.clear();
-
-		sys_log(0, "FLUSH_USE_TIME: count %u", dwCount);
-	}
-
-	if (m_vec_kUseTime.size() < 10240)
-	{
-		DWORD dwCurTime = get_dword_time();
-
-		std::map<DWORD, CLoginData *>::iterator it = m_map_pkLoginData.begin();
-
-		while (it != m_map_pkLoginData.end())
-		{
-			CLoginData * pkLD = (it++)->second;
-
-			if (!pkLD->IsBilling())
-				continue;
-
-			switch (pkLD->GetBillType())
-			{
-				case BILLING_IP_FREE:
-				case BILLING_FREE:
-					break;
-
-				case BILLING_IP_DAY:
-				case BILLING_DAY:
-				case BILLING_IP_TIME:
-				case BILLING_TIME:
-					if (pkLD->GetRemainSecs() < 0)
-					{
-						DWORD dwSecsConnected = (dwCurTime - pkLD->GetLogonTime()) / 1000;
-
-						if (dwSecsConnected % 10 == 0)
-							SendBillingExpire(pkLD->GetLogin(), BILLING_DAY, 0, pkLD);
-					}
-					else if (pkLD->GetRemainSecs() <= 600) // if remain seconds lower than 10 minutes
-					{
-						DWORD dwSecsConnected = (dwCurTime - pkLD->GetLogonTime()) / 1000;
-
-						if (dwSecsConnected >= 60) // 60 second cycle
-						{
-							sys_log(0, "BILLING 1 %s remain %d connected secs %u",
-									pkLD->GetLogin(), pkLD->GetRemainSecs(), dwSecsConnected);
-							PushBilling(pkLD);
-						}
-					}
-					else
-					{
-						DWORD dwSecsConnected = (dwCurTime - pkLD->GetLogonTime()) / 1000;
-
-						if (dwSecsConnected > (DWORD) (pkLD->GetRemainSecs() - 600) || dwSecsConnected >= 600)
-						{
-							sys_log(0, "BILLING 2 %s remain %d connected secs %u",
-									pkLD->GetLogin(), pkLD->GetRemainSecs(), dwSecsConnected);
-							PushBilling(pkLD);
-						}
-					}
-					break;
-			}
-		}
-	}
-
-}
-
-void DBManager::CheckBilling()
-{
-	std::vector<DWORD> vec;
-	vec.push_back(0); // ƒ´øÓ∆Æ∏¶ ¿ß«ÿ πÃ∏Æ ∫Òøˆµ–¥Ÿ.
-
-	//sys_log(0, "CheckBilling: map size %d", m_map_pkLoginData.size());
-
-	itertype(m_map_pkLoginData) it = m_map_pkLoginData.begin();
-
-	while (it != m_map_pkLoginData.end())
-	{
-		CLoginData * pkLD = (it++)->second;
-
-		if (pkLD->IsBilling())
-		{
-			sys_log(0, "BILLING: CHECK %u", pkLD->GetKey());
-			vec.push_back(pkLD->GetKey());
-		}
-	}
-
-	vec[0] = vec.size() - 1; // ∫Òøˆµ– ∞˜ø° ªÁ¿Ã¡Ó∏¶ ≥÷¥¬¥Ÿ, ªÁ¿Ã¡Ó ¿⁄Ω≈¿∫ ¡¶ø‹«ÿæﬂ «œπ«∑Œ -1
-	db_clientdesc->DBPacket(HEADER_GD_BILLING_CHECK, 0, &vec[0], sizeof(DWORD) * vec.size());
 }
 
 void DBManager::SendLoginPing(const char * c_pszLogin)
@@ -485,8 +202,6 @@ void DBManager::SendAuthLogin(LPDESC d)
 	trim_and_lower(r.login, ptod.szLogin, sizeof(ptod.szLogin));
 	strlcpy(ptod.szSocialID, r.social_id, sizeof(ptod.szSocialID));
 	ptod.dwLoginKey = d->GetLoginKey();
-	ptod.bBillType = pkLD->GetBillType();
-	ptod.dwBillID = pkLD->GetBillID();
 
 	thecore_memcpy(ptod.iPremiumTimes, pkLD->GetPremiumPtr(), sizeof(ptod.iPremiumTimes));
 	thecore_memcpy(&ptod.adwClientKey, pkLD->GetClientKey(), sizeof(DWORD) * 4);
@@ -498,151 +213,42 @@ void DBManager::SendAuthLogin(LPDESC d)
 }
 
 void DBManager::LoginPrepare(BYTE bBillType, DWORD dwBillID, long lRemainSecs, LPDESC d, DWORD * pdwClientKey, int * paiPremiumTimes)
+
 {
+
 	const TAccountTable & r = d->GetAccountTable();
+
+
 
 	CLoginData * pkLD = M2_NEW CLoginData;
 
+
+
 	pkLD->SetKey(d->GetLoginKey());
+
 	pkLD->SetLogin(r.login);
-	pkLD->SetBillType(bBillType);
-	pkLD->SetBillID(dwBillID);
-	pkLD->SetRemainSecs(lRemainSecs);
+
 	pkLD->SetIP(d->GetHostName());
+
 	pkLD->SetClientKey(pdwClientKey);
 
+
+
 	if (paiPremiumTimes)
+
 		pkLD->SetPremium(paiPremiumTimes);
+
+
 
 	InsertLoginData(pkLD);
 
 
-	if (LC_IsNewCIBN())
-	{
-		if (!g_bNoPasspod)
-		{
-			if (CheckPasspod(r.login))
-			{
-				BYTE id = HEADER_GC_REQUEST_PASSPOD;
-				d->Packet(&id, sizeof(BYTE));
-				sys_log(0, "%s request passpod", r.login);
-			}
-			else
-			{
-				SendAuthLogin(d);
 
-			}
-		}
-		else
-		{
-			SendAuthLogin(d);
-		}
-	}
-	else
-		SendAuthLogin(d);
+	SendAuthLogin(d);
+
 }
 
-bool GetGameTimeIP(MYSQL_RES * pRes, BYTE & bBillType, DWORD & dwBillID, int & seconds, const char * c_pszIP)
-{
-	if (!pRes)
-		return true;
 
-	MYSQL_ROW row = mysql_fetch_row(pRes);
-	int col = 0;
-
-	str_to_number(dwBillID, row[col++]);
-
-	int ip_start = 0;
-	str_to_number(ip_start, row[col++]);
-
-	int ip_end = 0;
-	str_to_number(ip_end, row[col++]);
-
-	int type = 0;
-	str_to_number(type, row[col++]);
-
-	str_to_number(seconds, row[col++]);
-
-	int day_seconds = 0;
-	str_to_number(day_seconds, row[col++]);
-
-	char szIP[MAX_HOST_LENGTH + 1];
-	strlcpy(szIP, c_pszIP, sizeof(szIP));
-
-	char * p = strrchr(szIP, '.');
-	++p;
-
-	int ip_postfix = 0;
-	str_to_number(ip_postfix, p);
-	int valid_ip = false;
-
-	if (ip_start <= ip_postfix && ip_end >= ip_postfix)
-		valid_ip = true;
-
-	bBillType = BILLING_NONE;
-
-	if (valid_ip)
-	{
-		if (type == -1)
-			return false;
-
-		if (type == 0)
-			bBillType = BILLING_IP_FREE;
-		else if (day_seconds > 0)
-		{
-			bBillType = BILLING_IP_DAY;
-			seconds = day_seconds;
-		}
-		else if (seconds > 0)
-			bBillType = BILLING_IP_TIME;
-	}
-
-	return true;
-}
-
-bool GetGameTime(MYSQL_RES * pRes, BYTE & bBillType, int & seconds)
-{
-	if (!pRes)
-		return true;
-
-	MYSQL_ROW row = mysql_fetch_row(pRes);
-	sys_log(1, "GetGameTime %p %p %p", row[0], row[1], row[2]);
-
-	int type = 0;
-	str_to_number(type, row[0]);
-	str_to_number(seconds, row[1]);
-	int day_seconds = 0;
-	str_to_number(day_seconds, row[2]);
-	bBillType = BILLING_NONE;
-
-	if (type == -1)
-		return false;
-	else if (type == 0)
-		bBillType = BILLING_FREE;
-	else if (day_seconds > 0)
-	{
-		bBillType = BILLING_DAY;
-		seconds = day_seconds;
-	}
-	else if (seconds > 0)
-		bBillType = BILLING_TIME;
-
-	if (!g_bBilling)
-		bBillType = BILLING_FREE;
-
-	return true;
-}
-
-void SendBillingExpire(const char * c_pszLogin, BYTE bBillType, int iSecs, CLoginData * pkLD)
-{
-	TPacketBillingExpire ptod;
-
-	strlcpy(ptod.szLogin, c_pszLogin, sizeof(ptod.szLogin));
-	ptod.bBillType = bBillType;
-	ptod.dwRemainSeconds = MAX(0, iSecs);
-	db_clientdesc->DBPacket(HEADER_GD_BILLING_EXPIRE, 0, &ptod, sizeof(TPacketBillingExpire));
-	sys_log(0, "BILLING: EXPIRE %s type %d sec %d ptr %p", c_pszLogin, bBillType, iSecs, pkLD);
-}
 
 void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 {
@@ -660,7 +266,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					M2_DELETE(pinfo);
 					break;
 				}
-				//¿ßƒ° ∫Ø∞Ê - By SeMinZ
+				//Âç†ÏèôÏòôÏπò Âç†ÏèôÏòôÂç†ÏèôÏòô - By SeMinZ
 				d->SetLogin(pinfo->login);
 
 				sys_log(0, "QID_AUTH_LOGIN: START %u %p", qi->dwIdent, get_pointer(d));
@@ -669,7 +275,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 				{
 					if (true == LC_IsBrazil())
 					{
-						// ∞Ë¡§¿Ã æ¯¿∏∏È ªı∑Œ ∏∏µÈæÓæﬂ «—¥Ÿ
+						// Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏãºÎåêÏòô
 						ReturnQuery(QID_BRAZIL_CREATE_ID, qi->dwIdent, pinfo,
 								"INSERT INTO account(login, password, social_id, create_time) "
 								"VALUES('%s', password('%s'), '0000000', NOW()) ;",
@@ -689,76 +295,44 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
 					int col = 0;
 
-					// PASSWORD('%s'), password, social_id, id, status
+					// PASSWORD('%s'), password, securitycode, social_id, id, status
 					char szEncrytPassword[45 + 1];
 					char szPassword[45 + 1];
-					char szSocialID[SOCIAL_ID_MAX_LEN + 1];
+						char szSocialID[SOCIAL_ID_MAX_LEN + 1];
 					char szStatus[ACCOUNT_STATUS_MAX_LEN + 1];
 					DWORD dwID = 0;
 
-					if (!row[col]) 
-					{ 
-						sys_err("error column %d", col);
-						M2_DELETE(pinfo);
-					   	break; 
-					}
+					if (!row[col])
+				{
+					col++;
+				}
+				else
+				{
+					col++;
+				}
 					
 					strlcpy(szEncrytPassword, row[col++], sizeof(szEncrytPassword));
 
-					if (!row[col]) 
-					{
-					   	sys_err("error column %d", col);
-						M2_DELETE(pinfo);
-					   	break;
-				   	}
-				
-					strlcpy(szPassword, row[col++], sizeof(szPassword));
-
 					if (!row[col])
-				   	{ 
-						sys_err("error column %d", col); 
-						M2_DELETE(pinfo);
-						break;
-				   	}
-
-					strlcpy(szSocialID, row[col++], sizeof(szSocialID));
-
-					if (!row[col])
-				   	{
-					   	sys_err("error column %d", col);
-						M2_DELETE(pinfo);
-					   	break;
-				   	}
-				
-					str_to_number(dwID, row[col++]);
-					
-					if (!row[col]) 
+				{
+					col++;
+				}
+				else
+				{
+					col++;
+				}
+					else
 					{
-					   	sys_err("error column %d", col); 
-						M2_DELETE(pinfo);
-						break;
-				   	}
-
-					strlcpy(szStatus, row[col++], sizeof(szStatus));
-
-					BYTE bNotAvail = 0;
-					str_to_number(bNotAvail, row[col++]);
-
-					int aiPremiumTimes[PREMIUM_MAX_NUM];
-					memset(&aiPremiumTimes, 0, sizeof(aiPremiumTimes));
-
-					char szCreateDate[256] = "00000000";
-
-					if (!g_iUseLocale)
-					{
-						str_to_number(aiPremiumTimes[PREMIUM_EXP], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_ITEM], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_SAFEBOX], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_AUTOLOOT], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_FISH_MIND], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_MARRIAGE_FAST], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_GOLD], row[col++]);
 					}
+
+					if (!row[col])
+				{
+					col++;
+				}
+				else
+				{
+					col++;
+				}
 					else
 					{
 						str_to_number(aiPremiumTimes[PREMIUM_EXP], row[col++]);
@@ -788,7 +362,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 					if (true == LC_IsBrazil())
 					{
-						nPasswordDiff = 0; // ∫Í∂Û¡˙ πˆ¿¸ø°º≠¥¬ ∫Òπ–π¯»£ √º≈©∏¶ «œ¡ˆ æ ¥¬¥Ÿ.
+						nPasswordDiff = 0; // Âç†ÏèôÏòôÂç†ÏèôÏòôÂç† Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÊ©òÂç†Ïã´ Ï≤¥ÌÅ¨Âç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòô Âç†Ïã≠ÎäîÎåêÏòô.
 					}
 
 					if (nPasswordDiff)
@@ -819,7 +393,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					{
 						if (LC_IsEurope())
 						{
-							//stBlockData >= 0 == ≥Ø¬•∞° BlockDate ∫∏¥Ÿ πÃ∑° 
+							//stBlockData >= 0 == Âç†ÏèôÏòôÏßúÂç†ÏèôÏòô BlockDate Âç†ÏèôÏòôÂç†ÏèôÏòô Âç†Ïã±Î§ÑÏòô 
 							if (strncmp(szCreateDate, g_stBlockDate.c_str(), 8) >= 0)
 							{
 								LoginFailure(d, "BLKLOGIN");
@@ -841,19 +415,16 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						strlcpy(r.social_id, szSocialID, sizeof(r.social_id));
 						DESC_MANAGER::instance().ConnectAccount(r.login, d);
 
-						if (!g_bBilling)
-						{
-							LoginPrepare(BILLING_FREE, 0, 0, d, pinfo->adwClientKey, aiPremiumTimes);
-							//By SeMinZ
-							M2_DELETE(pinfo);
-							break;
-						}
 
 						sys_log(0, "QID_AUTH_LOGIN: SUCCESS %s", pinfo->login);
+
+						LoginPrepare(0, 0, 0, d, pinfo->adwClientKey, aiPremiumTimes);
+						M2_DELETE(pinfo);
 					}
 				}
 			}
 			break;
+
 		case QID_AUTH_LOGIN_OPENID:
 			{
 				TPacketCGLogin3 * pinfo = (TPacketCGLogin3 *) qi->pvData;
@@ -864,7 +435,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					M2_DELETE(pinfo);
 					break;
 				}
-				//¿ßƒ° ∫Ø∞Ê - By SeMinZ
+				//Âç†ÏèôÏòôÏπò Âç†ÏèôÏòôÂç†ÏèôÏòô - By SeMinZ
 				d->SetLogin(pinfo->login);
 
 				sys_log(0, "QID_AUTH_LOGIN_OPENID: START %u %p", qi->dwIdent, get_pointer(d));
@@ -873,7 +444,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 				{
 					if (true == LC_IsBrazil())
 					{
-						// ∞Ë¡§¿Ã æ¯¿∏∏È ªı∑Œ ∏∏µÈæÓæﬂ «—¥Ÿ
+						// Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏãºÎåêÏòô
 						ReturnQuery(QID_BRAZIL_CREATE_ID, qi->dwIdent, pinfo,
 								"INSERT INTO account(login, password, social_id, create_time) "
 								"VALUES('%s', password('%s'), '0000000', NOW()) ;",
@@ -882,7 +453,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						sys_log(0, "[AUTH_BRAZIL] : Create A new AccountID From OnGame");
 					} else if (true == LC_IsJapan())
 					{
-						// ∞Ë¡§¿Ã æ¯¿∏∏È ªı∑Œ ∏∏µÈæÓæﬂ «—¥Ÿ
+						// Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏãºÎåêÏòô
 						ReturnQuery(QID_JAPAN_CREATE_ID, qi->dwIdent, pinfo,
 								"INSERT INTO account(login, password, social_id, create_time) "
 								"VALUES('%s', password('%s'), '0000000', NOW()) ;",
@@ -902,76 +473,44 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
 					int col = 0;
 
-					// PASSWORD('%s'), password, social_id, id, status
+					// PASSWORD('%s'), password, securitycode, social_id, id, status
 					char szEncrytPassword[45 + 1];
 					char szPassword[45 + 1];
-					char szSocialID[SOCIAL_ID_MAX_LEN + 1];
+						char szSocialID[SOCIAL_ID_MAX_LEN + 1];
 					char szStatus[ACCOUNT_STATUS_MAX_LEN + 1];
 					DWORD dwID = 0;
 
-					if (!row[col]) 
-					{ 
-						sys_err("error column %d", col);
-						M2_DELETE(pinfo);
-					   	break; 
-					}
+					if (!row[col])
+				{
+					col++;
+				}
+				else
+				{
+					col++;
+				}
 					
 					strlcpy(szEncrytPassword, row[col++], sizeof(szEncrytPassword));
 
-					if (!row[col]) 
-					{
-					   	sys_err("error column %d", col);
-						M2_DELETE(pinfo);
-					   	break;
-				   	}
-				
-					strlcpy(szPassword, row[col++], sizeof(szPassword));
-
 					if (!row[col])
-				   	{ 
-						sys_err("error column %d", col); 
-						M2_DELETE(pinfo);
-						break;
-				   	}
-
-					strlcpy(szSocialID, row[col++], sizeof(szSocialID));
-
-					if (!row[col])
-				   	{
-					   	sys_err("error column %d", col);
-						M2_DELETE(pinfo);
-					   	break;
-				   	}
-				
-					str_to_number(dwID, row[col++]);
-					
-					if (!row[col]) 
+				{
+					col++;
+				}
+				else
+				{
+					col++;
+				}
+					else
 					{
-					   	sys_err("error column %d", col); 
-						M2_DELETE(pinfo);
-						break;
-				   	}
-
-					strlcpy(szStatus, row[col++], sizeof(szStatus));
-
-					BYTE bNotAvail = 0;
-					str_to_number(bNotAvail, row[col++]);
-
-					int aiPremiumTimes[PREMIUM_MAX_NUM];
-					memset(&aiPremiumTimes, 0, sizeof(aiPremiumTimes));
-
-					char szCreateDate[256] = "00000000";
-
-					if (!g_iUseLocale)
-					{
-						str_to_number(aiPremiumTimes[PREMIUM_EXP], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_ITEM], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_SAFEBOX], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_AUTOLOOT], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_FISH_MIND], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_MARRIAGE_FAST], row[col++]);
-						str_to_number(aiPremiumTimes[PREMIUM_GOLD], row[col++]);
 					}
+
+					if (!row[col])
+				{
+					col++;
+				}
+				else
+				{
+					col++;
+				}
 					else
 					{
 						str_to_number(aiPremiumTimes[PREMIUM_EXP], row[col++]);
@@ -1001,10 +540,10 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 					if (true == LC_IsBrazil())
 					{
-						nPasswordDiff = 0; // ∫Í∂Û¡˙ πˆ¿¸ø°º≠¥¬ ∫Òπ–π¯»£ √º≈©∏¶ «œ¡ˆ æ ¥¬¥Ÿ.
+						nPasswordDiff = 0; // Âç†ÏèôÏòôÂç†ÏèôÏòôÂç† Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÊ©òÂç†Ïã´ Ï≤¥ÌÅ¨Âç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòô Âç†Ïã≠ÎäîÎåêÏòô.
 					}
 
-					//OpenID : OpenID ¿« ∞ÊøÏ, ∫Òπ–π¯»£ √º≈©∏¶ «œ¡ˆ æ ¥¬¥Ÿ.
+					//OpenID : OpenID Âç†ÏèôÏòô Âç†ÏèôÏòôÂç†, Âç†ÏèôÏòôÊ©òÂç†Ïã´ Ï≤¥ÌÅ¨Âç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòô Âç†Ïã≠ÎäîÎåêÏòô.
 					if (openid_server)
 					{
 						nPasswordDiff = 0;
@@ -1038,7 +577,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					{
 						if (LC_IsEurope())
 						{
-							//stBlockData >= 0 == ≥Ø¬•∞° BlockDate ∫∏¥Ÿ πÃ∑° 
+							//stBlockData >= 0 == Âç†ÏèôÏòôÏßúÂç†ÏèôÏòô BlockDate Âç†ÏèôÏòôÂç†ÏèôÏòô Âç†Ïã±Î§ÑÏòô 
 							if (strncmp(szCreateDate, g_stBlockDate.c_str(), 8) >= 0)
 							{
 								LoginFailure(d, "BLKLOGIN");
@@ -1060,119 +599,9 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						strlcpy(r.social_id, szSocialID, sizeof(r.social_id));
 						DESC_MANAGER::instance().ConnectAccount(r.login, d);
 
-						if (!g_bBilling)
-						{
-							LoginPrepare(BILLING_FREE, 0, 0, d, pinfo->adwClientKey, aiPremiumTimes);
-							//By SeMinZ
-							M2_DELETE(pinfo);
-							break;
-						}
-
 						sys_log(0, "QID_AUTH_LOGIN_OPENID: SUCCESS %s", pinfo->login);
 					}
 				}
-			}
-			break;
-
-		case QID_BILLING_GET_TIME:
-			{
-				TPacketCGLogin3 * pinfo = (TPacketCGLogin3 *) qi->pvData;
-				LPDESC d = DESC_MANAGER::instance().FindByLoginKey(qi->dwIdent);
-
-				sys_log(0, "QID_BILLING_GET_TIME: START ident %u d %p", qi->dwIdent, get_pointer(d));
-
-				if (d)
-				{
-					if (pMsg->Get()->uiNumRows == 0)
-					{
-						if (g_bBilling)
-							LoginFailure(d, "NOBILL");
-						else
-							LoginPrepare(BILLING_FREE, 0, 0, d, pinfo->adwClientKey);
-					}
-					else
-					{
-						int seconds = 0;
-						BYTE bBillType = BILLING_NONE;
-
-						if (!GetGameTime(pMsg->Get()->pSQLResult, bBillType, seconds))
-						{
-							sys_log(0, "QID_BILLING_GET_TIME: BLOCK");
-							LoginFailure(d, "BLOCK");
-						}
-						else if (bBillType == BILLING_NONE)
-						{
-							LoginFailure(d, "NOBILL");
-							sys_log(0, "QID_BILLING_GET_TIME: NO TIME");
-						}
-						else
-						{
-							LoginPrepare(bBillType, 0, seconds, d, pinfo->adwClientKey);
-							sys_log(0, "QID_BILLING_GET_TIME: SUCCESS");
-						}
-					}
-				}
-				M2_DELETE(pinfo);
-			}
-			break;
-
-		case QID_BILLING_CHECK:
-			{
-				TUseTime * pinfo = (TUseTime *) qi->pvData;
-				int iRemainSecs = 0;
-
-				CLoginData * pkLD = NULL;
-
-				if (pMsg->Get()->uiNumRows > 0)
-				{
-					MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
-					
-					int iLimitDt = 0;
-					str_to_number(iLimitDt, row[0]);
-
-					int iLimitTime = 0;
-					str_to_number(iLimitTime, row[1]);
-
-					pkLD = GetLoginData(pinfo->dwLoginKey);
-
-					if (pkLD)
-					{
-						switch (pkLD->GetBillType())
-						{
-							case BILLING_TIME:
-								if (iLimitTime <= 600 && iLimitDt > 0)
-								{
-									iRemainSecs = iLimitDt;
-									pkLD->SetBillType(BILLING_DAY);
-									pinfo->bBillType = BILLING_DAY;
-								}
-								else
-									iRemainSecs = iLimitTime;
-								break;
-
-							case BILLING_IP_TIME:
-								if (iLimitTime <= 600 && iLimitDt > 0)
-								{
-									iRemainSecs = iLimitDt;
-									pkLD->SetBillType(BILLING_IP_DAY);
-									pinfo->bBillType = BILLING_IP_DAY;
-								}
-								else
-									iRemainSecs = iLimitTime;
-								break;
-
-							case BILLING_DAY:
-							case BILLING_IP_DAY:
-								iRemainSecs = iLimitDt;
-								break;
-						}
-
-						pkLD->SetRemainSecs(iRemainSecs);
-					}
-				}
-
-				SendBillingExpire(pinfo->szLogin, pinfo->bBillType, MAX(0, iRemainSecs), pkLD);
-				M2_DELETE(pinfo);
 			}
 			break;
 
@@ -1239,7 +668,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						if (pkItem)
 						{
 							sys_log(0, "GIVE LOTTO SUCCESS TO %s (pid %u)", ch->GetName(), qi->dwIdent);
-							//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("æ∆¿Ã≈€ »πµÊ: %s"), pkItem->GetName());
+							//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô ÌöçÂç†ÏèôÏòô: %s"), pkItem->GetName());
 
 							pkItem->SetSocket(0, pMsg->Get()->uiInsertID);
 							pkItem->SetSocket(1, pdw[2]);
@@ -1363,7 +792,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					sys_log(0, "[AUTH_BRAZIL] : Succeed to create a new account %s", pinfo->login) ;
 
 					ReturnQuery(QID_AUTH_LOGIN, qi->dwIdent, pinfo,
-							"SELECT PASSWORD('%s'),password,social_id,id,status,availDt - NOW() > 0,"
+							"SELECT PASSWORD('%s'),password,securitycode,social_id,id,status,availDt - NOW() > 0,"
 							"UNIX_TIMESTAMP(silver_expire),"
 							"UNIX_TIMESTAMP(gold_expire),"
 							"UNIX_TIMESTAMP(safebox_expire),"
@@ -1394,7 +823,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					sys_log(0, "[AUTH_JAPAN] : Succeed to create a new account %s", pinfo->login) ;
 
 					ReturnQuery(QID_AUTH_LOGIN_OPENID, qi->dwIdent, pinfo,
-							"SELECT PASSWORD('%s'),password,social_id,id,status,availDt - NOW() > 0,"
+							"SELECT PASSWORD('%s'),password,securitycode,social_id,id,status,availDt - NOW() > 0,"
 							"UNIX_TIMESTAMP(silver_expire),"
 							"UNIX_TIMESTAMP(gold_expire),"
 							"UNIX_TIMESTAMP(safebox_expire),"
@@ -1459,7 +888,7 @@ void VCardUse(LPCHARACTER CardOwner, LPCHARACTER CardTaker, LPITEM item)
 
 	db_clientdesc->DBPacket(HEADER_GD_VCARD, 0, &p, sizeof(TPacketGDVCard));
 
-	CardTaker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d∫–¿« ∞·¡¶Ω√∞£¿Ã √ﬂ∞° µ«æ˙Ω¿¥œ¥Ÿ. (∞·¡¶π¯»£ %d)"), item->GetSocket(1) / 60, item->GetSocket(0));
+	CardTaker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏãúÍ≥§ÏòôÂç†ÏèôÏòô Âç†Ïå©Í≥§Ïòô Âç†Ïã§ÏñµÏòôÂç†ÏèôÏòôÂç†ÏãπÎåêÏòô. (Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòôÌò∏ %d)"), item->GetSocket(1) / 60, item->GetSocket(0));
 
 	LogManager::instance().VCardLog(p.dwID, CardTaker->GetX(), CardTaker->GetY(), g_stHostname.c_str(),
 			CardOwner->GetName(), CardOwner->GetDesc()->GetHostName(),
@@ -1470,12 +899,13 @@ void VCardUse(LPCHARACTER CardOwner, LPCHARACTER CardTaker, LPITEM item)
 	sys_log(0, "VCARD_TAKE: %u %s -> %s", p.dwID, CardOwner->GetName(), CardTaker->GetName());
 }
 
-void DBManager::StopAllBilling()
+void DBManager::RequestBlockException(const char *login, int cmd)
 {
-	for (itertype(m_map_pkLoginData) it = m_map_pkLoginData.begin(); it != m_map_pkLoginData.end(); ++it)
-	{
-		SetBilling(it->first, false);
-	}
+	TPacketBlockException packet;
+
+	packet.cmd = cmd;
+	strlcpy(packet.login, login, sizeof(packet.login));
+	db_clientdesc->DBPacket(HEADER_GD_BLOCK_EXCEPTION, 0, &packet, sizeof(packet));
 }
 
 size_t DBManager::EscapeString(char* dst, size_t dstSize, const char *src, size_t srcSize)
@@ -1586,7 +1016,7 @@ enum EAccountQID
 	QID_SPAM_DB,
 };
 
-// 10∫–∏∂¥Ÿ ∏Æ∑ŒµÂ
+// 10Âç†ÏãªÎ™åÏòôÂç†ÏèôÏòô Âç†ÏèôÏòôÂç†Ïã∏Îì∏Ïòô
 static LPEVENT s_pkReloadSpamEvent = NULL;
 
 EVENTINFO(reload_spam_event_info)

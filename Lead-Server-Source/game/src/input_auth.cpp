@@ -5,7 +5,6 @@
 #include "desc_client.h"
 #include "desc_manager.h"
 #include "protocol.h"
-#include "passpod.h"
 #include "locale_service.h"
 #include "auth_brazil.h"
 #include "db.h"
@@ -25,11 +24,11 @@ bool FN_IS_VALID_LOGIN_STRING(const char *str)
 
 	for (tmp = str; *tmp; ++tmp)
 	{
-		// ¾ËÆÄºª°ú ¼öÀÚ¸¸ Çã¿ë
+		// ì•ŒíŒŒë²³ê³¼ ìˆ˜ìžë§Œ í—ˆìš©
 		if (isdigit(*tmp) || isalpha(*tmp))
 			continue;
 
-		// Ä³³ª´Ù´Â ¸î¸î Æ¯¼ö¹®ÀÚ Çã¿ë
+		// ìºë‚˜ë‹¤ëŠ” ëª‡ëª‡ íŠ¹ìˆ˜ë¬¸ìž í—ˆìš©
 		if (LC_IsCanada())
 		{
 			switch (*tmp)
@@ -116,7 +115,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 		return;
 	}
 
-	// string ¹«°á¼ºÀ» À§ÇØ º¹»ç
+	// string ë¬´ê²°ì„±ì„ ìœ„í•´ ë³µì‚¬
 	char login[LOGIN_MAX_LEN + 1];
 	trim_and_lower(pinfo->login, login, sizeof(login));
 
@@ -231,13 +230,13 @@ void CInputAuth::LoginOpenID(LPDESC d, const char * c_pData)
 	//OpenID test code.
 	TPacketCGLogin5 *tempInfo1 = (TPacketCGLogin5 *)c_pData;
 
-	//ÀÏº» À¥ ¼­¹ö¿¡ ÀÎÁõÅ° È®ÀÎ ¿äÃ»À» º¸³½´Ù.
+	//ì¼ë³¸ ì›¹ ì„œë²„ì— ì¸ì¦í‚¤ í™•ì¸ ìš”ì²­ì„ ë³´ë‚¸ë‹¤.
 	char* authKey = tempInfo1->authKey;
 	char returnID[LOGIN_MAX_LEN + 1] = {0};
 
 	int test_url_get_protocol = auth_OpenID(authKey, inet_ntoa(d->GetAddr().sin_addr), returnID);
 
-	//ÀÎÁõ ½ÇÆÐ. ¿¡·¯ Ã³¸®
+	//ì¸ì¦ ì‹¤íŒ¨. ì—ëŸ¬ ì²˜ë¦¬
 	if (0!=test_url_get_protocol)
 	{
 		LoginFailure(d, "OpenID Fail");
@@ -259,7 +258,7 @@ void CInputAuth::LoginOpenID(LPDESC d, const char * c_pData)
 		return;
 	}
 
-	// string ¹«°á¼ºÀ» À§ÇØ º¹»ç
+	// string ë¬´ê²°ì„±ì„ ìœ„í•´ ë³µì‚¬
 	char login[LOGIN_MAX_LEN + 1];
 	trim_and_lower(pinfo->login, login, sizeof(login));
 
@@ -436,7 +435,7 @@ int CInputAuth::auth_OpenID(const char *authKey, const char *ipAddr, char *rID)
 	    return 3;
 	}
 
-	//°á°ú°ª ÆÄ½Ì
+	//ê²°ê³¼ê°’ íŒŒì‹±
 	char buffer[1024];
 	strcpy(buffer, reply);
 
@@ -461,7 +460,7 @@ int CInputAuth::auth_OpenID(const char *authKey, const char *ipAddr, char *rID)
 		return 4;
 	}
 
-	if (0 != strcmp("OK", success))		//¿¡·¯ Ã³¸®
+	if (0 != strcmp("OK", success))		//ì—ëŸ¬ ì²˜ë¦¬
 	{
 		int returnNumber = 0;
 		str_to_number(returnNumber, id);
@@ -524,7 +523,7 @@ int CInputAuth::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			Login(d, c_pData);
 			break;
 
-		//2012.07.19 OpenID : ±è¿ë¿í
+		//2012.07.19 OpenID : ê¹€ìš©ìš±
 		case HEADER_CG_LOGIN5_OPENID:
 			if (openid_server)
 				LoginOpenID(d, c_pData);
@@ -532,9 +531,6 @@ int CInputAuth::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 				sys_err("HEADER_CG_LOGIN5_OPENID : wrong client access");
 			break;
 
-		case HEADER_CG_PASSPOD_ANSWER:
-			PasspodAnswer(d, c_pData);
-			break;
 
 		case HEADER_CG_HANDSHAKE:
 			break;
@@ -547,47 +543,3 @@ int CInputAuth::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 	return iExtraLen;
 }
 
-void CInputAuth::PasspodAnswer(LPDESC d, const char * c_pData)
-{
-
-	if (!g_bAuthServer)
-	{
-		sys_err ("CInputAuth class is not for game server. IP %s might be a hacker.", 
-			inet_ntoa(d->GetAddr().sin_addr));
-		d->DelayedDisconnect(5);		
-		return;
-	}
-
-	TPacketCGPasspod * packet = (TPacketCGPasspod*)c_pData;
-
-	RequestConfirmPasspod Confirm;
-
-	memcpy(Confirm.passpod, packet->szAnswer, MAX_PASSPOD + 1);
-	memcpy(Confirm.login, d->GetAccountTable().login, LOGIN_MAX_LEN + 1);
-	
-
-	if (!d->GetAccountTable().id)
-	{
-		sys_err("HEADER_CG_PASSPOD_ANSWER received to desc with no account table binded");
-		return;
-	}   
-
-	int ret_code = 1;
-	sys_log(0, "Passpod start %s %s", d->GetAccountTable().login, packet->szAnswer);
-	ret_code = CPasspod::instance().ConfirmPasspod(d->GetAccountTable().login, packet->szAnswer);
-	
-	if (ret_code != 0)
-	{
-		sys_log(0, "PASSPOD: wrong answer: %s ret_code %d", d->GetAccountTable().login, ret_code);
-	
-		LoginFailure(d, ERR_MESSAGE[ret_code]);
-	}
-	else
-	{
-		sys_log(0, "PASSPOD: success: %s", d->GetAccountTable().login);
-		DBManager::instance().SendAuthLogin(d);
-	}
-//	g_PasspodDesc->DBPacket(HEADER_GP_CONFIRM_PASSPOD,  0, &Confirm, sizeof(Confirm));
-
-//	sys_log(0, "PASSPOD %s %d", Confirm.login, Confirm.passpod);	
-}

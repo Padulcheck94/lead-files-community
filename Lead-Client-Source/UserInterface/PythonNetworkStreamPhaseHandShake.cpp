@@ -3,13 +3,6 @@
 #include "PythonApplication.h"
 #include "Packet.h"
 #include "../eterpack/EterPackManager.h"
-#include "Hackshield.h"
-#include "WiseLogicXTrap.h"
-
-#ifdef USE_AHNLAB_HACKSHIELD
-#include METIN2HS_INCLUDE_HSHIELD
-#endif
-
 // HandShake ---------------------------------------------------------------------------
 void CPythonNetworkStream::HandShakePhase()
 {
@@ -25,16 +18,6 @@ void CPythonNetworkStream::HandShakePhase()
 				return;
 			break;
 
-		case HEADER_GC_BINDUDP:
-			{
-				TPacketGCBindUDP BindUDP;
-				
-				if (!Recv(sizeof(TPacketGCBindUDP), &BindUDP))
-					return;
-
-				return;
-			}
-			break;
 
 		case HEADER_GC_HANDSHAKE:
 			{
@@ -265,67 +248,4 @@ bool CPythonNetworkStream::RecvKeyAgreementCompletedPacket()
 }
 #endif // _IMPROVED_PACKET_ENCRYPTION_
 
-bool CPythonNetworkStream::RecvHSCheckRequest()
-{
-	TPacketHSCheck packet;
 
-	if (!Recv(sizeof(packet), &packet))
-	{
-		TraceError("HShield: Recv failed");
-
-		return false;
-	}
-
-#if defined(USE_AHNLAB_HACKSHIELD) || defined(LOCALE_SERVICE_GLOBAL)
-	TPacketHSCheck pack_ret;
-	memset(&pack_ret, 0, sizeof(pack_ret));
-	pack_ret.bHeader = HEADER_CG_HS_ACK;
-
-#if defined(USE_AHNLAB_HACKSHIELD)
-	unsigned long ret = _AhnHS_MakeResponse( packet.Req.byBuffer, packet.Req.nLength, &pack_ret.Req );
-
-	if (ERROR_SUCCESS != ret)
-	{
-		TraceError("HShield: _AhnHS_MakeResponse return error(%u)", ret);
-
-		return false;
-	}
-#endif
-
-	if (!Send(sizeof(pack_ret), &pack_ret))
-	{
-		TraceError("HShield: Send failed");
-
-		return false;
-	}
-
-	return true;
-#else
-	return false;
-#endif
-}
-
-bool CPythonNetworkStream::RecvXTrapVerifyRequest()
-{
-	TPacketXTrapCSVerify packet;
-
-	if (!Recv(sizeof(packet), &packet))
-	{
-		TraceError("XTrap: Recv failed");
-
-		return false;
-	}
-
-	TPacketXTrapCSVerify packet_res;
-	packet_res.bHeader = HEADER_CG_XTRAP_ACK;
-
-	XTrap_ValidateCheckStream( packet.bPacketData, packet_res.bPacketData );
-
-	if (!Send(sizeof(packet_res), &packet_res))
-	{
-		TraceError("XTrap: Send failed");
-		return false;
-	}
-
-	return true;
-}

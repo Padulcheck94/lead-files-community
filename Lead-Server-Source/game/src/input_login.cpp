@@ -29,8 +29,6 @@
 #include "log.h"
 #include "horsename_manager.h"
 #include "MarkManager.h"
-#include "HackShield.h"
-#include "XTrapManager.h"
 
 static void _send_bonus_info(LPCHARACTER ch)
 {
@@ -64,23 +62,6 @@ static void _send_bonus_info(LPCHARACTER ch)
 		ch->ChatPacket(CHAT_TYPE_NOTICE, 
 				LC_TEXT("경험치 %d%% 추가 획득 이벤트 중입니다."), exp_bonus);
 	}
-}
-
-static bool FN_is_battle_zone(LPCHARACTER ch)
-{
-	switch (ch->GetMapIndex())
-	{
-		case 1:         // 신수 1차 마을
-		case 2:         // 신수 2차 마을
-		case 21:        // 천조 1차 마을
-		case 23:        // 천조 2차 마을
-		case 41:        // 진노 1차 마을
-		case 43:        // 진노 2차 마을
-		case 113:       // OX 맵
-			return false;
-	}
-
-	return true;
 }
 
 void CInputLogin::Login(LPDESC d, const char * data)
@@ -780,17 +761,6 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		if (pid != 0 && CHorseNameManager::instance().GetHorseName(pid) == NULL)
 			db_clientdesc->DBPacket(HEADER_GD_REQ_HORSE_NAME, 0, &pid, sizeof(DWORD));
 	}
-
-	// 중립맵에 들어갔을때 안내하기
-	if (g_noticeBattleZone)
-	{
-		if (FN_is_battle_zone(ch))
-		{
-			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("이 맵에선 강제적인 대전이 있을수 도 있습니다."));
-			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("이 조항에 동의하지 않을시"));
-			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("본인의 주성 및 부성으로 돌아가시기 바랍니다."));
-		}
-	}
 }
 
 void CInputLogin::Empire(LPDESC d, const char * c_pData)
@@ -1081,20 +1051,6 @@ int CInputLogin::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_CG_CLIENT_VERSION2:
 			Version(d->GetCharacter(), c_pData);
-			break;
-
-		case HEADER_CG_HS_ACK:
-			if (isHackShieldEnable)
-			{
-				CHackShieldManager::instance().VerifyAck(d->GetCharacter(), c_pData);
-			}
-			break;
-
-		case HEADER_CG_XTRAP_ACK:
-			{
-				TPacketXTrapCSVerify* p = reinterpret_cast<TPacketXTrapCSVerify*>((void*)c_pData);
-				CXTrapManager::instance().Verify_CSStep3(d->GetCharacter(), p->bPacketData);
-			}
 			break;
 
 		default:

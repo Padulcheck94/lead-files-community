@@ -45,7 +45,6 @@
 #include "mob_manager.h"
 #include "mining.h"
 #include "monarch.h"
-#include "castle.h"
 #include "arena.h"
 #include "dev_log.h"
 #include "horsename_manager.h"
@@ -53,9 +52,7 @@
 #include "gm.h"
 #include "map_location.h"
 #include "BlueDragon_Binder.h"
-#include "HackShield.h"
 #include "skill_power.h"
-#include "XTrapManager.h"
 #include "buff_on_attributes.h"
 
 #ifdef __PET_SYSTEM__
@@ -358,9 +355,6 @@ void CHARACTER::Initialize()
 
 	m_dwLastGoldDropTime = 0;
 
-	m_HackShieldCheckEvent = NULL;
-	m_HackShieldCheckMode = false;
-
 	m_bIsLoadedAffect = false;
 	cannot_dead = false;
 
@@ -427,14 +421,6 @@ void CHARACTER::Destroy()
 
 	if (GetRider())
 		GetRider()->ClearHorseInfo();
-
-	if( IsPC() )
-	{
-		if (isHackShieldEnable)
-		{
-			CHackShieldManager::instance().DeleteClientHandle(GetPlayerID());
-		}
-	}
 
 	if (GetDesc())
 	{
@@ -527,8 +513,6 @@ void CHARACTER::Destroy()
 	// MINING
 	event_cancel(&m_pkMiningEvent);
 	// END_OF_MINING
-
-	StopHackShieldCheckCycle();
 
 	for (itertype(m_mapMobSkillEvent) it = m_mapMobSkillEvent.begin(); it != m_mapMobSkillEvent.end(); ++it)
 	{
@@ -1406,8 +1390,6 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 		GetDesc()->BindCharacter(NULL);
 //		BindDesc(NULL);
 	}
-
-	CXTrapManager::instance().DestroyClientSession(this);
 
 	M2_DESTROY_CHARACTER(this);
 }
@@ -5080,10 +5062,6 @@ void CHARACTER::SetTarget(LPCHARACTER pkChrTarget)
 	if (m_pkChrTarget == pkChrTarget)
 		return;
 
-	// CASTLE
-	if (IS_CASTLE_MAP(GetMapIndex()) && !IsGM())
-		return;
-	// CASTLE
 
 	if (m_pkChrTarget)
 		m_pkChrTarget->m_set_pkChrTargetedBy.erase(this);

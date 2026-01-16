@@ -331,11 +331,9 @@
 				>
 			</File>
 			<File
-				RelativePath=".\castle.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\castle.h"
 				>
 			</File>
 			<File
@@ -360,10 +358,6 @@
 			</File>
 			<File
 				RelativePath=".\char_dragonsoul.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\char_hackshield.cpp"
 				>
 			</File>
 			<File
@@ -675,22 +669,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\HackShield.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HackShield.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HackShield_Impl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HackShield_Impl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\horse_rider.cpp"
 				>
 			</File>
@@ -743,7 +721,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\input_udp.cpp"
 				>
 			</File>
 			<File
@@ -887,14 +864,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\matrix_card.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\matrix_card.h"
-				>
-			</File>
-			<File
 				RelativePath=".\messenger_manager.cpp"
 				>
 			</File>
@@ -943,11 +912,9 @@
 				>
 			</File>
 			<File
-				RelativePath=".\over9refine.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\over9refine.h"
 				>
 			</File>
 			<File
@@ -992,14 +959,6 @@
 			</File>
 			<File
 				RelativePath=".\party.h"
-				>
-			</File>
-			<File
-				RelativePath=".\passpod.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\passpod.h"
 				>
 			</File>
 			<File
@@ -1088,10 +1047,6 @@
 			</File>
 			<File
 				RelativePath=".\questlua_building.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\questlua_danceevent.cpp"
 				>
 			</File>
 			<File
@@ -1408,14 +1363,6 @@
 			</File>
 			<File
 				RelativePath=".\xmas_event.h"
-				>
-			</File>
-			<File
-				RelativePath=".\XTrapManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\XTrapManager.h"
 				>
 			</File>
 		</Filter>

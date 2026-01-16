@@ -1,6 +1,5 @@
 #include "StdAfx.h"
 #include "PythonNetworkStream.h"
-//#include "PythonNetworkDatagram.h"
 #include "AccountConnector.h"
 #include "PythonGuild.h"
 #include "Test.h"
@@ -290,15 +289,6 @@ PyObject* netSetTCPSendBufferSize(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject* netSetUDPRecvBufferSize(PyObject* poSelf, PyObject* poArgs)
-{
-	int bufSize;
-	if (!PyTuple_GetInteger(poArgs, 0, &bufSize))
-		return Py_BuildException();
-
-	//CPythonNetworkDatagram::Instance().SetRecvBufferSize(bufSize);
-	return Py_BuildNone();
-}
 
 PyObject* netSetMarkServer(PyObject* poSelf, PyObject* poArgs)
 {
@@ -330,18 +320,6 @@ PyObject* netConnectTCP(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject* netConnectUDP(PyObject* poSelf, PyObject* poArgs)
-{
-	char * c_szIP;
-	if (!PyTuple_GetString(poArgs, 0, &c_szIP))
-		return Py_BuildException();
-	int iPort;
-	if (!PyTuple_GetInteger(poArgs, 1, &iPort))
-		return Py_BuildException();
-
-	//CPythonNetworkDatagram::Instance().SetConnection(c_szIP, iPort);
-	return Py_BuildNone();
-}
 
 PyObject* netConnectToAccountServer(PyObject* poSelf, PyObject* poArgs)
 {
@@ -418,16 +396,8 @@ PyObject* netSendLoginPacket(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject* netSendNEWCIBNPasspodAnswerPacket(PyObject* poSelf, PyObject* poArgs)
-{
-	char* szMatrixCardString;
-	if (!PyTuple_GetString(poArgs, 0, &szMatrixCardString))
-		return Py_BuildException();
 
-	CAccountConnector & rkAccountConnector = CAccountConnector::Instance();
-	rkAccountConnector.SendNEWCIBNPasspodAnswerPacket(szMatrixCardString);
-	return Py_BuildNone();
-}
+
 
 
 PyObject* netDirectEnter(PyObject* poSelf, PyObject* poArgs)
@@ -1544,7 +1514,7 @@ PyObject* netSendRequestRefineInfoPacket(PyObject* poSelf, PyObject* poArgs)
 
 //	CPythonNetworkStream& rns=CPythonNetworkStream::Instance();
 //	rns.SendRequestRefineInfoPacket(iSlotIndex);
-	assert(!"netSendRequestRefineInfoPacket - ¥ı¿ÃªÛ ªÁøÎ«œ¡ˆ æ ¥¬ «‘ºˆ ¿‘¥œ¥Ÿ");
+	assert(!"netSendRequestRefineInfoPacket - ÎçîÏù¥ÏÉÅ ÏÇ¨Ïö©ÌïòÏßÄ ÏïäÎäî Ìï®Ïàò ÏûÖÎãàÎã§");
 
 	return Py_BuildNone();
 }
@@ -1729,18 +1699,15 @@ void initnet()
 		{ "SetHandler",							netSetHandler,							METH_VARARGS },
 		{ "SetTCPRecvBufferSize",				netSetTCPRecvBufferSize,				METH_VARARGS },
 		{ "SetTCPSendBufferSize",				netSetTCPSendBufferSize,				METH_VARARGS },
-		{ "SetUDPRecvBufferSize",				netSetUDPRecvBufferSize,				METH_VARARGS },
 		{ "DirectEnter",						netDirectEnter,							METH_VARARGS },
 
 		{ "LogOutGame",							netLogOutGame,							METH_VARARGS },
 		{ "ExitGame",							netExitGame,							METH_VARARGS },
 		{ "ExitApplication",					netExitApplication,						METH_VARARGS },
 		{ "ConnectTCP",							netConnectTCP,							METH_VARARGS },
-		{ "ConnectUDP",							netConnectUDP,							METH_VARARGS },
 		{ "ConnectToAccountServer",				netConnectToAccountServer,				METH_VARARGS },
 
 		{ "SendLoginPacket",					netSendLoginPacket,						METH_VARARGS },
-		{ "SendNEWCIBNPasspodAnswerPacket",		netSendNEWCIBNPasspodAnswerPacket,		METH_VARARGS },
 		{ "SendSelectEmpirePacket",				netSendSelectEmpirePacket,				METH_VARARGS },
 		{ "SendSelectCharacterPacket",			netSendSelectCharacterPacket,			METH_VARARGS },
 		{ "SendChangeNamePacket",				netSendChangeNamePacket,				METH_VARARGS },

@@ -104,7 +104,6 @@ class CMainPacketHeaderMap : public CNetworkPacketHeaderMap
 
 			Set(HEADER_GC_HANDSHAKE,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCHandshake), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_HANDSHAKE_OK,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCBlank), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_BINDUDP,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCBindUDP), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_OWNERSHIP,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCOwnership), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_CREATE_FLY,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCreateFly), STATIC_SIZE_PACKET));
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
@@ -147,8 +146,6 @@ class CMainPacketHeaderMap : public CNetworkPacketHeaderMap
 			Set(HEADER_GC_NPC_POSITION, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCNPCPosition), DYNAMIC_SIZE_PACKET));
 			Set(HEADER_GC_CHANGE_NAME, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCChangeName), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_NEWCIBN_PASSPOD_REQUEST, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCNEWCIBNPasspodRequest), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_NEWCIBN_PASSPOD_FAILURE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCNEWCIBNPasspodFailure), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_LOGIN_KEY, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCLoginKey), STATIC_SIZE_PACKET));
 
 			Set(HEADER_GC_AUTH_SUCCESS, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCAuthSuccess), STATIC_SIZE_PACKET));
@@ -175,8 +172,6 @@ class CMainPacketHeaderMap : public CNetworkPacketHeaderMap
 			Set(HEADER_GC_DIG_MOTION, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDigMotion), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_DAMAGE_INFO, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDamageInfo), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_HS_REQUEST, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketHSCheck), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_XTRAP_CS1_REQUEST, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketXTrapCSVerify), STATIC_SIZE_PACKET));
 
 			Set(HEADER_GC_HYBRIDCRYPT_KEYS,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCHybridCryptKeys), DYNAMIC_SIZE_PACKET));
 			Set(HEADER_GC_HYBRIDCRYPT_SDB,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCHybridSDB), DYNAMIC_SIZE_PACKET));
@@ -241,7 +236,7 @@ void CPythonNetworkStream::AbsoluteExitApplication()
 
 bool CPythonNetworkStream::__IsNotPing()
 {
-	// ¿ø·¡´Â ÇÎÀÌ ¾È¿Ã¶§ Ã¼Å©ÀÌ³ª ¼­¹ö¶û Á¤È®È÷ ¸ÂÃß¾î¾ß ÇÑ´Ù.
+	// ì›ë˜ëŠ” í•‘ì´ ì•ˆì˜¬ë•Œ ì²´í¬ì´ë‚˜ ì„œë²„ë‘ ì •í™•íˆ ë§ì¶”ì–´ì•¼ í•œë‹¤.
 	return false;
 }
 
@@ -253,7 +248,7 @@ DWORD CPythonNetworkStream::GetGuildID()
 UINT CPythonNetworkStream::UploadMark(const char * c_szImageFileName)
 {
 	// MARK_BUG_FIX
-	// ±æµå¸¦ ¸¸µç Á÷ÈÄ´Â ±æµå ¾ÆÀÌµğ°¡ 0ÀÌ´Ù.
+	// ê¸¸ë“œë¥¼ ë§Œë“  ì§í›„ëŠ” ê¸¸ë“œ ì•„ì´ë””ê°€ 0ì´ë‹¤.
 	if (0 == m_dwGuildID)
 		return ERROR_MARK_UPLOAD_NEED_RECONNECT;
 
@@ -323,13 +318,13 @@ UINT CPythonNetworkStream::UploadSymbol(const char* c_szImageFileName)
 
 void CPythonNetworkStream::__DownloadMark()
 {
-	// 3ºĞ ¾È¿¡´Â ´Ù½Ã Á¢¼ÓÇÏÁö ¾Ê´Â´Ù.
+	// 3ë¶„ ì•ˆì—ëŠ” ë‹¤ì‹œ ì ‘ì†í•˜ì§€ ì•ŠëŠ”ë‹¤.
 	DWORD curTime = ELTimer_GetMSec();
 
 	if (curTime < gs_nextDownloadMarkTime)
 		return;
 
-	gs_nextDownloadMarkTime = curTime + 60000 * 3; // 3ºĞ
+	gs_nextDownloadMarkTime = curTime + 60000 * 3; // 3ë¶„
 
 	CGuildMarkDownloader& rkGuildMarkDownloader = CGuildMarkDownloader::Instance();
 	rkGuildMarkDownloader.Connect(m_kMarkAuth.m_kNetAddr, m_kMarkAuth.m_dwHandle, m_kMarkAuth.m_dwRandomKey);
@@ -595,19 +590,19 @@ bool CPythonNetworkStream::RecvPhasePacket()
 
 	switch (packet_phase.phase)
 	{
-		case PHASE_CLOSE:				// ²÷±â´Â »óÅÂ (¶Ç´Â ²÷±â Àü »óÅÂ)
+		case PHASE_CLOSE:				// ëŠê¸°ëŠ” ìƒíƒœ (ë˜ëŠ” ëŠê¸° ì „ ìƒíƒœ)
 			ClosePhase();
 			break;
 
-		case PHASE_HANDSHAKE:			// ¾Ç¼ö..;;
+		case PHASE_HANDSHAKE:			// ì•…ìˆ˜..;;
 			SetHandShakePhase();
 			break;
 
-		case PHASE_LOGIN:				// ·Î±×ÀÎ Áß
+		case PHASE_LOGIN:				// ë¡œê·¸ì¸ ì¤‘
 			SetLoginPhase();
 			break;
 
-		case PHASE_SELECT:				// Ä³¸¯ÅÍ ¼±ÅÃ È­¸é
+		case PHASE_SELECT:				// ìºë¦­í„° ì„ íƒ í™”ë©´
 			SetSelectPhase();
 
 			BuildProcessCRC();
@@ -617,15 +612,15 @@ bool CPythonNetworkStream::RecvPhasePacket()
 			// END_OF_MARK_BUG_FIX
 			break;
 
-		case PHASE_LOADING:				// ¼±ÅÃ ÈÄ ·Îµù È­¸é
+		case PHASE_LOADING:				// ì„ íƒ í›„ ë¡œë”© í™”ë©´
 			SetLoadingPhase();
 			break;
 
-		case PHASE_GAME:				// °ÔÀÓ È­¸é
+		case PHASE_GAME:				// ê²Œì„ í™”ë©´
 			SetGamePhase();
 			break;
 
-		case PHASE_DEAD:				// Á×¾úÀ» ¶§.. (°ÔÀÓ ¾È¿¡ ÀÖ´Â °ÍÀÏ ¼öµµ..)
+		case PHASE_DEAD:				// ì£½ì—ˆì„ ë•Œ.. (ê²Œì„ ì•ˆì— ìˆëŠ” ê²ƒì¼ ìˆ˜ë„..)
 			break;
 	}
 
@@ -660,7 +655,7 @@ bool CPythonNetworkStream::RecvDefaultPacket(int header)
 	if (!header)
 		return true;
 
-	TraceError("Ã³¸®µÇÁö ¾ÊÀº ÆĞÅ¶ Çì´õ %d, state %s\n", header, m_strPhase.c_str());
+	TraceError("ì²˜ë¦¬ë˜ì§€ ì•Šì€ íŒ¨í‚· í—¤ë” %d, state %s\n", header, m_strPhase.c_str());
 	ClearRecvBuffer();
 	return true;
 }
