@@ -215,9 +215,6 @@ bool LocaleService_IsCHEONMA()
 #define _LSS_SERVICE_CODEPAGE		CP_CHINESE_TRAD
 #define _LSS_SERVICE_LOCALE_NAME	"taiwan"
 #define _LSS_SERVICE_LOCALE_PATH	"locale/taiwan"
-#define _LSS_SERVICE_CODEPAGE		CP_CHINESE_SIMPLE
-#define _LSS_SERVICE_LOCALE_NAME	"newcibn"
-#define _LSS_SERVICE_LOCALE_PATH	"locale/newcibn"
 #endif
 
 #if defined(_LSS_USE_LOCALE_CFG)

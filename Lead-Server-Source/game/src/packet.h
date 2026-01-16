@@ -310,7 +310,6 @@ enum
 	HEADER_GG_CHECK_CLIENT_VERSION		= 21,
 	HEADER_GG_BLOCK_CHAT			= 22,
 
-	HEADER_GG_BLOCK_EXCEPTION		= 24,
 	HEADER_GG_MONARCH_NOTICE		= 26,
 	HEADER_GG_MONARCH_TRANSFER		= 27,
 	HEADER_GG_PCBANG_UPDATE			= 28,
@@ -547,8 +546,6 @@ typedef struct command_login5
 	char	authKey[OPENID_AUTHKEY_LEN + 1];
 	DWORD	adwClientKey[4];
 } TPacketCGLogin5;
-
-
 
 typedef struct packet_login_key
 {

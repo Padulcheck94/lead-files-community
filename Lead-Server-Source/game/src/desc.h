@@ -256,8 +256,6 @@ class DESC
 	public:
 		LPEVENT			m_pkDisconnectEvent;
 
-	protected:
-
 	public:
 
 		void SetLogin( const std::string & login ) { m_Login = login; }
