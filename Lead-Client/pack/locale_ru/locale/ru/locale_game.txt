@@ -797,6 +797,8 @@ TOOLTIP_MALL_AUTOLOOT	Янг принимается автом.	SNA
 TOOLTIP_MALL_DEFBONUS	Защита +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Защита +12~15%	SNA
 TOOLTIP_MALL_EXPBONUS	Опыт +%d%%	SA
+TOOLTIP_MALL_EXPBONUS_P_STATIC	иКафе бонус к опыту +%d%%	SA
+TOOLTIP_MALL_EXPBONUS_STATIC	на 50% больше опыта	SNA
 TOOLTIP_MALL_FISH_MIND	Повышенный шанс поймать рыбу.	SNA
 TOOLTIP_MALL_GOLDBONUS	Шансы на выпадение янг (%.1f)	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Удвоенные шансы на выпадение янг	SNA
