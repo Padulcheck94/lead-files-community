@@ -102,6 +102,8 @@ extern DWORD g_GoldDropTimeLimitValue;
 extern int gPlayerMaxLevel;
 extern BYTE gPartyGapLevel;
 
+extern int gGuildCreateFee;
+
 extern bool g_BlockCharCreation;
 
 #endif /* __INC_METIN_II_GAME_CONFIG_H__ */

@@ -107,6 +107,8 @@ bool            g_protectNormalPlayer   = false;        // 범법자가 "평화모드" �
 int gPlayerMaxLevel = 99;
 BYTE gPartyGapLevel = 30;
 
+int gGuildCreateFee = 200000;
+
 bool g_BlockCharCreation = false;
 
 
@@ -1022,9 +1024,18 @@ void config_init(const string& st_localeServiceName)
 		{
 			str_to_number(gPartyGapLevel, value_string);
 
-			gPlayerMaxLevel = MINMAX(1, gPartyGapLevel, PLAYER_MAX_LEVEL_CONST);
+			gPartyGapLevel = MINMAX(1, gPartyGapLevel, PLAYER_MAX_LEVEL_CONST);
 
 			fprintf(stderr, "PARTY_GAP_LEVEL: %d\n", gPartyGapLevel);
+		}
+
+		TOKEN("guild_create_fee")
+		{
+			str_to_number(gGuildCreateFee, value_string);
+
+			gGuildCreateFee = MINMAX(1, gGuildCreateFee, GOLD_MAX);
+
+			fprintf(stderr, "GUILD_CREATE_FEE: %d\n", gGuildCreateFee);
 		}
 
 		TOKEN("block_char_creation")
