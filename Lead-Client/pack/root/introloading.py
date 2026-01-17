@@ -17,7 +17,7 @@ import stringCommander
 import emotion
 
 ####################################
-# ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½Ð´ï¿½
+# ºü¸¥ ½ÇÇàÀ» À§ÇÑ ¸ðµâ ·Îµù ºÐ´ã
 ####################################
 import uiRefine
 import uiToolTip
@@ -80,7 +80,7 @@ class LoadingWindow(ui.ScriptWindow):
 			exception.Abort("LodingWindow.Open - LoadScriptFile Error")
 
 		self.errMsg.Hide()
-			
+
 		# Loading merged together
 		imgFileNameDict = {
 			# Base
@@ -166,7 +166,7 @@ class LoadingWindow(ui.ScriptWindow):
 		self.playerX=playerX
 		self.playerY=playerY
 
-		self.__RegisterSkill() ## ï¿½Îµï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
+		self.__RegisterSkill() ## ·Îµù Áß°£¿¡ ½ÇÇà ÇÏ¸é ¹®Á¦ ¹ß»ý
 		self.__RegisterTitleName()
 		self.__RegisterColor()
 		self.__InitData()
@@ -187,7 +187,7 @@ class LoadingWindow(ui.ScriptWindow):
 		self.playerY=playerY
 
 		self.__RegisterDungeonMapName()
-		self.__RegisterSkill() ## ï¿½Îµï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
+		self.__RegisterSkill() ## ·Îµù Áß°£¿¡ ½ÇÇà ÇÏ¸é ¹®Á¦ ¹ß»ý
 		self.__RegisterTitleName()
 		self.__RegisterColor()
 		self.__RegisterEmotionIcon()
@@ -225,7 +225,7 @@ class LoadingWindow(ui.ScriptWindow):
 				self.errMsg.Show()
 				self.loadStepList=[]
 
-				## ï¿½Ì°ï¿½ï¿½ï¿½ï¿½ï¿½ syserr.txt ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
+				## ÀÌ°÷¿¡¼­ syserr.txt ¸¦ º¸³½´Ù.
 
 				import dbg
 				dbg.TraceError(" !!! Failed to load game data : STEP [%d]" % (progress))

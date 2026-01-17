@@ -29,7 +29,7 @@ class CItemData
 			ITEM_TYPE_MATERIAL,				//5
 			ITEM_TYPE_SPECIAL,				//6 //스페셜 아이템
 			ITEM_TYPE_TOOL,					//7
-			ITEM_TYPE_LOTTERY,				//8//복권
+			ITEM_TYPE_UNUSED_1,				//8//복권
 			ITEM_TYPE_ELK,					//9//돈
 			ITEM_TYPE_METIN,				//10
 			ITEM_TYPE_CONTAINER,			//11

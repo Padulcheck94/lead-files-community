@@ -34,7 +34,6 @@ bool	g_bNoMoreClient = false;
 bool	g_bNoRegen = false;
 
 int			test_server = 0;
-int			speed_server = 0;
 #ifdef __AUCTION__
 int			auction_server = 0;
 #endif
@@ -787,15 +786,6 @@ void config_init(const string& st_localeServiceName)
 			printf("TEST_SERVER\n");
 			printf("-----------------------------------------------\n");
 			str_to_number(test_server, value_string);
-			continue;
-		}
-
-		TOKEN("speed_server")
-		{
-			printf("-----------------------------------------------\n");
-			printf("SPEED_SERVER\n");
-			printf("-----------------------------------------------\n");
-			str_to_number(speed_server, value_string);
 			continue;
 		}
 #ifdef __AUCTION__

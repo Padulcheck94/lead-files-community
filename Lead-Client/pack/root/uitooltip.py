@@ -981,17 +981,6 @@ class ItemToolTip(ToolTip):
 				self.__AppendLimitInformation()
 				self.__AppendPickInformation(curLevel, curEXP, maxEXP)
 
-		## Lottery ##
-		elif item.ITEM_TYPE_LOTTERY == itemType:
-			if 0 != metinSlot:
-
-				ticketNumber = int(metinSlot[0])
-				stepNumber = int(metinSlot[1])
-
-				self.AppendSpace(5)
-				self.AppendTextLine(localeInfo.TOOLTIP_LOTTERY_STEP_NUMBER % (stepNumber), self.NORMAL_COLOR)
-				self.AppendTextLine(localeInfo.TOOLTIP_LOTTO_NUMBER % (ticketNumber), self.NORMAL_COLOR);
-
 		### Metin ###
 		elif item.ITEM_TYPE_METIN == itemType:
 			self.AppendMetinInformation()

@@ -750,7 +750,7 @@ void CInputDB::Boot(const char* data)
 	sys_log(0, "GM Value Count %d %d", HostSize, ChunkSize  );
 	for (int n = 0; n < HostSize; ++n )
 	{
-		gm_new_host_inert(data );
+		gm_new_host_insert(data );
 		sys_log(0, "GM HOST : IP[%s] ", data );		
 		data += ChunkSize;
 	}
@@ -1953,7 +1953,7 @@ void CInputDB::ReloadAdmin(const char * c_pData )
 	
 	for (int n = 0; n < HostSize; ++n )
 	{
-		gm_new_host_inert(c_pData );
+		gm_new_host_insert(c_pData );
 		c_pData += ChunkSize;
 	}
 	

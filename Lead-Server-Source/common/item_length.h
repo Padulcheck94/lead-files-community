@@ -49,7 +49,7 @@ enum EItemTypes
     ITEM_MATERIAL,          //5
     ITEM_SPECIAL,           //6 //스페셜 아이템
     ITEM_TOOL,              //7
-    ITEM_LOTTERY,           //8//복권
+    ITEM_UNUSED_1,          //8//복권
     ITEM_ELK,               //9//돈
     ITEM_METIN,             //10
     ITEM_CONTAINER,         //11
@@ -258,12 +258,6 @@ enum ESpecialSubTypes
 enum EToolSubTypes
 {
 	TOOL_FISHING_ROD
-};
-
-enum ELotterySubTypes
-{
-	LOTTERY_TICKET,
-	LOTTERY_INSTANT
 };
 
 enum EItemFlag

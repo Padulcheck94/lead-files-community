@@ -60,7 +60,7 @@ int get_Item_Type_Value(string inputString)
 		"ITEM_ARMOR", "ITEM_USE", 
 		"ITEM_AUTOUSE", "ITEM_MATERIAL",
 		"ITEM_SPECIAL", "ITEM_TOOL", 
-		"ITEM_LOTTERY", "ITEM_ELK",					//10°³
+		"ITEM_UNUSED_1", "ITEM_ELK",					//10°³
 
 		"ITEM_METIN", "ITEM_CONTAINER", 
 		"ITEM_FISH", "ITEM_ROD", 
@@ -114,7 +114,6 @@ int get_Item_SubType_Value(int type_value, string inputString)
 		"MATERIAL_DS_REFINE_NORMAL", "MATERIAL_DS_REFINE_BLESSED", "MATERIAL_DS_REFINE_HOLLY"};
 	static string arSub6[] = { "SPECIAL_MAP", "SPECIAL_KEY", "SPECIAL_DOC", "SPECIAL_SPIRIT"};
 	static string arSub7[] = { "TOOL_FISHING_ROD" };
-	static string arSub8[] = { "LOTTERY_TICKET", "LOTTERY_INSTANT" };
 	static string arSub10[] = { "METIN_NORMAL", "METIN_GOLD" };
 	static string arSub12[] = { "FISH_ALIVE", "FISH_DEAD"};
 	static string arSub14[] = { "RESOURCE_FISHBONE", "RESOURCE_WATERSTONEPIECE", "RESOURCE_WATERSTONE", "RESOURCE_BLOOD_PEARL",
@@ -134,7 +133,7 @@ int get_Item_SubType_Value(int type_value, string inputString)
 		arSub5,	//5
 		arSub6,	//6
 		arSub7,	//7
-		arSub8,	//8
+		0,			//8
 		0,			//9
 		arSub10,	//10
 		0,			//11
@@ -171,7 +170,7 @@ int get_Item_SubType_Value(int type_value, string inputString)
 		sizeof(arSub5)/sizeof(arSub5[0]),
 		sizeof(arSub6)/sizeof(arSub6[0]),
 		sizeof(arSub7)/sizeof(arSub7[0]),
-		sizeof(arSub8)/sizeof(arSub8[0]),
+		0,
 		0,
 		sizeof(arSub10)/sizeof(arSub10[0]),
 		0,

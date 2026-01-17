@@ -51,7 +51,7 @@ elif localeInfo.IsHONGKONG():
 
 elif localeInfo.IsJAPAN():
 	FULL_BACK_IMAGE = True
-
+	
 def IsFullBackImage():
 	global FULL_BACK_IMAGE
 	return FULL_BACK_IMAGE
@@ -569,7 +569,7 @@ class LoginWindow(ui.ScriptWindow):
 			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_ALPHABET_LOWERS)
 		elif self.virtualKeyboardMode == "NUMBER":
 			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_NUMBERS)			
-		else:	
+		else:
 			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_SYMBOLS)
 			
 	def __VirtualKeyboard_SetAlphabetMode(self):
@@ -860,14 +860,14 @@ class LoginWindow(ui.ScriptWindow):
 		visible_index = 1
 		for id, regionDataDict in regionDict.items():
 			name = regionDataDict.get("name", "noname")
-				try:
-					server_id = serverInfo.SERVER_ID_DICT[id]
-				except:
-					server_id = visible_index
+			try:
+				server_id = serverInfo.SERVER_ID_DICT[id]
+			except:
+				server_id = visible_index
 
-				self.serverList.InsertItem(id, "  %02d. %s" % (int(server_id), name))
+			self.serverList.InsertItem(id, "  %02d. %s" % (int(server_id), name))
 
-				visible_index += 1
+			visible_index += 1
 		
 		# END_OF_SEVER_LIST_BUG_FIX
 

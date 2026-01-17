@@ -351,15 +351,15 @@ CSpeedTreeWrapper::~CSpeedTreeWrapper()
 
 ///////////////////////////////////////////////////////////////////////  
 //	CSpeedTreeWrapper::LoadTree
-bool CSpeedTreeWrapper::LoadTree(const char * pszSptFile, const BYTE * c_pbBlock, unsigned int uiBlockSize, UINT nSeed, float fSize, float fSizeVariance)
+bool CSpeedTreeWrapper::LoadTree(const char* pszSptFile, const BYTE* c_pbBlock, unsigned int uiBlockSize, UINT nSeed, float fSize, float fSizeVariance)
 {
-    bool bSuccess = false;
-	
+	bool bSuccess = false;
+
 	// directx, so allow for flipping of the texture coordinate
 #ifdef WRAPPER_FLIP_T_TEXCOORD
 	m_pSpeedTree->SetTextureFlip(true);
 #endif
-	
+
 	// load the tree file
 	if (!m_pSpeedTree->LoadTree(c_pbBlock, uiBlockSize))
 	{
@@ -369,7 +369,7 @@ bool CSpeedTreeWrapper::LoadTree(const char * pszSptFile, const BYTE * c_pbBlock
 			return false;
 		}
 	}
-		
+
 	// override the lighting method stored in the spt file
 #ifdef WRAPPER_USE_DYNAMIC_LIGHTING
 	m_pSpeedTree->SetBranchLightingMethod(CSpeedTreeRT::LIGHT_DYNAMIC);
@@ -380,7 +380,7 @@ bool CSpeedTreeWrapper::LoadTree(const char * pszSptFile, const BYTE * c_pbBlock
 	m_pSpeedTree->SetLeafLightingMethod(CSpeedTreeRT::LIGHT_STATIC);
 	m_pSpeedTree->SetFrondLightingMethod(CSpeedTreeRT::LIGHT_STATIC);
 #endif
-	
+
 	// set the wind method
 #ifdef WRAPPER_USE_GPU_WIND
 	m_pSpeedTree->SetBranchWindMethod(CSpeedTreeRT::WIND_GPU);
@@ -397,65 +397,70 @@ bool CSpeedTreeWrapper::LoadTree(const char * pszSptFile, const BYTE * c_pbBlock
 	m_pSpeedTree->SetLeafWindMethod(CSpeedTreeRT::WIND_NONE);
 	m_pSpeedTree->SetFrondWindMethod(CSpeedTreeRT::WIND_NONE);
 #endif
-	
+
 	m_pSpeedTree->SetNumLeafRockingGroups(1);
-	
+
 	// override the size, if necessary
 	if (fSize >= 0.0f && fSizeVariance >= 0.0f)
 		m_pSpeedTree->SetTreeSize(fSize, fSizeVariance);
-	
+
 	// generate tree geometry
 	if (m_pSpeedTree->Compute(NULL, nSeed))
 	{
 		// get the dimensions
 		m_pSpeedTree->GetBoundingBox(m_afBoundingBox);
-		
+
 		// make the leaves rock in the wind
 		m_pSpeedTree->SetLeafRockingState(true);
-		
+
 		// billboard setup
 #ifdef WRAPPER_NO_BILLBOARD_MODE
 		CSpeedTreeRT::SetDropToBillboard(false);
 #else
 		CSpeedTreeRT::SetDropToBillboard(true);
 #endif
-		
+
 		// query & set materials
 		m_cBranchMaterial.Set(m_pSpeedTree->GetBranchMaterial());
 		m_cFrondMaterial.Set(m_pSpeedTree->GetFrondMaterial());
 		m_cLeafMaterial.Set(m_pSpeedTree->GetLeafMaterial());
-		
+
 		// adjust lod distances
 		float fHeight = m_afBoundingBox[5] - m_afBoundingBox[2];
 		m_pSpeedTree->SetLodLimits(fHeight * c_fNearLodFactor, fHeight * c_fFarLodFactor);
-		
+
 		// query textures
 		m_pTextureInfo = new CSpeedTreeRT::STextures;
 		m_pSpeedTree->GetTextures(*m_pTextureInfo);
-		
-		// load branch textures
-		auto sptFileName = std::string(pszSptFile);
-		auto branchTextureFileName = std::string(m_pTextureInfo->m_pBranchTextureFilename);
 
-		LoadTexture((CFileNameHelper::GetPath(sptFileName) + CFileNameHelper::NoExtension(branchTextureFileName) + ".dds").c_str(), m_BranchImageInstance);
-		
+		// load branch textures
+		auto vs1 = std::string(pszSptFile);
+		auto vs2 = std::string(m_pTextureInfo->m_pBranchTextureFilename);
+		LoadTexture((CFileNameHelper::GetPath(vs1) + CFileNameHelper::NoExtension(vs2) + ".dds").c_str(), m_BranchImageInstance);
+
 #ifdef WRAPPER_RENDER_SELF_SHADOWS
 		if (m_pTextureInfo->m_pSelfShadowFilename != NULL)
-			LoadTexture((CFileNameHelper::GetPath(sptFileName) + CFileNameHelper::NoExtension(branchTextureFileName) + ".dds").c_str(), m_ShadowImageInstance);
+		{
+			auto vss = std::string(m_pTextureInfo->m_pSelfShadowFilename);
+			LoadTexture((CFileNameHelper::GetPath(vs1) + CFileNameHelper::NoExtension(vss) + ".dds").c_str(), m_ShadowImageInstance);
+		}
 #endif
 		if (m_pTextureInfo->m_pCompositeFilename)
-			LoadTexture((CFileNameHelper::GetPath(sptFileName) + CFileNameHelper::NoExtension(branchTextureFileName) + ".dds").c_str(), m_CompositeImageInstance);
+		{
+			auto vss = std::string(m_pTextureInfo->m_pCompositeFilename);
+			LoadTexture((CFileNameHelper::GetPath(vs1) + CFileNameHelper::NoExtension(vss) + ".dds").c_str(), m_CompositeImageInstance);
+		}
 
 		// setup the index and vertex buffers
 		SetupBuffers();
-		
+
 		// everything appeared to go well
 		bSuccess = true;
 	}
 	else // tree failed to compute
 		fprintf(stderr, "\nFatal Error, cannot compute tree [%s]\n\n", CSpeedTreeRT::GetCurrentError());
-	
-    return bSuccess;
+
+	return bSuccess;
 }
 
 
