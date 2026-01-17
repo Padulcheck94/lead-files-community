@@ -1413,9 +1413,6 @@
 				RelativePath=".\Locale_inc.h"
 				>
 			</File>
-			<File
-				RelativePath=".\Locale_inc_BR.h"
-				>
 			</File>
 			<File
 				RelativePath=".\Locale_inc_CA.h"

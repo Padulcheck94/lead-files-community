@@ -182,7 +182,7 @@ bool LocaleService_IsCHEONMA()
 
 // END_OF_CHEONMA
 
-#if defined(LOCALE_SERVICE_EUROPE) || defined(LOCALE_SERVICE_BRAZIL) || defined(LOCALE_SERVICE_CANADA) || defined(LOCALE_SERVICE_SINGAPORE) || defined(LOCALE_SERVICE_VIETNAM) || defined(LOCALE_SERVICE_TAIWAN) 
+#if defined(LOCALE_SERVICE_EUROPE) || defined(LOCALE_SERVICE_CANADA) || defined(LOCALE_SERVICE_SINGAPORE) || defined(LOCALE_SERVICE_VIETNAM) || defined(LOCALE_SERVICE_TAIWAN) 
 #define _LSS_USE_LOCALE_CFG			1
 #define _LSS_SERVICE_NAME			LSS_EUROPE
 #elif defined(LOCALE_SERVICE_ITALY)
@@ -275,7 +275,6 @@ struct SLOCALEDATA
 	{ LSS_EUROPE,	"ca",			1252,	"testtesttesttest"	},		// Z8Games (Canada)
 	{ LSS_EUROPE,	"sg",			1252,	"testtesttesttest"	},		// TEC (Singapore)
 	{ LSS_JAPAN,	"japan",		932,	"testtesttesttest"	},		// Japan
-	{ LSS_EUROPE,	"br",			1252,	"testtesttesttest"	},		// OnGame (Brazil)
 	{ LSS_HONGKONG,	"hongkong",		950,	"testtesttesttest"	},		// HongKong & Taiwan
 	{ LSS_ENGLISH,	"english",		949,	"testtesttesttest"	},		// English (Obsoleted)
 	{ LSS_YMIR,		"kr",			949,	"testtesttesttest"	},		// Korea (Obsoleted)
