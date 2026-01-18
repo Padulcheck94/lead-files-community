@@ -1,0 +1,9 @@
+drop table if exists player.monarch;
+drop table if exists player.monarch_candidacy;
+drop table if exists player.monarch_election;
+drop table if exists player.lotto_list;
+drop table if exists player.pcbang_ip;
+drop table if exists log.pcbang_loginlog;
+drop table if exists log.hackshield_log;
+drop table if exists player.sms_pool;
+drop table if exists account.iptocountry;
