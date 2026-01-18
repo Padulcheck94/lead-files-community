@@ -1565,7 +1565,7 @@ bool CPythonNetworkStream::RecvShopPacket()
 	if (!Recv(sizeof(packet_shop), &packet_shop))
 		return false;
 
-	int iSize = packet_shop.size - sizeof(DWORD) - sizeof(packet_shop);
+	int iSize = packet_shop.size - sizeof(packet_shop);
 	if (iSize > 0)
 	{
 		vecBuffer.resize(iSize);
@@ -1577,10 +1577,6 @@ bool CPythonNetworkStream::RecvShopPacket()
 	{
 		case SHOP_SUBHEADER_GC_START:
 			{
-				DWORD owner_vid;
-				if (!Recv(sizeof(owner_vid), &owner_vid))
-					return false;
-
 				CPythonShop::Instance().Clear();
 
 				TPacketGCShopStart *pShopStartPacket = (TPacketGCShopStart *)vecBuffer.data();
@@ -1589,7 +1585,7 @@ bool CPythonNetworkStream::RecvShopPacket()
 					CPythonShop::Instance().SetItemData(iItemIndex, pShopStartPacket->items[iItemIndex]);
 				}
 
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartShop", Py_BuildValue("(i)", owner_vid));
+				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartShop", Py_BuildValue("(i)", pShopStartPacket->owner_vid));
 			}
 			break;
 
