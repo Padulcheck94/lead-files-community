@@ -62,7 +62,6 @@ enum
 	HEADER_GD_RELOAD_PROTO		= 43,
 
 	HEADER_GD_CHANGE_NAME		= 44,
-	HEADER_GD_SMS				= 45,
 
 	HEADER_GD_GUILD_CHANGE_LADDER_POINT	= 46,
 	HEADER_GD_GUILD_USE_SKILL		= 47,
@@ -98,19 +97,12 @@ enum
 
 	HEADER_GD_AUTH_LOGIN		= 100,
 	HEADER_GD_LOGIN_BY_KEY		= 101,
-	HEADER_GD_VCARD				= 105,
 	HEADER_GD_MALL_LOAD			= 107,
 
 	HEADER_GD_MYSHOP_PRICELIST_UPDATE	= 108,		///< 가격정보 갱신 요청
 	HEADER_GD_MYSHOP_PRICELIST_REQ		= 109,		///< 가격정보 리스트 요청
 
 	HEADER_GD_BLOCK_CHAT				= 110,
-
-	// PCBANG_IP_LIST_BY_AUTH
-	HEADER_GD_PCBANG_REQUEST_IP_LIST	= 111,
-	HEADER_GD_PCBANG_CLEAR_IP_LIST		= 112,
-	HEADER_GD_PCBANG_INSERT_IP			= 113,
-	// END_OF_PCBANG_IP_LIST_BY_AUTH
 
 	HEADER_GD_RELOAD_ADMIN			= 115,			///<운영자 정보 요청
 	HEADER_GD_BREAK_MARRIAGE		= 116,			///< 결혼 파기
@@ -219,8 +211,6 @@ enum
 	HEADER_DG_MONEY_LOG			= 126,
 
 	HEADER_DG_CHANGE_CHARACTER_PRIV	= 127,
-
-	HEADER_DG_VCARD			= 131,
 
 	HEADER_DG_CREATE_OBJECT		= 140,
 	HEADER_DG_DELETE_OBJECT		= 141,
@@ -407,7 +397,6 @@ typedef struct SPlayerTable
 
 	BYTE	skill_group;
 	long	lAlignment;
-	char	szMobile[MOBILE_MAX_LEN + 1];
 
 	short	stat_reset_count;
 
@@ -955,14 +944,6 @@ typedef struct SPacketGuildLadderPoint
 	long lChange;
 } TPacketGuildLadderPoint;
 
-typedef struct SPacketGDSMS
-{
-	char szFrom[CHARACTER_NAME_MAX_LEN + 1];
-	char szTo[CHARACTER_NAME_MAX_LEN + 1];
-	char szMobile[MOBILE_MAX_LEN + 1];
-	char szMsg[SMS_MAX_LEN + 1];
-} TPacketGDSMS;
-
 typedef struct SPacketGuildUseSkill
 {
 	DWORD dwGuild;
@@ -1129,15 +1110,6 @@ typedef struct SPacketGDHammerOfTor
 	DWORD	delay;
 } TPacketGDHammerOfTor;
 
-typedef struct SPacketGDVCard
-{
-	DWORD	dwID;
-	char	szSellCharacter[CHARACTER_NAME_MAX_LEN + 1];
-	char	szSellAccount[LOGIN_MAX_LEN + 1];
-	char	szBuyCharacter[CHARACTER_NAME_MAX_LEN + 1];
-	char	szBuyAccount[LOGIN_MAX_LEN + 1];
-} TPacketGDVCard;
-
 typedef struct SGuildReserve
 {
 	DWORD       dwID;
@@ -1241,15 +1213,6 @@ typedef struct
 	char szName[CHARACTER_NAME_MAX_LEN + 1];
 	long lDuration;
 } TPacketBlockChat;
-
-// PCBANG_IP_LIST
-typedef struct SPacketPCBangIP
-{
-	DWORD id;
-	DWORD ip;
-} TPacketPCBangIP;
-// END_OF_PCBANG_IP_LIST
-
 
 //ADMIN_MANAGER
 typedef struct TAdminInfo

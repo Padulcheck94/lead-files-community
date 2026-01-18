@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Пусто
 MESSENGER_FAMILY	Семья
 MESSENGER_FRIEND	Друзья
 MESSENGER_GUILD	Гильдия
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Введите номер подтверждения, посланный на ваш мобильный.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Ввести номер подтверждения.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Введите номер своего мобильного тел.для передачи смс.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Ввести номер сейчас?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Ввести номер мобильного телефона
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Отправить сообщение.
 METIN_TEST	
 MINIMAP	Открыть мини-карту
 MINIMAP_CANNOT_SEE	Показ мини-карты невозможен.
@@ -797,13 +791,11 @@ TOOLTIP_MALL_AUTOLOOT	Янг принимается автом.	SNA
 TOOLTIP_MALL_DEFBONUS	Защита +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Защита +12~15%	SNA
 TOOLTIP_MALL_EXPBONUS	Опыт +%d%%	SA
-TOOLTIP_MALL_EXPBONUS_P_STATIC	иКафе бонус к опыту +%d%%	SA
 TOOLTIP_MALL_EXPBONUS_STATIC	на 50% больше опыта	SNA
 TOOLTIP_MALL_FISH_MIND	Повышенный шанс поймать рыбу.	SNA
 TOOLTIP_MALL_GOLDBONUS	Шансы на выпадение янг (%.1f)	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Удвоенные шансы на выпадение янг	SNA
 TOOLTIP_MALL_ITEMBONUS	Шансы на выпадение предметов (%.1f)	SA
-TOOLTIP_MALL_ITEMBONUS_P_STATIC	иКафе шанс на захват предметов плюс %.1f%%	SA
 TOOLTIP_MALL_ITEMBONUS_STATIC	Удвоенные шансы на выпадение предметов	SNA
 TOOLTIP_MALL_MARRIAGE_FAST	Очки любви возрастают быстрее.	SNA
 TOOLTIP_MALL_SAFEBOX	В вашем распоряжении больше складских помещений.	SNA

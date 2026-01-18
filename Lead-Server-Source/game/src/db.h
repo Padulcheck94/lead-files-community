@@ -16,16 +16,10 @@ enum
 	QID_SAFEBOX_SIZE,
 	QID_DB_STRING,
 	QID_AUTH_LOGIN,
-	QID_AUTH_LOGIN_OPENID,
 
 	// BLOCK_CHAT
 	QID_BLOCK_CHAT_LIST,
 	// END_OF_BLOCK_CHAT
-
-	// PCBANG_IP_LIST
-	QID_PCBANG_IP_LIST_CHECK,
-	QID_PCBANG_IP_LIST_SELECT,
-	// END_OF_PCBANG_IP_LIST
 
 	QID_PROTECT_CHILD,
 
@@ -144,10 +138,6 @@ template <class Functor> void DBManager::FuncAfterQuery(Functor f, const char* c
 
 	m_sql.ReturnQuery(szQuery, p);
 }
-
-////////////////////////////////////////////////////////////////
-extern void VCardUse(LPCHARACTER CardOwner, LPCHARACTER CardTaker, LPITEM item);
-
 
 // ACCOUNT_DB
 class AccountDB : public singleton<AccountDB>

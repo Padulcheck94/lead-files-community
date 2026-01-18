@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Prázdný
 MESSENGER_FAMILY	Rodina
 MESSENGER_FRIEND	Pøátelé
 MESSENGER_GUILD	Cech
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Zadej èíslo potvrzení, které bylo odesláno na tvùj mobil.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Zadat èíslo potvrzení
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Zadej èíslo na mobil na zasílaní SMS.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Chceš teï zadat èíslo?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Zadat èíslo na mobil
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Poslat zprávu
 METIN_TEST	
 MINIMAP	Otevøít minimapu
 MINIMAP_CANNOT_SEE	Minimapu nelze zobrazit.
@@ -797,13 +791,11 @@ TOOLTIP_MALL_AUTOLOOT	Yangy se automaticky sesbírají.	SNA
 TOOLTIP_MALL_DEFBONUS	Obrana +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Obrana +12~15 %	SNA
 TOOLTIP_MALL_EXPBONUS	BZK +%d%%	SA
-TOOLTIP_MALL_EXPBONUS_P_STATIC	iCafe bonus BZK +%d%%	SA
 TOOLTIP_MALL_EXPBONUS_STATIC	O 50 % víc BZK	SNA
 TOOLTIP_MALL_FISH_MIND	Šance ulovit rybu je zvýšena.	SNA
 TOOLTIP_MALL_GOLDBONUS	Šance na spadlé Yangy (%.1f)	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Zdvojnásobí šanci na spadnutí Yangù	SNA
 TOOLTIP_MALL_ITEMBONUS	Šance ukoøistit pøedmìty (%.1f)	SA
-TOOLTIP_MALL_ITEMBONUS_P_STATIC	iCafe šance ukoøistit pøedmìty plus %.1f%%	SA
 TOOLTIP_MALL_ITEMBONUS_STATIC	Zdvojnásobí šanci ukoøistit pøedmìty	SNA
 TOOLTIP_MALL_MARRIAGE_FAST	Body za lásku narùstají rychleji.	SNA
 TOOLTIP_MALL_SAFEBOX	Na skladì je k dispozici více místa.	SNA

@@ -288,12 +288,6 @@ MESSENGER_EMPTY_LIST	Leer
 MESSENGER_FAMILY	Familie
 MESSENGER_FRIEND	Freunde
 MESSENGER_GUILD	Gilde
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Gib die Bestätigungsnr. ein, die an dein Handy gesendet wurde.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Bestätigungsnr. eingeben
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Gib die Handynr. für den SMS-Versand ein.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Möchtest du die Nummer jetzt eingeben?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Handynummer eingeben
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Nachricht senden.
 MINIMAP	Minikarte öffnen
 MINIMAP_CANNOT_SEE	Minikarte kann nicht angezeigt werden.
 MINIMAP_CAN_NOT_SHOW_AREAMAP	Übersichtskarte kann nicht angezeigt werden.
@@ -676,13 +670,11 @@ TOOLTIP_MALL_AUTOLOOT	Autom. wird das Yang aufgenommen.	SNA
 TOOLTIP_MALL_DEFBONUS	Verteidigung +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Verteidigung +12~15%	SNA
 TOOLTIP_MALL_EXPBONUS	EXP +%d%%	SA
-TOOLTIP_MALL_EXPBONUS_P_STATIC	iCafe EXP-Bonus +%d%%	SA
 TOOLTIP_MALL_EXPBONUS_STATIC	50% mehr EXP	SNA
 TOOLTIP_MALL_FISH_MIND	Die Chance, einen Fisch zu fangen, ist erhöht.	SNA
 TOOLTIP_MALL_GOLDBONUS	Dropchance von Yang (%.1f)	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Doppelte Dropchance Yang	SNA
 TOOLTIP_MALL_ITEMBONUS	Dropchance von Gegenständen (%.1f)	SA
-TOOLTIP_MALL_ITEMBONUS_P_STATIC	iCafe Chance auf Erbeuten von Gegenständen plus %.1f%%	SA
 TOOLTIP_MALL_ITEMBONUS_STATIC	Doppelte Dropchance von Gegenständen	SNA
 TOOLTIP_MALL_MARRIAGE_FAST	Liebespunkte wachsen schneller an.	SNA
 TOOLTIP_MALL_SAFEBOX	Es steht mehr Lagerraum zur Verfügung.	SNA

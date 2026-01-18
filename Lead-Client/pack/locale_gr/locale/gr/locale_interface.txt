@@ -197,7 +197,6 @@ MARKLIST_TITLE	Κατχώρηση Σήματος Συντεχνίας
 MESSAGE	Αυτό το μήνυμα είναι
 MESSENGER_ADD_FRIEND	Προσθήκη φίλου
 MESSENGER_DELETE_FRIEND	Διαγραφή φίλου
-MESSENGER_MOBILE	Αποστολή Μηνύματος Κειμένου
 MESSENGER_OPEN_GUILD	’νοιγμα παραθύρου συντεχνίας
 MESSENGER_TITLE	Φίλοι
 MESSENGER_USE_GUILD_MOVE_SKILL	Χρήση της Ικανότητας Μετακίνησης Συντεχνίας
@@ -223,7 +222,6 @@ OPTION_BLOCK_WHISPER	Ψίθυρος
 OPTION_CAMERA_DISTANCE	Κάμερα
 OPTION_CAMERA_DISTANCE_LONG	Μακριά
 OPTION_CAMERA_DISTANCE_SHORT	Κοντά
-OPTION_DELETE_MOBILE_BUTTON	Διαγραφή Νούμερου Κινητού Τηλεφώνου
 OPTION_EFFECT	Χτυπήματα.
 OPTION_ENV_EFFECT	Περιβάλλον
 OPTION_ENV_EFFECT_OFF	Off
@@ -232,8 +230,6 @@ OPTION_FOG	Ομίχλη
 OPTION_FOG_DENSE	Έντονη
 OPTION_FOG_LIGHT	Απαλή
 OPTION_FOG_MIDDLE	Μεσαία
-OPTION_INPUT_MOBILE_BUTTON	Εισαγωγή Νούμερου Κινητού Τηλεφώνου
-OPTION_MOBILE	Κινητό Τηλέφωνο
 OPTION_MOB_INFO	Στοιχ. τέρ.
 OPTION_MOB_INFO_AGGR	Επιθετικό
 OPTION_MOB_INFO_LEVEL	Επίπεδο

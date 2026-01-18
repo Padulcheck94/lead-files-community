@@ -118,7 +118,6 @@ enum
 	
 	HEADER_CG_HACK								= 105,
     HEADER_CG_CHANGE_NAME                       = 106,
-    HEADER_CG_SMS                               = 107,
     HEADER_CG_LOGIN2                            = 109,
 	HEADER_CG_DUNGEON							= 110,
 	HEADER_CG_LOGIN3							= 111,
@@ -126,9 +125,6 @@ enum
 	HEADER_CG_GUILD_SYMBOL_CRC					= 113,
 	HEADER_CG_SCRIPT_SELECT_ITEM				= 114,
 	HEADER_CG_LOGIN4							= 115,
-	HEADER_CG_LOGIN5_OPENID						= 116,	//OpenID : 실행시 받은 인증키를 서버에 보냄.
-
-
 
 	HEADER_CG_DRAGON_SOUL_REFINE			= 205,
 	HEADER_CG_STATE_CHECKER					= 206,
@@ -298,9 +294,6 @@ enum
 	HEADER_GC_HYBRIDCRYPT_SDB					= 153, // SDB means Supplmentary Data Blocks
 	//HYBRID CRYPT
 
-	HEADER_GC_AUTH_SUCCESS_OPENID				= 154,
-
-
 #ifdef __AUCTION__
 	HEADER_GC_AUCTOIN_ITEM_LIST					= 206,
 #endif 
@@ -368,8 +361,6 @@ enum
 
 
 	WEAR_MAX_NUM = 11,
-
-	OPENID_AUTHKEY_LEN = 32,
 
 	SHOP_TAB_NAME_MAX = 32,
 	SHOP_TAB_COUNT_MAX = 3,
@@ -506,14 +497,6 @@ typedef struct command_login3
     DWORD	adwClientKey[4];
 } TPacketCGLogin3;
 
-typedef struct command_login5
-{
-    BYTE	header;
-    char	authKey[OPENID_AUTHKEY_LEN + 1];
-    DWORD	adwClientKey[4];
-} TPacketCGLogin5;
-// end - 권한 서버 접속을 위한 패킷들
-
 typedef struct command_direct_enter
 {
     BYTE        bHeader;
@@ -550,13 +533,6 @@ typedef struct command_whisper
     WORD        wSize;
     char        szNameTo[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketCGWhisper;
-
-typedef struct command_sms
-{
-    BYTE        bHeader;
-    WORD        wSize;
-    char        szNameTo[CHARACTER_NAME_MAX_LEN + 1];
-} TPacketCGSMS;
 
 enum EBattleMode
 {
@@ -752,8 +728,7 @@ enum
 	MESSENGER_SUBHEADER_GC_LIST,
 	MESSENGER_SUBHEADER_GC_LOGIN,
 	MESSENGER_SUBHEADER_GC_LOGOUT,
-	MESSENGER_SUBHEADER_GC_INVITE,
-	MESSENGER_SUBHEADER_GC_MOBILE,
+	MESSENGER_SUBHEADER_GC_INVITE
 };
 
 typedef struct packet_messenger
@@ -773,7 +748,6 @@ enum
 {
 	MESSENGER_CONNECTED_STATE_OFFLINE,
 	MESSENGER_CONNECTED_STATE_ONLINE,
-	MESSENGER_CONNECTED_STATE_MOBILE,
 };
 
 typedef struct packet_messenger_list_online
@@ -1575,8 +1549,6 @@ enum EPointTypes
    
     POINT_SKILL_DEFEND_BONUS,       // 123 스킬 방어 데미지
     POINT_NORMAL_HIT_DEFEND_BONUS,  // 124 평타 방어 데미지
-    POINT_PC_BANG_EXP_BONUS,        // 125
-	POINT_PC_BANG_DROP_BONUS,       // 126 PC방 전용 드롭률 보너스
 
 	POINT_ENERGY = 128,				// 128 기력
 
@@ -2339,14 +2311,6 @@ typedef struct packet_auth_success
     DWORD       dwLoginKey;
     BYTE        bResult;
 } TPacketGCAuthSuccess;
-
-typedef struct packet_auth_success_openid
-{
-    BYTE        bHeader;
-    DWORD       dwLoginKey;
-    BYTE        bResult;
-	char		login[ID_MAX_NUM + 1];
-} TPacketGCAuthSuccessOpenID;
 
 typedef struct packet_channel
 {

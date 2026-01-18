@@ -233,7 +233,6 @@ protected:
 	void		ChangeName(LPDESC d, const char * data);
 
 	void		AuthLogin(LPDESC d, const char * c_pData);
-	void		AuthLoginOpenID(LPDESC d, const char * c_pData);
 	void		ItemAward(const char * c_pData);
 
 	void		ChangeEmpirePriv(const char* c_pData);
@@ -243,8 +242,6 @@ protected:
 	void		MoneyLog(const char* c_pData);
 
 	void		SetEventFlag(const char* c_pData);
-
-	void		VCard(const char * c_pData);
 
 	void		CreateObject(const char * c_pData);
 	void		DeleteObject(const char * c_pData);
@@ -300,7 +297,6 @@ class CInputP2P : public CInputProcessor
 		void		Disconnect(const char * c_pData);
 		void		MessengerAdd(const char * c_pData);
 		void		MessengerRemove(const char * c_pData);
-		void		MessengerMobile(const char * c_pData);
 		void		FindPosition(LPDESC d, const char* c_pData);
 		void		WarpCharacter(const char* c_pData);
 		void		GuildWarZoneMapIndex(const char* c_pData);
@@ -309,7 +305,6 @@ class CInputP2P : public CInputProcessor
 		void		XmasWarpSantaReply(const char * c_pData);
 		void		LoginPing(LPDESC d, const char * c_pData);
 		void		BlockChat(const char * c_pData);
-		void		PCBangUpdate(const char* c_pData);
 		void		IamAwake(LPDESC d, const char * c_pData);
 
 	protected:
@@ -324,12 +319,9 @@ class CInputAuth : public CInputProcessor
 
 	protected:
 		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
-		int auth_OpenID(const char *authKey, const char *ipAddr, char *rID);
 
 	public:
 		void		Login(LPDESC d, const char * c_pData);
-		void		LoginOpenID(LPDESC d, const char * c_pData);		//2012.07.19 OpenID : ±è¿ë¿í
-
 };
 
 class CInputTeen : public CInputProcessor

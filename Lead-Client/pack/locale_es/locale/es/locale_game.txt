@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Vacío
 MESSENGER_FAMILY	Familia
 MESSENGER_FRIEND	Amigos
 MESSENGER_GUILD	Gremio
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Introducir el código de confirmación que fue enviado a tu teléfono móvil.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Intruducir número de confirmación
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Introducir el número de teléfono móvil para el envío del mensaje de texto.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	¿Deseas introducir el número ahora?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Introducir número de móvil.
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Enviar mensaje.
 METIN_TEST	
 MINIMAP	Abrir mini mapa
 MINIMAP_CANNOT_SEE	El mini mapa no puede ser visto.
@@ -797,13 +791,11 @@ TOOLTIP_MALL_AUTOLOOT	Una mano que recoge automáticamente el Yang tirado	SNA
 TOOLTIP_MALL_DEFBONUS	Defensa +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Defensa +12~15%	SNA
 TOOLTIP_MALL_EXPBONUS	EXP +%d%%	SA
-TOOLTIP_MALL_EXPBONUS_P_STATIC	iCafe EXP Bonus +%d%%	SA
 TOOLTIP_MALL_EXPBONUS_STATIC	Aumenta la ganancia de EXP un 50%	SNA
 TOOLTIP_MALL_FISH_MIND	Tu probabilidad de capturar un pez raro se duplica.	SNA
 TOOLTIP_MALL_GOLDBONUS	Probabilidad de capturar Yang multiplicado con %.1f	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Duplica tu probabilidad de capturar Yang	SNA
 TOOLTIP_MALL_ITEMBONUS	Probabilidad de capturar objetos multiplicada con %.1f	SA
-TOOLTIP_MALL_ITEMBONUS_P_STATIC	iCafe Probabilidad de capturar objetos más %.1f%%	SA
 TOOLTIP_MALL_ITEMBONUS_STATIC	Duplica tus probabilidades de capturar objetos	SNA
 TOOLTIP_MALL_MARRIAGE_FAST	Los puntos de amor aumentan más rápido.	SNA
 TOOLTIP_MALL_SAFEBOX	Tu almacén obtiene 2 áreas de almacenaje más	SNA

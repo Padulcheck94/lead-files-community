@@ -47,7 +47,6 @@
 #include "arena.h"
 #include "dev_log.h"
 #include "horsename_manager.h"
-#include "pcbang.h"
 #include "gm.h"
 #include "map_location.h"
 #include "BlueDragon_Binder.h"
@@ -258,8 +257,6 @@ void CHARACTER::Initialize()
 	m_dwQuestByVnum = 0;
 	m_pQuestItem = NULL;
 
-	m_szMobileAuth[0] = '\0';
-
 	m_dwUnderGuildWarInfoMessageTime = get_dword_time()-60000;
 
 	m_bUnderRefine = false;
@@ -305,8 +302,6 @@ void CHARACTER::Initialize()
 	// MOB_SKILL_COOLTIME
 	memset(m_adwMobSkillCooltime, 0, sizeof(m_adwMobSkillCooltime));
 	// END_OF_MOB_SKILL_COOLTIME
-
-	m_isinPCBang = false;
 
 	// ARENA
 	m_pArena = NULL;
@@ -1216,9 +1211,6 @@ void CHARACTER::CreatePlayerProto(TPlayerTable & tab)
 	for (int i = 0; i < QUICKSLOT_MAX_NUM; ++i)
 		tab.quickslot[i] = m_quickslot[i];
 
-	if (m_stMobile.length() && !*m_szMobileAuth)
-		strlcpy(tab.szMobile, m_stMobile.c_str(), sizeof(tab.szMobile));
-
 	thecore_memcpy(tab.parts, m_pointsInstant.parts, sizeof(tab.parts));
 
 	// REMOVE_REAL_SKILL_LEVLES
@@ -1546,8 +1538,6 @@ void CHARACTER::MainCharacterPacket()
 			strlcpy(mainChrPacket.szBGMName, bgmInfo.name.c_str(), sizeof(mainChrPacket.szBGMName));
 			GetDesc()->Packet(&mainChrPacket, sizeof(TPacketGCMainCharacter3_BGM));
 		}
-		//if (m_stMobile.length())
-		//		ChatPacket(CHAT_TYPE_COMMAND, "sms");
 	}
 	// END_OF_SUPPORT_BGM
 	else
@@ -1565,9 +1555,6 @@ void CHARACTER::MainCharacterPacket()
 		pack.skill_group = GetSkillGroup();
 		strlcpy(pack.szName, GetName(), sizeof(pack.szName));
 		GetDesc()->Packet(&pack, sizeof(TPacketGCMainCharacter));
-
-		if (m_stMobile.length())
-			ChatPacket(CHAT_TYPE_COMMAND, "sms");
 	}
 }
 
@@ -1786,8 +1773,6 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 
 	if (GetLevel() < PK_PROTECT_LEVEL)
 		m_bPKMode = PK_MODE_PROTECT;
-
-	m_stMobile = t->szMobile;
 
 	SetHorseData(t->horse);
 
@@ -2232,11 +2217,6 @@ void CHARACTER::ComputePoints()
 
 	SetPoint(POINT_HP_RECOVERY, lHPRecovery);
 	SetPoint(POINT_SP_RECOVERY, lSPRecovery);
-
-	// PC_BANG_ITEM_ADD
-	SetPoint(POINT_PC_BANG_EXP_BONUS, 0);
-	SetPoint(POINT_PC_BANG_DROP_BONUS, 0);
-	// END_PC_BANG_ITEM_ADD
 
 	int iMaxHP, iMaxSP;
 	int iMaxStamina;
@@ -3435,14 +3415,10 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 			val = GetPoint(type);
 			break;
 
-			// PC_BANG_ITEM_ADD		
-		case POINT_PC_BANG_EXP_BONUS :
-		case POINT_PC_BANG_DROP_BONUS :
 		case POINT_RAMADAN_CANDY_BONUS_EXP:
 			SetPoint(type, amount);
 			val = GetPoint(type);
 			break;
-			// END_PC_BANG_ITEM_ADD		
 
 		case POINT_EXP_DOUBLE_BONUS:	// 71  
 		case POINT_GOLD_DOUBLE_BONUS:	// 72  
@@ -3716,9 +3692,6 @@ void CHARACTER::ApplyPoint(BYTE bApplyType, int iVal)
 		case APPLY_SKILL_DEFEND_BONUS:
 		case APPLY_NORMAL_HIT_DEFEND_BONUS:
 			// END_OF_DEPEND_BONUS_ATTRIBUTES
-
-		case APPLY_PC_BANG_EXP_BONUS :
-		case APPLY_PC_BANG_DROP_BONUS :
 
 		case APPLY_RESIST_WARRIOR :
 		case APPLY_RESIST_ASSASSIN :

@@ -197,7 +197,6 @@ MARKLIST_TITLE	Регистрировать символ гильдии
 MESSAGE	Это-сообщение
 MESSENGER_ADD_FRIEND	Добавить друга
 MESSENGER_DELETE_FRIEND	Удалить друга
-MESSENGER_MOBILE	Послать смс
 MESSENGER_OPEN_GUILD	Открыть окно Гильдии
 MESSENGER_TITLE	Друзья
 MESSENGER_USE_GUILD_MOVE_SKILL	Применяйте навык передвижения Гильдии
@@ -223,7 +222,6 @@ OPTION_BLOCK_WHISPER	Шептание
 OPTION_CAMERA_DISTANCE	Камера
 OPTION_CAMERA_DISTANCE_LONG	дальний
 OPTION_CAMERA_DISTANCE_SHORT	ближний
-OPTION_DELETE_MOBILE_BUTTON	Удалить номер мобильного тел.
 OPTION_EFFECT	Hit инфо
 OPTION_ENV_EFFECT	Окруж. среда
 OPTION_ENV_EFFECT_OFF	Выкл.
@@ -232,8 +230,6 @@ OPTION_FOG	Туман
 OPTION_FOG_DENSE	высокий
 OPTION_FOG_LIGHT	низкий
 OPTION_FOG_MIDDLE	Средний
-OPTION_INPUT_MOBILE_BUTTON	ввести номер мобильного тел.
-OPTION_MOBILE	мобильный тел.
 OPTION_MOB_INFO	Данные монстра
 OPTION_MOB_INFO_AGGR	Агрессия
 OPTION_MOB_INFO_LEVEL	Уровень

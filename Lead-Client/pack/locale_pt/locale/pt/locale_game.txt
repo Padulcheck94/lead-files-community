@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Vazio
 MESSENGER_FAMILY	Família
 MESSENGER_FRIEND	Amigos
 MESSENGER_GUILD	Guild
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Insere o número de confirmação que foi enviado para o teu telemóvel.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Insere o número de confirmação
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Insere o número de telemóvel para enviar a mensagem de texto.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Queres inserir o número agora?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Insere o número de telemóvel.
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Enviar mensagem.
 METIN_TEST	
 MINIMAP	Abrir Mini Mapa
 MINIMAP_CANNOT_SEE	O Mini-Mapa não pode ser visto.
@@ -797,13 +791,11 @@ TOOLTIP_MALL_AUTOLOOT	Mão que apanha automaticamente o Yang caído.	SNA
 TOOLTIP_MALL_DEFBONUS	Defesa: +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Defesa: +12~15%	SNA
 TOOLTIP_MALL_EXPBONUS	EXP: +%d%%	SA
-TOOLTIP_MALL_EXPBONUS_P_STATIC	EXP Bónus iCafe: +%d%%	SA
 TOOLTIP_MALL_EXPBONUS_STATIC	Mais 50% de Experiência.	SNA
 TOOLTIP_MALL_FISH_MIND	Dobro da probabilidade de apanhar Peixes Raros.	SNA
 TOOLTIP_MALL_GOLDBONUS	Probabilidade de apanhar Yangs multiplicada por %.1f	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Dobro da probabilidade de apanhar Yang.	SNA
 TOOLTIP_MALL_ITEMBONUS	Probabilidade de apanhar Itens multiplicada por %.1f	SA
-TOOLTIP_MALL_ITEMBONUS_P_STATIC	iCafe - Probabilidade de apanhar Itens multiplicada por %.1f	SA
 TOOLTIP_MALL_ITEMBONUS_STATIC	Dobro da probabilidade de apanhar Itens.	SNA
 TOOLTIP_MALL_MARRIAGE_FAST	Pontos de Amor aumentam mais rapidamente.	SNA
 TOOLTIP_MALL_SAFEBOX	O teu Armazém recebe mais 2 espaços de arrumação.	SNA

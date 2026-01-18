@@ -400,12 +400,6 @@ MESSENGER_EMPTY_LIST	Tom
 MESSENGER_FAMILY	Familie
 MESSENGER_FRIEND	Venner
 MESSENGER_GUILD	Orden
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Indtast bekræftigelses-koden der blev sendt til dit mobilnr.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Indtast bekræftigelses-kode
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Indtast mobilnr. for SMS-tilsending.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Vil du indtaste dette nr.?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Angiv mobilnr.
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Afsend meddelelse.
 METIN_TEST	
 MINIMAP	Åben Minimap
 MINIMAP_CANNOT_SEE	Minikort kan ikke vises.
@@ -796,13 +790,11 @@ TOOLTIP_MALL_AUTOLOOT	Automatisk samles alt Yang.	SNA
 TOOLTIP_MALL_DEFBONUS	Forsvar +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Forsvar +12~15%	SNA
 TOOLTIP_MALL_EXPBONUS	EXP +%d%%	SA
-TOOLTIP_MALL_EXPBONUS_P_STATIC	iCafe EXP-Bonus +%d%%	SA
 TOOLTIP_MALL_EXPBONUS_STATIC	50% mere EXP	SNA
 TOOLTIP_MALL_FISH_MIND	Sandsynligheden at fange en fisk er øget	SNA
 TOOLTIP_MALL_GOLDBONUS	Sandsynlighed for Yang (%.1f)	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Doppelt Yang-sandsynlighed	SNA
 TOOLTIP_MALL_ITEMBONUS	Sandsynlighed for tab af genstande (%.1f)	SA
-TOOLTIP_MALL_ITEMBONUS_P_STATIC	iCafe sandsynlighed for at få genstande plus %.1f%%	SA
 TOOLTIP_MALL_ITEMBONUS_STATIC	Doppelt tab af genstand-sandsynlighed	SNA
 TOOLTIP_MALL_MARRIAGE_FAST	Kærlighedspoints gendannes hurtigere.	SNA
 TOOLTIP_MALL_SAFEBOX	Du har øget lastrummet i din kiste.	SNA
