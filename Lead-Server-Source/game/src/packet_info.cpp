@@ -146,7 +146,6 @@ CPacketInfoCG::CPacketInfoCG()
 	Set(HEADER_CG_LOGIN, sizeof(TPacketCGLogin), "Login", true);
 	Set(HEADER_CG_LOGIN2, sizeof(TPacketCGLogin2), "Login2", true);
 	Set(HEADER_CG_LOGIN3, sizeof(TPacketCGLogin3), "Login3", true);
-	Set(HEADER_CG_LOGIN5_OPENID, sizeof(TPacketCGLogin5), "Login5", true);	//OpenID
 	Set(HEADER_CG_ATTACK, sizeof(TPacketCGAttack), "Attack", true);
 	Set(HEADER_CG_CHAT, sizeof(TPacketCGChat), "Chat", true);
 	Set(HEADER_CG_WHISPER, sizeof(TPacketCGWhisper), "Whisper", true);
@@ -247,7 +246,6 @@ CPacketInfoGG::CPacketInfoGG()
 	Set(HEADER_GG_MESSENGER_REMOVE,	sizeof(TPacketGGMessenger),	"MessengerRemove", false);
 	Set(HEADER_GG_FIND_POSITION,	sizeof(TPacketGGFindPosition),	"FindPosition", false);
 	Set(HEADER_GG_WARP_CHARACTER,	sizeof(TPacketGGWarpCharacter),	"WarpCharacter", false);
-	Set(HEADER_GG_MESSENGER_MOBILE,	sizeof(TPacketGGMessengerMobile), "MessengerMobile", false);
 	Set(HEADER_GG_GUILD_WAR_ZONE_MAP_INDEX, sizeof(TPacketGGGuildWarMapIndex), "GuildWarMapIndex", false);
 	Set(HEADER_GG_TRANSFER,		sizeof(TPacketGGTransfer),	"Transfer", false);
 	Set(HEADER_GG_XMAS_WARP_SANTA,	sizeof(TPacketGGXmasWarpSanta),	"XmasWarpSanta", false);
@@ -260,9 +258,6 @@ CPacketInfoGG::CPacketInfoGG()
 	Set(HEADER_GG_BLOCK_CHAT,		sizeof(TPacketGGBlockChat),	"BlockChat", false);
 	// END_OF_BLOCK_CHAT
 
-	Set(HEADER_GG_MONARCH_NOTICE,		sizeof(TPacketGGMonarchNotice),	"MonarchNotice", false);
-	Set(HEADER_GG_MONARCH_TRANSFER,		sizeof(TPacketMonarchGGTransfer),	"MonarchTransfer", false);
-	Set(HEADER_GG_PCBANG_UPDATE,		sizeof(TPacketPCBangUpdate),		"PCBangUpdate",		false);
 	Set(HEADER_GG_CHECK_AWAKENESS,		sizeof(TPacketGGCheckAwakeness),	"CheckAwakeness",		false);
 }
 

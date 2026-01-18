@@ -288,12 +288,6 @@ MESSENGER_EMPTY_LIST	Vide
 MESSENGER_FAMILY	Famille
 MESSENGER_FRIEND	Ami
 MESSENGER_GUILD	Guilde
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Entrez le numéro de confirmation qui sera envoyé pour votre numéro de téléphone portable.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Entrez le numéro de confirmation
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Entrez le numéro de téléphone portable pour l'envoi d'un message textuel.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Souhaitez-vous entrer le numéro maintenant ?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Entrez le numéro de téléphone portable
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Envoyer un message
 MINIMAP	Ouvrir Mini-carte
 MINIMAP_CANNOT_SEE	La mini carte ne peut pas être affichée.
 MINIMAP_CAN_NOT_SHOW_AREAMAP	La carte générale ne peut pas être affichée.
@@ -678,13 +672,11 @@ TOOLTIP_MALL_AUTOLOOT	Une main qui ramasse les Yangs automatiquement. 	SNA
 TOOLTIP_MALL_DEFBONUS	Défense +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Défense +12~15%	SNA
 TOOLTIP_MALL_EXPBONUS	EXP +%d%%	SA
-TOOLTIP_MALL_EXPBONUS_P_STATIC	Bonus CyberCafé EXP +%d%%	SA
 TOOLTIP_MALL_EXPBONUS_STATIC	50% plus d'expérience 	SNA
 TOOLTIP_MALL_FISH_MIND	La chance d'attraper un poisson est augmenter. 	SNA
 TOOLTIP_MALL_GOLDBONUS	Chance de Drop de Yangs (%.1f) 	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Double chance de Drop de Yangs 	SNA
 TOOLTIP_MALL_ITEMBONUS	Chance de Drop d'objet (%.1f) 	SA
-TOOLTIP_MALL_ITEMBONUS_P_STATIC	iCafe Chance de trouver des Yangs plus %.1f%%	SA
 TOOLTIP_MALL_ITEMBONUS_STATIC	Double chance de Drop pour les objets 	SNA
 TOOLTIP_MALL_MARRIAGE_FAST	Points d'amours augmente plus rapidement 	SNA
 TOOLTIP_MALL_SAFEBOX	Plus d'espace dans l'entrepôt disponible	SNA

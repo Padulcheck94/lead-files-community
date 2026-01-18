@@ -360,7 +360,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 				"id,name,job,voice,dir,x,y,z,map_index,exit_x,exit_y,exit_map_index,hp,mp,stamina,random_hp,random_sp,playtime,"
 				"gold,level,level_step,st,ht,dx,iq,exp,"
 				"stat_point,skill_point,sub_skill_point,stat_reset_count,part_base,part_hair,"
-				"skill_level,quickslot,skill_group,alignment,mobile,horse_level,horse_riding,horse_hp,horse_hp_droptime,horse_stamina,"
+				"skill_level,quickslot,skill_group,alignment,horse_level,horse_riding,horse_hp,horse_hp_droptime,horse_stamina,"
 				"UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(last_play),horse_skill_point FROM player%s WHERE id=%d",
 				GetTablePostfix(), packet->player_id);
 
@@ -447,10 +447,6 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 
 	int	col = 0;
 
-	// "id,name,job,voice,dir,x,y,z,map_index,exit_x,exit_y,exit_map_index,hp,mp,stamina,random_hp,random_sp,playtime,"
-	// "gold,level,level_step,st,ht,dx,iq,exp,"
-	// "stat_point,skill_point,sub_skill_point,stat_reset_count,part_base,part_hair,"
-	// "skill_level,quickslot,skill_group,alignment,mobile,horse_level,horse_riding,horse_hp,horse_stamina FROM player%s WHERE id=%d",
 	str_to_number(pkTab->id, row[col++]);
 	strlcpy(pkTab->name, row[col++], sizeof(pkTab->name));
 	str_to_number(pkTab->job, row[col++]);
@@ -500,11 +496,6 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 
 	str_to_number(pkTab->skill_group, row[col++]);
 	str_to_number(pkTab->lAlignment, row[col++]);
-
-	if (row[col])
-	{
-		strlcpy(pkTab->szMobile, row[col], sizeof(pkTab->szMobile));
-	}
 
 	col++;
 
@@ -832,11 +823,6 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 		return;
 	}
 
-	if (g_stLocale == "sjis")
-		snprintf(queryStr, sizeof(queryStr),
-			"SELECT COUNT(*) as count FROM player%s WHERE name='%s' collate sjis_japanese_ci", 
-			GetTablePostfix(), packet->player_table.name);	
-	else
 	snprintf(queryStr, sizeof(queryStr), 
 			"SELECT COUNT(*) as count FROM player%s WHERE name='%s'", GetTablePostfix(), packet->player_table.name);
 
@@ -971,39 +957,6 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 
 	TAccountTable & r = ld->GetAccountRef();
 
-	// block for japan 
-	if (g_stLocale != "sjis")
-	{
-		if (strlen(r.social_id) < 7 || strncmp(packet->private_code, r.social_id + strlen(r.social_id) - 7, 7))
-		{
-			sys_log(0, "PLAYER_DELETE FAILED len(%d)", strlen(r.social_id));
-			peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
-			peer->EncodeBYTE(packet->account_index);
-			return;
-		}
-
-		CPlayerTableCache * pkPlayerCache = GetPlayerCache(packet->player_id);
-		if (pkPlayerCache)
-		{
-			TPlayerTable * pTab = pkPlayerCache->Get();
-
-			if (pTab->level >= m_iPlayerDeleteLevelLimit)
-			{
-				sys_log(0, "PLAYER_DELETE FAILED LEVEL %u >= DELETE LIMIT %d", pTab->level, m_iPlayerDeleteLevelLimit);
-				peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
-				peer->EncodeBYTE(packet->account_index);
-				return;
-			}
-
-			if (pTab->level < m_iPlayerDeleteLevelLimitLower)
-			{
-				sys_log(0, "PLAYER_DELETE FAILED LEVEL %u < DELETE LIMIT %d", pTab->level, m_iPlayerDeleteLevelLimitLower);
-				peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
-				peer->EncodeBYTE(packet->account_index);
-				return;
-			}
-		}
-	}
 
 	char szQuery[128];
 	snprintf(szQuery, sizeof(szQuery), "SELECT p.id, p.level, p.name FROM player_index%s AS i, player%s AS p WHERE pid%u=%u AND pid%u=p.id", 
@@ -1016,9 +969,6 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 	CDBManager::instance().ReturnQuery(szQuery, QID_PLAYER_DELETE, peer->GetHandle(), pi);
 }
 
-//
-// @version	05/06/10 Bang2ni - 플레이어 삭제시 가격정보 리스트 삭제 추가.
-//
 void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 {
 	CQueryInfo * qi = (CQueryInfo *) msg->pvUserData;

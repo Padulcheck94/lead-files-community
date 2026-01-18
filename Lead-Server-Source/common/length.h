@@ -16,8 +16,6 @@ enum EMisc
 	ABILITY_MAX_NUM			= 50,
 	EMPIRE_MAX_NUM			= 4,
 	BANWORD_MAX_LEN			= 24,
-	SMS_MAX_LEN				= 80,
-	MOBILE_MAX_LEN			= 32,
 	SOCIAL_ID_MAX_LEN		= 18,
 
 	GUILD_NAME_MAX_LEN		= 12,
@@ -66,11 +64,7 @@ enum EMisc
 
 	//LIMIT_GOLD
 	GOLD_MAX = 2000000000,
-
-		
 	//END_LIMIT_GOLD
-
-	OPENID_AUTHKEY_LEN = 32, 
 
 	SHOP_TAB_NAME_MAX = 32,
 	SHOP_TAB_COUNT_MAX = 3,
@@ -254,7 +248,6 @@ enum EChatType
 	CHAT_TYPE_SHOUT,	/* 외치기 */
 	CHAT_TYPE_WHISPER,
 	CHAT_TYPE_BIG_NOTICE,
-	CHAT_TYPE_MONARCH_NOTICE,
 	CHAT_TYPE_MAX_NUM
 };
 
@@ -405,8 +398,6 @@ enum EApplyTypes
 	APPLY_NORMAL_HIT_DAMAGE_BONUS,	// 72 평타 데미지 * (100+x)%
 	APPLY_SKILL_DEFEND_BONUS,		// 73 스킬 데미지 방어 * (100-x)%
 	APPLY_NORMAL_HIT_DEFEND_BONUS,	// 74 평타 데미지 방어 * (100-x)%
-	APPLY_PC_BANG_EXP_BONUS,		// 75 PC방 아이템 EXP 보너스
-	APPLY_PC_BANG_DROP_BONUS,		// 76 PC방 아이템 드롭율 보너스
 
 	APPLY_EXTRACT_HP_PCT,			// 77 사용시 HP 소모
 
@@ -618,13 +609,13 @@ enum EMoneyLogType
 
 enum EPremiumTypes
 {
-	PREMIUM_EXP,		// 경험치가 1.2배
-	PREMIUM_ITEM,		// 아이템 드롭율이 2배
-	PREMIUM_SAFEBOX,		// 창고가 1칸에서 3칸
-	PREMIUM_AUTOLOOT,		// 돈 자동 줍기
-	PREMIUM_FISH_MIND,		// 고급 물고기 낚일 확률 상승
-	PREMIUM_MARRIAGE_FAST,	// 금실 증가 양을 빠르게합니다.
-	PREMIUM_GOLD,		// 돈 드롭율이 1.5배
+	PREMIUM_EXP,
+	PREMIUM_ITEM,
+	PREMIUM_SAFEBOX,
+	PREMIUM_AUTOLOOT,
+	PREMIUM_FISH_MIND,
+	PREMIUM_MARRIAGE_FAST,
+	PREMIUM_GOLD,
 	PREMIUM_MAX_NUM = 9
 };
 
@@ -654,28 +645,13 @@ enum SPECIAL_EFFECT
 	SE_AUTO_HPUP,
 	SE_AUTO_SPUP,
 
-	SE_EQUIP_RAMADAN_RING,		// 라마단 초승달의 반지(71135) 착용할 때 이펙트 (발동이펙트임, 지속이펙트 아님)
-	SE_EQUIP_HALLOWEEN_CANDY,		// 할로윈 사탕을 착용(-_-;)한 순간에 발동하는 이펙트
-	SE_EQUIP_HAPPINESS_RING,		// 크리스마스 행복의 반지(71143) 착용할 때 이펙트 (발동이펙트임, 지속이펙트 아님)
-	SE_EQUIP_LOVE_PENDANT,		// 발렌타인 사랑의 팬던트(71145) 착용할 때 이펙트 (발동이펙트임, 지속이펙트 아님)
+	SE_EQUIP_RAMADAN_RING,
+	SE_EQUIP_HALLOWEEN_CANDY,
+	SE_EQUIP_HAPPINESS_RING,
+	SE_EQUIP_LOVE_PENDANT,
 } ;
 
-enum ETeenFlags
-{
-	TEENFLAG_NONE = 0,
-	TEENFLAG_1HOUR,
-	TEENFLAG_2HOUR,
-	TEENFLAG_3HOUR,
-	TEENFLAG_4HOUR,
-	TEENFLAG_5HOUR,
-};
-
 #include "item_length.h"
-
-// inventory의 position을 나타내는 구조체
-// int와의 암시적 형변환이 있는 이유는,
-// 인벤 관련된 모든 함수가 window_type은 받지 않고, cell 하나만 받았기 때문에,(기존에는 인벤이 하나 뿐이어서 inventory type이란게 필요없었기 때문에,)
-// 인벤 관련 모든 함수 호출부분을 수정하는 것이 난감하기 문이다.
 
 enum EDragonSoulRefineWindowSize
 {
@@ -724,7 +700,6 @@ typedef struct SItemPos
 			return cell < INVENTORY_AND_EQUIP_SLOT_MAX;
 		case DRAGON_SOUL_INVENTORY:
 			return cell < (DRAGON_SOUL_INVENTORY_MAX_NUM);
-		// 동적으로 크기가 정해지는 window는 valid 체크를 할 수가 없다.
 		case SAFEBOX:
 		case MALL:
 			return false;
@@ -769,7 +744,7 @@ const TItemPos NPOS (RESERVED_WINDOW, WORD_MAX);
 
 typedef enum
 {
-	SHOP_COIN_TYPE_GOLD, // DEFAULT VALUE
+	SHOP_COIN_TYPE_GOLD,
 	SHOP_COIN_TYPE_SECONDARY_COIN,
 } EShopCoinType;
 

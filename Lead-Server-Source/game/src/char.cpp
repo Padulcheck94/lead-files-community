@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "../../common/teen_packet.h"
 #include "../../common/VnumHelper.h"
 
 #include "char.h"
@@ -44,11 +43,9 @@
 #include "wedding.h"
 #include "mob_manager.h"
 #include "mining.h"
-#include "monarch.h"
 #include "arena.h"
 #include "dev_log.h"
 #include "horsename_manager.h"
-#include "pcbang.h"
 #include "gm.h"
 #include "map_location.h"
 #include "BlueDragon_Binder.h"
@@ -259,8 +256,6 @@ void CHARACTER::Initialize()
 	m_dwQuestByVnum = 0;
 	m_pQuestItem = NULL;
 
-	m_szMobileAuth[0] = '\0';
-
 	m_dwUnderGuildWarInfoMessageTime = get_dword_time()-60000;
 
 	m_bUnderRefine = false;
@@ -307,8 +302,6 @@ void CHARACTER::Initialize()
 	memset(m_adwMobSkillCooltime, 0, sizeof(m_adwMobSkillCooltime));
 	// END_OF_MOB_SKILL_COOLTIME
 
-	m_isinPCBang = false;
-
 	// ARENA
 	m_pArena = NULL;
 	m_nPotionLimit = quest::CQuestManager::instance().GetEventFlag("arena_potion_limit_count");
@@ -332,8 +325,6 @@ void CHARACTER::Initialize()
 	m_iSafeboxLoadTime = 0;
 
 	m_iMyShopTime = 0;
-
-	InitMC();
 
 	m_deposit_pulse = 0;
 
@@ -1219,9 +1210,6 @@ void CHARACTER::CreatePlayerProto(TPlayerTable & tab)
 	for (int i = 0; i < QUICKSLOT_MAX_NUM; ++i)
 		tab.quickslot[i] = m_quickslot[i];
 
-	if (m_stMobile.length() && !*m_szMobileAuth)
-		strlcpy(tab.szMobile, m_stMobile.c_str(), sizeof(tab.szMobile));
-
 	thecore_memcpy(tab.parts, m_pointsInstant.parts, sizeof(tab.parts));
 
 	// REMOVE_REAL_SKILL_LEVLES
@@ -1361,28 +1349,9 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 
 	MessengerManager::instance().Logout(GetName());
 
-	if (g_TeenDesc)
-	{
-		int		offset = 0;
-		char	buf[245] = {0};
-
-		buf[0] = HEADER_GT_LOGOUT;
-		offset += 1;
-
-		memset(buf+offset, 0x00, 2);
-		offset += 2;
-
-		TAccountTable	&acc_table = GetDesc()->GetAccountTable();
-		memcpy(buf+offset, &acc_table.id, 4);
-		offset += 4;
-
-		g_TeenDesc->Packet(buf, offset);
-	}
-
 	if (GetDesc())
 	{
 		GetDesc()->BindCharacter(NULL);
-//		BindDesc(NULL);
 	}
 
 	M2_DESTROY_CHARACTER(this);
@@ -1549,8 +1518,6 @@ void CHARACTER::MainCharacterPacket()
 			strlcpy(mainChrPacket.szBGMName, bgmInfo.name.c_str(), sizeof(mainChrPacket.szBGMName));
 			GetDesc()->Packet(&mainChrPacket, sizeof(TPacketGCMainCharacter3_BGM));
 		}
-		//if (m_stMobile.length())
-		//		ChatPacket(CHAT_TYPE_COMMAND, "sms");
 	}
 	// END_OF_SUPPORT_BGM
 	else
@@ -1568,9 +1535,6 @@ void CHARACTER::MainCharacterPacket()
 		pack.skill_group = GetSkillGroup();
 		strlcpy(pack.szName, GetName(), sizeof(pack.szName));
 		GetDesc()->Packet(&pack, sizeof(TPacketGCMainCharacter));
-
-		if (m_stMobile.length())
-			ChatPacket(CHAT_TYPE_COMMAND, "sms");
 	}
 }
 
@@ -1789,8 +1753,6 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 
 	if (GetLevel() < PK_PROTECT_LEVEL)
 		m_bPKMode = PK_MODE_PROTECT;
-
-	m_stMobile = t->szMobile;
 
 	SetHorseData(t->horse);
 
@@ -2235,11 +2197,6 @@ void CHARACTER::ComputePoints()
 
 	SetPoint(POINT_HP_RECOVERY, lHPRecovery);
 	SetPoint(POINT_SP_RECOVERY, lSPRecovery);
-
-	// PC_BANG_ITEM_ADD
-	SetPoint(POINT_PC_BANG_EXP_BONUS, 0);
-	SetPoint(POINT_PC_BANG_DROP_BONUS, 0);
-	// END_PC_BANG_ITEM_ADD
 
 	int iMaxHP, iMaxSP;
 	int iMaxStamina;
@@ -3438,14 +3395,10 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 			val = GetPoint(type);
 			break;
 
-			// PC_BANG_ITEM_ADD		
-		case POINT_PC_BANG_EXP_BONUS :
-		case POINT_PC_BANG_DROP_BONUS :
 		case POINT_RAMADAN_CANDY_BONUS_EXP:
 			SetPoint(type, amount);
 			val = GetPoint(type);
 			break;
-			// END_PC_BANG_ITEM_ADD		
 
 		case POINT_EXP_DOUBLE_BONUS:	// 71  
 		case POINT_GOLD_DOUBLE_BONUS:	// 72  
@@ -3719,9 +3672,6 @@ void CHARACTER::ApplyPoint(BYTE bApplyType, int iVal)
 		case APPLY_SKILL_DEFEND_BONUS:
 		case APPLY_NORMAL_HIT_DEFEND_BONUS:
 			// END_OF_DEPEND_BONUS_ATTRIBUTES
-
-		case APPLY_PC_BANG_EXP_BONUS :
-		case APPLY_PC_BANG_DROP_BONUS :
 
 		case APPLY_RESIST_WARRIOR :
 		case APPLY_RESIST_ASSASSIN :
@@ -6616,16 +6566,6 @@ bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 	return false;
 }
 
-BOOL CHARACTER::IsMonarch() const
-{
-	//MONARCH_LIMIT
-	if (CMonarch::instance().IsMonarch(GetPlayerID(), GetEmpire()))
-		return true;
-
-	return false;
-
-	//END_MONARCH_LIMIT
-}
 void CHARACTER::Say(const std::string & s)
 {
 	struct ::packet_script packet_script;
@@ -6644,77 +6584,6 @@ void CHARACTER::Say(const std::string & s)
 	{
 		GetDesc()->Packet(buf.read_peek(), buf.size());
 	}
-}
-
-//
-// Monarch
-//
-void CHARACTER::InitMC()
-{
-	for (int n = 0; n < MI_MAX; ++n)
-	{
-		m_dwMonarchCooltime[n] = thecore_pulse(); 
-	}
-
-	m_dwMonarchCooltimelimit[MI_HEAL] = PASSES_PER_SEC(MC_HEAL);
-	m_dwMonarchCooltimelimit[MI_WARP] = PASSES_PER_SEC(MC_WARP);
-	m_dwMonarchCooltimelimit[MI_TRANSFER] = PASSES_PER_SEC(MC_TRANSFER);
-	m_dwMonarchCooltimelimit[MI_TAX] = PASSES_PER_SEC(MC_TAX);
-	m_dwMonarchCooltimelimit[MI_SUMMON] = PASSES_PER_SEC(MC_SUMMON);
-
-	m_dwMonarchCooltime[MI_HEAL] -= PASSES_PER_SEC(GetMCL(MI_HEAL));
-	m_dwMonarchCooltime[MI_WARP] -= PASSES_PER_SEC(GetMCL(MI_WARP));
-	m_dwMonarchCooltime[MI_TRANSFER] -= PASSES_PER_SEC(GetMCL(MI_TRANSFER));
-	m_dwMonarchCooltime[MI_TAX] -= PASSES_PER_SEC(GetMCL(MI_TAX));
-	m_dwMonarchCooltime[MI_SUMMON] -= PASSES_PER_SEC(GetMCL(MI_SUMMON));
-}
-
-DWORD CHARACTER::GetMC(enum MONARCH_INDEX e) const
-{
-	return m_dwMonarchCooltime[e];
-}
-
-void CHARACTER::SetMC(enum MONARCH_INDEX e)
-{
-	m_dwMonarchCooltime[e] = thecore_pulse();
-}
-
-bool CHARACTER::IsMCOK(enum MONARCH_INDEX e) const
-{
-	int iPulse = thecore_pulse();
-
-	if ((iPulse -  GetMC(e)) <  GetMCL(e))
-	{
-		if (test_server)
-			sys_log(0, " Pulse %d cooltime %d, limit %d", iPulse, GetMC(e), GetMCL(e));
-		
-		return false;
-	}
-	
-	if (test_server)
-		sys_log(0, " Pulse %d cooltime %d, limit %d", iPulse, GetMC(e), GetMCL(e));
-
-	return true;
-}
-
-DWORD CHARACTER::GetMCL(enum MONARCH_INDEX e) const
-{
-	return m_dwMonarchCooltimelimit[e];
-}
-
-DWORD CHARACTER::GetMCLTime(enum MONARCH_INDEX e) const
-{
-	int iPulse = thecore_pulse();
-
-	if (test_server)
-		sys_log(0, " Pulse %d cooltime %d, limit %d", iPulse, GetMC(e), GetMCL(e));
-
-	return  (GetMCL(e)) / passes_per_sec   -  (iPulse - GetMC(e)) / passes_per_sec;
-}
-
-bool CHARACTER::IsSiegeNPC() const
-{
-	return IsNPC() && (GetRaceNum() == 11000 || GetRaceNum() == 11002 || GetRaceNum() == 11004);
 }
 
 //------------------------------------------------

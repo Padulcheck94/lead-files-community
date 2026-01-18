@@ -13,7 +13,6 @@ enum
 	INPROC_DB,
 	INPROC_P2P,
 	INPROC_AUTH,
-	INPROC_TEEN,
 };
 
 void LoginFailure(LPDESC d, const char * c_pszStatus);
@@ -233,7 +232,6 @@ protected:
 	void		ChangeName(LPDESC d, const char * data);
 
 	void		AuthLogin(LPDESC d, const char * c_pData);
-	void		AuthLoginOpenID(LPDESC d, const char * c_pData);
 	void		ItemAward(const char * c_pData);
 
 	void		ChangeEmpirePriv(const char* c_pData);
@@ -243,8 +241,6 @@ protected:
 	void		MoneyLog(const char* c_pData);
 
 	void		SetEventFlag(const char* c_pData);
-
-	void		VCard(const char * c_pData);
 
 	void		CreateObject(const char * c_pData);
 	void		DeleteObject(const char * c_pData);
@@ -261,20 +257,7 @@ protected:
 	void		WeddingStart(TPacketWeddingStart* p);
 	void		WeddingEnd(TPacketWeddingEnd* p);
 
-	void		TakeMonarchMoney(LPDESC d, const char * data );
-	void		AddMonarchMoney(LPDESC d, const char * data );
-	void		DecMonarchMoney(LPDESC d, const char * data );
-	void		SetMonarch( LPDESC d, const char * data );
-
-	void		ChangeMonarchLord(TPacketChangeMonarchLordACK* data);
-	void		UpdateMonarchInfo(TMonarchInfo* data);
-
 	// MYSHOP_PRICE_LIST
-	/// 아이템 가격정보 리스트 요청에 대한 응답 패킷(HEADER_DG_MYSHOP_PRICELIST_RES) 처리함수
-	/**
-	* @param	d 아이템 가격정보 리스트를 요청한 플레이어의 descriptor
-	* @param	p 패킷데이터의 포인터
-	*/
 	void		MyshopPricelistRes( LPDESC d, const TPacketMyshopPricelistHeader* p );
 	// END_OF_MYSHOP_PRICE_LIST
 	//
@@ -283,7 +266,7 @@ protected:
 	//END_RELOAD_ADMIN
 
 	void		DetailLog(const TPacketNeedLoginLogInfo* info);
-	// 독일 선물 기능 테스트
+
 	void		ItemAwardInformer(TPacketItemAwardInfromer* data);
 
 	void		RespondChannelStatus(LPDESC desc, const char* pcData);
@@ -308,14 +291,11 @@ class CInputP2P : public CInputProcessor
 		void		Logout(LPDESC d, const char * c_pData);
 		int			Relay(LPDESC d, const char * c_pData, size_t uiBytes);
 		int			Notice(LPDESC d, const char * c_pData, size_t uiBytes);
-		int			MonarchNotice(LPDESC d, const char * c_pData, size_t uiBytes);
-		int			MonarchTransfer(LPDESC d, const char * c_pData);
 		int			Guild(LPDESC d, const char* c_pData, size_t uiBytes);
 		void		Shout(const char * c_pData);
 		void		Disconnect(const char * c_pData);
 		void		MessengerAdd(const char * c_pData);
 		void		MessengerRemove(const char * c_pData);
-		void		MessengerMobile(const char * c_pData);
 		void		FindPosition(LPDESC d, const char* c_pData);
 		void		WarpCharacter(const char* c_pData);
 		void		GuildWarZoneMapIndex(const char* c_pData);
@@ -324,7 +304,6 @@ class CInputP2P : public CInputProcessor
 		void		XmasWarpSantaReply(const char * c_pData);
 		void		LoginPing(LPDESC d, const char * c_pData);
 		void		BlockChat(const char * c_pData);
-		void		PCBangUpdate(const char* c_pData);
 		void		IamAwake(LPDESC d, const char * c_pData);
 
 	protected:
@@ -339,30 +318,9 @@ class CInputAuth : public CInputProcessor
 
 	protected:
 		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
-		int auth_OpenID(const char *authKey, const char *ipAddr, char *rID);
 
 	public:
 		void		Login(LPDESC d, const char * c_pData);
-		void		LoginOpenID(LPDESC d, const char * c_pData);		//2012.07.19 OpenID : 김용욱
-
-};
-
-class CInputTeen : public CInputProcessor
-{
-	public :
-		virtual BYTE GetType() { return INPROC_TEEN; }
-
-		void SetStep(int step);
-
-	protected :
-		virtual bool Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, int & r_iBytesProceed);
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData) { return 0; };
-
-	private:
-		int	m_step;
-
-		bool ProcessHandshake(LPDESC lpDesc, const void * c_pvOrig, size_t uiBytes, int & r_iBytesProceed);
-		bool ProcessMain(LPDESC lpDesc, const void * c_pvOrig, size_t uiBytes, int & r_iBytesProceed);
 };
 
 #endif /* __INC_METIN_II_GAME_INPUT_PROCESSOR__ */

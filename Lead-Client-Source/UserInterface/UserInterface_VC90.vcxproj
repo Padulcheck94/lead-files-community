@@ -98,7 +98,7 @@
       <BrowseInformation>true</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -385,10 +385,6 @@
     <None Include="..\bin\UIScript\949_LoginWindow.py" />
     <None Include="..\bin\UIScript\AtlasWindow.py" />
     <None Include="..\bin\UIScript\AttachStoneDialog.py" />
-    <None Include="..\bin\UIScript\AuctionWindow.py" />
-    <None Include="..\bin\UIScript\AuctionWindow_ListPage.py" />
-    <None Include="..\bin\UIScript\AuctionWindow_RegisterPage.py" />
-    <None Include="..\bin\UIScript\AuctionWindow_UniqueAuctionPage.py" />
     <None Include="..\bin\UIScript\ChangeGradeNameDialog.py" />
     <None Include="..\bin\UIScript\ChangePasswordDialog.py" />
     <None Include="..\bin\UIScript\CharacterWindow.py" />

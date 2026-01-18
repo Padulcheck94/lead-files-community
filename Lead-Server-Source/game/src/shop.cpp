@@ -15,7 +15,6 @@
 #include "log.h"
 #include "db.h"
 #include "questmanager.h"
-#include "monarch.h"
 #include "mob_manager.h"
 #include "locale_service.h"
 
@@ -333,47 +332,33 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 		}
 	}
 
-	// 상점에서 살떄 세금 5%
-	if (!m_pkPC) 
-	{
-		CMonarch::instance().SendtoDBAddMoney(dwTax, ch->GetEmpire(), ch);
-	}
-
-	// 군주 시스템 : 세금 징수
 	if (m_pkPC)
 	{
 		m_pkPC->SyncQuickslot(QUICKSLOT_TYPE_ITEM, item->GetCell(), 255);
 
-		if (item->GetVnum() == 90008 || item->GetVnum() == 90009) // VCARD
+		char buf[512];
+
+		if (item->GetVnum() >= 80003 && item->GetVnum() <= 80007)
 		{
-			VCardUse(m_pkPC, ch, item);
-			item = NULL;
+			snprintf(buf, sizeof(buf), "%s FROM: %u TO: %u PRICE: %u", item->GetName(), ch->GetPlayerID(), m_pkPC->GetPlayerID(), dwPrice);
+			LogManager::instance().GoldBarLog(ch->GetPlayerID(), item->GetID(), SHOP_BUY, buf);
+			LogManager::instance().GoldBarLog(m_pkPC->GetPlayerID(), item->GetID(), SHOP_SELL, buf);
 		}
+			
+		item->RemoveFromCharacter();
+		if (item->IsDragonSoul())
+			item->AddToCharacter(ch, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyPos));
 		else
-		{
-			char buf[512];
-
-			if (item->GetVnum() >= 80003 && item->GetVnum() <= 80007)
-			{
-				snprintf(buf, sizeof(buf), "%s FROM: %u TO: %u PRICE: %u", item->GetName(), ch->GetPlayerID(), m_pkPC->GetPlayerID(), dwPrice);
-				LogManager::instance().GoldBarLog(ch->GetPlayerID(), item->GetID(), SHOP_BUY, buf);
-				LogManager::instance().GoldBarLog(m_pkPC->GetPlayerID(), item->GetID(), SHOP_SELL, buf);
-			}
-			
-			item->RemoveFromCharacter();
-			if (item->IsDragonSoul())
-				item->AddToCharacter(ch, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyPos));
-			else
-				item->AddToCharacter(ch, TItemPos(INVENTORY, iEmptyPos));
-			ITEM_MANAGER::instance().FlushDelayedSave(item);
+			item->AddToCharacter(ch, TItemPos(INVENTORY, iEmptyPos));
+		ITEM_MANAGER::instance().FlushDelayedSave(item);
 			
 
-			snprintf(buf, sizeof(buf), "%s %u(%s) %u %u", item->GetName(), m_pkPC->GetPlayerID(), m_pkPC->GetName(), dwPrice, item->GetCount());
-			LogManager::instance().ItemLog(ch, item, "SHOP_BUY", buf);
+		snprintf(buf, sizeof(buf), "%s %u(%s) %u %u", item->GetName(), m_pkPC->GetPlayerID(), m_pkPC->GetName(), dwPrice, item->GetCount());
+		LogManager::instance().ItemLog(ch, item, "SHOP_BUY", buf);
 
-			snprintf(buf, sizeof(buf), "%s %u(%s) %u %u", item->GetName(), ch->GetPlayerID(), ch->GetName(), dwPrice, item->GetCount());
-			LogManager::instance().ItemLog(m_pkPC, item, "SHOP_SELL", buf);
-		}
+		snprintf(buf, sizeof(buf), "%s %u(%s) %u %u", item->GetName(), ch->GetPlayerID(), ch->GetName(), dwPrice, item->GetCount());
+		LogManager::instance().ItemLog(m_pkPC, item, "SHOP_SELL", buf);
+
 
 		r_item.pkItem = NULL;
 		BroadcastUpdateItem(pos);
@@ -383,7 +368,6 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 		if (iVal > 0)
 			m_pkPC->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("판매금액의 %d %% 가 세금으로 나가게됩니다"), iVal);
 
-		CMonarch::instance().SendtoDBAddMoney(dwTax, m_pkPC->GetEmpire(), m_pkPC);
 	}
 	else
 	{

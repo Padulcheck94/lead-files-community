@@ -707,7 +707,7 @@ int GetDropPerKillPct(int iMinimum, int iDefault, int iDeltaPercent, const char 
 
 	if ((iVal = quest::CQuestManager::instance().GetEventFlag(c_pszFlag)))
 	{
-		if (!test_server && !LC_IsJapan())
+		if (!test_server)
 		{
 			if (iVal < iMinimum)
 				iVal = iDefault;
@@ -755,14 +755,6 @@ bool ITEM_MANAGER::GetDropPct(LPCHARACTER pkChr, LPCHARACTER pkKiller, OUT int& 
 			pkKiller->IsEquipUniqueGroup(UNIQUE_GROUP_DOUBLE_ITEM))
 		iDeltaPercent += iDeltaPercent;
 	// END_OF_ADD_PREMIUM
-
-	// PC_BANG_ITEM_ADD
-	if (pkKiller->GetPoint(POINT_PC_BANG_DROP_BONUS) > 0)
-	{
-		if (pkKiller->IsPCBang() == true)
-			iDeltaPercent += iDeltaPercent * pkKiller->GetPoint(POINT_PC_BANG_DROP_BONUS)/100;
-	}
-	// END_PC_BANG_ITEM_ADD
 
 	iRandRange = 4000000;
 	iRandRange = iRandRange * 100 / 

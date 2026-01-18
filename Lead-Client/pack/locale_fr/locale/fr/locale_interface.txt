@@ -193,7 +193,6 @@ MARKLIST_TITLE	Enregistrer le symbole de Guilde
 MESSAGE	Ceci est un message
 MESSENGER_ADD_FRIEND	Ajouter un(e) ami(e)
 MESSENGER_DELETE_FRIEND	Effacer un(e) ami(e)
-MESSENGER_MOBILE	Envoyer un message
 MESSENGER_OPEN_GUILD	Ouvrir la fenêtre de Guilde
 MESSENGER_TITLE	Amis
 MESSENGER_USE_GUILD_MOVE_SKILL	Utilisez la compétence de Guilde de mouvement
@@ -219,14 +218,11 @@ OPTION_BLOCK_WHISPER	Chuchoter
 OPTION_CAMERA_DISTANCE	Caméra
 OPTION_CAMERA_DISTANCE_LONG	Loin
 OPTION_CAMERA_DISTANCE_SHORT	Proche
-OPTION_DELETE_MOBILE_BUTTON	Effacer le numéro de téléphone portable
 OPTION_EFFECT	Infos combat
 OPTION_FOG	Brouillard
 OPTION_FOG_DENSE	Epais
 OPTION_FOG_LIGHT	Léger
 OPTION_FOG_MIDDLE	Moyen
-OPTION_INPUT_MOBILE_BUTTON	Entrer le numéro de téléphone portable
-OPTION_MOBILE	Téléphone portable
 OPTION_MUSIC	Musique
 OPTION_MUSIC_CHANGE	Changer
 OPTION_MUSIC_DEFAULT_THEMA	Musique standard de Metin2

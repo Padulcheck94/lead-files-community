@@ -230,7 +230,7 @@ LPCHARACTER CHARACTER_MANAGER::FindPC(const char * name)
 
 LPCHARACTER CHARACTER_MANAGER::SpawnMobRandomPosition(DWORD dwVnum, long lMapIndex)
 {
-	// 왜구 스폰할지말지를 결정할 수 있게함
+	// Tanaka Pirates event
 	{
 		if (dwVnum == 5001 && !quest::CQuestManager::instance().GetEventFlag("japan_regen"))
 		{

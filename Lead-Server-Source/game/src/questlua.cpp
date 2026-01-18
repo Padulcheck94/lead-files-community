@@ -452,10 +452,7 @@ namespace quest
 		RegisterQuestFunctionTable();
 		RegisterTargetFunctionTable();
 		RegisterArenaFunctionTable();
-		RegisterForkedFunctionTable();
-		RegisterMonarchFunctionTable(); 
 		RegisterOXEventFunctionTable();
-		RegisterMgmtFunctionTable();
 		RegisterBattleArenaFunctionTable();
 		RegisterDragonLairFunctionTable();
 		RegisterDragonSoulFunctionTable();

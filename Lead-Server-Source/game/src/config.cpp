@@ -72,9 +72,6 @@ string g_stBlockDate = "30000705";
 
 extern string g_stLocale;
 
-char	teen_addr[ADDRESS_MAX_LEN + 1] = {0};
-WORD	teen_port	= 0;
-
 int SPEEDHACK_LIMIT_COUNT   = 50;
 int SPEEDHACK_LIMIT_BONUS   = 80;
 int g_iSyncHackLimitCount = 20; // 10 -> 20 2013 09 11 CYH
@@ -106,12 +103,6 @@ BYTE gPartyGapLevel = 30;
 int gGuildCreateFee = 200000;
 
 bool g_BlockCharCreation = false;
-
-
-//OPENID
-int		openid_server = 0;
-char	openid_host[256];
-char	openid_uri[256];
 
 bool is_string_true(const char * string)
 {
@@ -471,24 +462,6 @@ void config_init(const string& st_localeServiceName)
 
 			char buf[1024];
 			snprintf(buf, sizeof(buf), "LOG_SQL: %s %s %s %s %d", log_host, log_user, log_pwd, log_db, log_port);
-			continue;
-		}
-
-		
-		//OPENID		
-		TOKEN("WEB_AUTH")
-		{
-			const char * line = two_arguments(value_string, openid_host, sizeof(openid_host), openid_uri, sizeof(openid_uri));
-
-			if (!*openid_host || !*openid_uri)
-			{
-				fprintf(stderr, "WEB_AUTH syntax error (ex: WEB_AUTH <host(metin2.co.kr) uri(/kyw/gameauth.php)>\n");
-				exit(1);
-			}
-
-			char buf[1024];
-			openid_server = 1;
-			snprintf(buf, sizeof(buf), "WEB_AUTH: %s %s", openid_host, openid_uri);
 			continue;
 		}
 	}
@@ -896,24 +869,6 @@ void config_init(const string& st_localeServiceName)
 				g_setQuestObjectDir.insert(dir);
 				sys_log(0, "QUEST_OBJECT_DIR INSERT : %s", dir .c_str());
 			}
-		}
-
-		TOKEN("teen_addr")
-		{
-			strlcpy(teen_addr, value_string, sizeof(teen_addr));
-
-			for (int n =0; n < ADDRESS_MAX_LEN; ++n)
-			{
-				if (teen_addr[n] == ' ')
-					teen_addr[n] = '\0';
-			}
-
-			continue;
-		}
-
-		TOKEN("teen_port")
-		{
-			str_to_number(teen_port, value_string);
 		}
 
 		TOKEN("synchack_limit_count")

@@ -69,6 +69,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -92,7 +93,6 @@
     <ClCompile Include="LoginData.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Marriage.cpp" />
-    <ClCompile Include="Monarch.cpp" />
     <ClCompile Include="MoneyLog.cpp" />
     <ClCompile Include="NetBase.cpp" />
     <ClCompile Include="Peer.cpp" />
@@ -118,7 +118,6 @@
     <ClInclude Include="LoginData.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Marriage.h" />
-    <ClInclude Include="Monarch.h" />
     <ClInclude Include="MoneyLog.h" />
     <ClInclude Include="NetBase.h" />
     <ClInclude Include="Peer.h" />

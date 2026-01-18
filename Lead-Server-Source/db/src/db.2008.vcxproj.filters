@@ -64,9 +64,6 @@
     <ClCompile Include="Marriage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Monarch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MoneyLog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -127,9 +124,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Marriage.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Monarch.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="MoneyLog.h">

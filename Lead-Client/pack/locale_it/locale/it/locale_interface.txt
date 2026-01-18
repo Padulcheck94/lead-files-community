@@ -197,7 +197,6 @@ MARKLIST_TITLE	Registra il logo della Gilda
 MESSAGE	Questo è un messaggio
 MESSENGER_ADD_FRIEND	Aggiungi amico
 MESSENGER_DELETE_FRIEND	Cancella amico
-MESSENGER_MOBILE	Invia SMS
 MESSENGER_OPEN_GUILD	Apri la finestra della Gilda
 MESSENGER_TITLE	Amici
 MESSENGER_USE_GUILD_MOVE_SKILL	Utilizza l'abitlità di movimento della Gilda
@@ -223,7 +222,6 @@ OPTION_BLOCK_WHISPER	Chat privata
 OPTION_CAMERA_DISTANCE	Videocamera
 OPTION_CAMERA_DISTANCE_LONG	Lontano
 OPTION_CAMERA_DISTANCE_SHORT	Vicino
-OPTION_DELETE_MOBILE_BUTTON	Cancella numero di cellulare
 OPTION_EFFECT	Visualizzatore dei bersagli
 OPTION_ENV_EFFECT	Ambiente
 OPTION_ENV_EFFECT_OFF	Off
@@ -232,8 +230,6 @@ OPTION_FOG	Nebbia
 OPTION_FOG_DENSE	Molto
 OPTION_FOG_LIGHT	Poco
 OPTION_FOG_MIDDLE	Media
-OPTION_INPUT_MOBILE_BUTTON	Inserisci il numero di cellulare
-OPTION_MOBILE	Cellulare
 OPTION_MOB_INFO	Info mostri
 OPTION_MOB_INFO_AGGR	Aggressivo
 OPTION_MOB_INFO_LEVEL	Livello

@@ -91,17 +91,9 @@ enum
 	// SCRIPT_SELECT_ITEM
 	HEADER_CG_SCRIPT_SELECT_ITEM	= 114,
 	// END_OF_SCRIPT_SELECT_ITEM
-	
-	HEADER_CG_LOGIN5_OPENID			= 116,	//OpenID : 클라이언트로부터 OpenID 인증키를 받는다.
 
 //	HEADER_CG_ROULETTE				= 200,
 
-	//
-
-	//NOTE : 이런 개XXX 정말 이거 Packet설계한 사람은 누구냐. 이렇게 코딩하고 밥이 넘어가나.
-	//enum을 별도로 구별을 하던가. 아님 namepsace로 구별을 하던가..
-	//정말 packet generator까지는 바라지도 않는다. 이런 씨XX
-	//이러다가 숫자 겹치면 누가 책임지는데???
 	HEADER_CG_DRAGON_SOUL_REFINE			= 205,
 	HEADER_CG_STATE_CHECKER					= 206,
 
@@ -272,8 +264,6 @@ enum
 	HEADER_GC_HYBRIDCRYPT_SDB		= 153, // SDB means Supplmentary Data Blocks
 	//HYBRID CRYPT
 
-	HEADER_GC_AUTH_SUCCESS_OPENID	= 154,
-
 	// ROULETTE
 	HEADER_GC_ROULETTE					= 200, 
 	// END_ROULETTE			
@@ -300,7 +290,6 @@ enum
 	HEADER_GG_MESSENGER_REMOVE                  = 11,
 	HEADER_GG_FIND_POSITION			= 12,
 	HEADER_GG_WARP_CHARACTER			= 13,
-	HEADER_GG_MESSENGER_MOBILE			= 14,
 	HEADER_GG_GUILD_WAR_ZONE_MAP_INDEX		= 15,
 	HEADER_GG_TRANSFER				= 16,
 	HEADER_GG_XMAS_WARP_SANTA			= 17,
@@ -309,11 +298,6 @@ enum
 	HEADER_GG_LOGIN_PING			= 20,
 	HEADER_GG_CHECK_CLIENT_VERSION		= 21,
 	HEADER_GG_BLOCK_CHAT			= 22,
-
-	HEADER_GG_MONARCH_NOTICE		= 26,
-	HEADER_GG_MONARCH_TRANSFER		= 27,
-	HEADER_GG_PCBANG_UPDATE			= 28,
-
 	HEADER_GG_CHECK_AWAKENESS		= 29,
 };
 
@@ -354,21 +338,6 @@ typedef struct SPacketGGNotice
 	long	lSize;
 } TPacketGGNotice;
 
-typedef struct SPacketGGMonarchNotice
-{
-	BYTE	bHeader;
-	BYTE	bEmpire;
-	long	lSize;
-} TPacketGGMonarchNotice;
-
-//FORKED_ROAD
-typedef struct SPacketGGForkedMapInfo
-{
-	BYTE	bHeader;
-	BYTE	bPass;
-	BYTE	bSungzi;
-} TPacketGGForkedMapInfo;
-//END_FORKED_ROAD
 typedef struct SPacketGGShutdown
 {
 	BYTE	bHeader;
@@ -437,11 +406,6 @@ typedef struct SPacketGGXmasWarpSantaReply
 	BYTE	bChannel;
 } TPacketGGXmasWarpSantaReply;
 
-typedef struct SMessengerData
-{
-	char        szMobile[MOBILE_MAX_LEN + 1];
-} TMessengerData;
-
 typedef struct SPacketGGMessenger
 {   
 	BYTE        bHeader;
@@ -449,12 +413,6 @@ typedef struct SPacketGGMessenger
 	char        szCompanion[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketGGMessenger;
 
-typedef struct SPacketGGMessengerMobile
-{   
-	BYTE        bHeader;
-	char        szName[CHARACTER_NAME_MAX_LEN + 1];
-	char        szMobile[MOBILE_MAX_LEN + 1];
-} TPacketGGMessengerMobile;
 
 typedef struct SPacketGGFindPosition
 {
@@ -539,13 +497,6 @@ typedef struct command_login3
 	char	passwd[PASSWD_MAX_LEN + 1];
 	DWORD	adwClientKey[4];
 } TPacketCGLogin3;
-
-typedef struct command_login5
-{
-	BYTE	header;
-	char	authKey[OPENID_AUTHKEY_LEN + 1];
-	DWORD	adwClientKey[4];
-} TPacketCGLogin5;
 
 typedef struct packet_login_key
 {
@@ -834,7 +785,6 @@ enum EPhase
 	PHASE_DBCLIENT,
 	PHASE_P2P,
 	PHASE_AUTH,
-	PHASE_TEEN,
 };
 
 typedef struct packet_phase
@@ -872,14 +822,6 @@ typedef struct packet_auth_success
 	DWORD	dwLoginKey;
 	BYTE	bResult;
 } TPacketGCAuthSuccess;
-
-typedef struct packet_auth_success_openid
-{
-	BYTE	bHeader;
-	DWORD	dwLoginKey;
-	BYTE	bResult;
-	char	login[LOGIN_MAX_LEN + 1];
-} TPacketGCAuthSuccessOpenID;
 
 typedef struct packet_login_failure
 {
@@ -1446,8 +1388,7 @@ enum
 	MESSENGER_SUBHEADER_GC_LIST,
 	MESSENGER_SUBHEADER_GC_LOGIN,
 	MESSENGER_SUBHEADER_GC_LOGOUT,
-	MESSENGER_SUBHEADER_GC_INVITE,
-	MESSENGER_SUBHEADER_GC_MOBILE
+	MESSENGER_SUBHEADER_GC_INVITE
 };
 
 typedef struct packet_messenger
@@ -2110,20 +2051,6 @@ typedef struct packet_damage_info
 	BYTE flag;
 	int damage;
 } TPacketGCDamageInfo;
-
-typedef struct SPacketGGMonarchTransfer
-{
-	BYTE	bHeader;
-	DWORD	dwTargetPID;
-	long	x;
-	long	y;
-} TPacketMonarchGGTransfer;
-
-typedef struct SPacketGGPCBangUpdate
-{
-	BYTE bHeader;
-	unsigned long ulPCBangID;
-} TPacketPCBangUpdate;
 
 typedef struct SPacketGGCheckAwakeness
 {

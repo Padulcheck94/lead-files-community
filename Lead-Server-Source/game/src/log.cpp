@@ -129,12 +129,6 @@ void LogManager::HackCRCLog(const char * c_pszHackName, const char * c_pszLogin,
 	Query("INSERT INTO hack_crc_log (time, login, name, ip, server, why, crc) VALUES(NOW(), '%s', '%s', '%s', '%s', '%s', %u)", c_pszLogin, c_pszName, c_pszIP, g_stHostname.c_str(), c_pszHackName, dwCRC);
 }
 
-void LogManager::PCBangLoginLog(DWORD dwPCBangID, const char* c_szPCBangIP, DWORD dwPlayerID, DWORD dwPlayTime)
-{
-	Query("INSERT INTO pcbang_loginlog (time, pcbang_id, ip, pid, play_time) VALUES (NOW(), %u, '%s', %u, %u)",
-			dwPCBangID, c_szPCBangIP, dwPlayerID, dwPlayTime);
-}
-
 void LogManager::GoldBarLog(DWORD dwPID, DWORD dwItemID, GOLDBAR_HOW eHow, const char* c_pszHint)
 {
 	char szHow[32+1];
@@ -249,12 +243,6 @@ void LogManager::BootLog(const char * c_pszHostName, BYTE bChannel)
 {
 	Query("INSERT INTO bootlog (time, hostname, channel) VALUES(NOW(), '%s', %d)",
 			c_pszHostName, bChannel);
-}
-
-void LogManager::VCardLog(DWORD vcard_id, DWORD x, DWORD y, const char * hostname, const char * giver_name, const char * giver_ip, const char * taker_name, const char * taker_ip)
-{
-	Query("INSERT DELAYED INTO vcard_log (vcard_id, x, y, hostname, giver_name, giver_ip, taker_name, taker_ip) VALUES(%u, %u, %u, '%s', '%s', '%s', '%s', '%s')",
-			vcard_id, x, y, hostname, giver_name, giver_ip, taker_name, taker_ip);
 }
 
 void LogManager::FishLog(DWORD dwPID, int prob_idx, int fish_id, int fish_level, DWORD dwMiliseconds, DWORD dwVnum, DWORD dwValue)

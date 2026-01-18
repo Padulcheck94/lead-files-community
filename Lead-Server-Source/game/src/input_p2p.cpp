@@ -16,9 +16,7 @@
 #include "dev_log.h"
 #include "locale_service.h"
 #include "questmanager.h"
-#include "pcbang.h"
 #include "skill.h"
-#include "threeway_war.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +64,7 @@ int CInputP2P::Relay(LPDESC d, const char * c_pData, size_t uiBytes)
 	{
 		if (pkChr->IsBlockMode(BLOCK_WHISPER))
 		{
-			// ±Ó¼Ó¸» °ÅºÎ »óÅÂ¿¡¼­ ±Ó¼Ó¸» °ÅºÎ.
+			// ê·“ì†ë§ ê±°ë¶€ ìƒíƒœì—ì„œ ê·“ì†ë§ ê±°ë¶€.
 			return p->lSize;
 		}
 
@@ -74,12 +72,12 @@ int CInputP2P::Relay(LPDESC d, const char * c_pData, size_t uiBytes)
 		memcpy(buf, c_pbData, MIN(p->lSize, sizeof(buf)));
 
 		TPacketGCWhisper* p2 = (TPacketGCWhisper*) buf;
-		// bType »óÀ§ 4ºñÆ®: Empire ¹øÈ£
-		// bType ÇÏÀ§ 4ºñÆ®: EWhisperType
+		// bType ìƒìœ„ 4ë¹„íŠ¸: Empire ë²ˆí˜¸
+		// bType í•˜ìœ„ 4ë¹„íŠ¸: EWhisperType
 		BYTE bToEmpire = (p2->bType >> 4);
 		p2->bType = p2->bType & 0x0F;
 		if(p2->bType == 0x0F) {
-			// ½Ã½ºÅÛ ¸Þ¼¼Áö ±Ó¼Ó¸»Àº bTypeÀÇ »óÀ§ºñÆ®±îÁö ¸ðµÎ »ç¿ëÇÔ.
+			// ì‹œìŠ¤í…œ ë©”ì„¸ì§€ ê·“ì†ë§ì€ bTypeì˜ ìƒìœ„ë¹„íŠ¸ê¹Œì§€ ëª¨ë‘ ì‚¬ìš©í•¨.
 			p2->bType = WHISPER_TYPE_SYSTEM;
 		} else {
 			if (!pkChr->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_LANGUAGE))
@@ -118,46 +116,6 @@ int CInputP2P::Notice(LPDESC d, const char * c_pData, size_t uiBytes)
 	strlcpy(szBuf, c_pData + sizeof(TPacketGGNotice), MIN(p->lSize + 1, sizeof(szBuf)));
 	SendNotice(szBuf);
 	return (p->lSize);
-}
-
-int CInputP2P::MonarchNotice(LPDESC d, const char * c_pData, size_t uiBytes)
-{
-	TPacketGGMonarchNotice * p = (TPacketGGMonarchNotice *) c_pData;
-
-	if (uiBytes < p->lSize + sizeof(TPacketGGMonarchNotice))
-		return -1;
-
-	if (p->lSize < 0)
-	{
-		sys_err("invalid packet length %d", p->lSize);
-		d->SetPhase(PHASE_CLOSE);
-		return -1;
-	}
-
-	char szBuf[256+1];
-	strlcpy(szBuf, c_pData + sizeof(TPacketGGMonarchNotice), MIN(p->lSize + 1, sizeof(szBuf)));
-	SendMonarchNotice(p->bEmpire, szBuf);
-	return (p->lSize);
-}
-
-int CInputP2P::MonarchTransfer(LPDESC d, const char* c_pData)
-{
-	TPacketMonarchGGTransfer* p = (TPacketMonarchGGTransfer*) c_pData;
-	LPCHARACTER pTargetChar = CHARACTER_MANAGER::instance().FindByPID(p->dwTargetPID);
-
-	if (pTargetChar != NULL)
-	{
-		unsigned int qIndex = quest::CQuestManager::instance().GetQuestIndexByName("monarch_transfer");
-
-		if (qIndex != 0)
-		{
-			pTargetChar->SetQuestFlag("monarch_transfer.x", p->x);
-			pTargetChar->SetQuestFlag("monarch_transfer.y", p->y);
-			quest::CQuestManager::instance().Letter(pTargetChar->GetPlayerID(), qIndex, 0);
-		}
-	}
-
-	return 0;
 }
 
 int CInputP2P::Guild(LPDESC d, const char* c_pData, size_t uiBytes)
@@ -337,7 +295,7 @@ void CInputP2P::XmasWarpSanta(const char * c_pData)
 		else
 			iNextSpawnDelay = 50 * 60;
 
-		xmas::SpawnSanta(p->lMapIndex, iNextSpawnDelay); // 50ºÐÀÖ´Ù°¡ »õ·Î¿î »êÅ¸°¡ ³ªÅ¸³² (ÇÑ±¹Àº 20ºÐ)
+		xmas::SpawnSanta(p->lMapIndex, iNextSpawnDelay); // 50ë¶„ìžˆë‹¤ê°€ ìƒˆë¡œìš´ ì‚°íƒ€ê°€ ë‚˜íƒ€ë‚¨ (í•œêµ­ì€ 20ë¶„)
 
 		TPacketGGXmasWarpSantaReply pack_reply;
 		pack_reply.bHeader = HEADER_GG_XMAS_WARP_SANTA_REPLY;
@@ -392,13 +350,6 @@ void CInputP2P::BlockChat(const char * c_pData)
 }   
 // END_OF_BLOCK_CHAT
 //
-
-void CInputP2P::PCBangUpdate(const char* c_pData)
-{
-	TPacketPCBangUpdate* p = (TPacketPCBangUpdate*)c_pData;
-
-	CPCBangManager::instance().RequestUpdateIPList(p->ulPCBangID);
-}
 
 void CInputP2P::IamAwake(LPDESC d, const char * c_pData)
 {
@@ -502,20 +453,6 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_GG_BLOCK_CHAT:
 			BlockChat(c_pData);
-			break;
-
-
-		case HEADER_GG_MONARCH_NOTICE:
-			if ((iExtraLen = MonarchNotice(d, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_GG_MONARCH_TRANSFER :
-			MonarchTransfer(d, c_pData);
-			break;
-
-		case HEADER_GG_PCBANG_UPDATE :
-			PCBangUpdate(c_pData);
 			break;
 
 		case HEADER_GG_CHECK_AWAKENESS:

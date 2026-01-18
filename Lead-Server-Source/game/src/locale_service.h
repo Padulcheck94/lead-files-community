@@ -14,7 +14,6 @@ enum eLocalization
 	LC_NOSET = 0,
 
 	LC_YMIR,
-	LC_JAPAN,
 	LC_ENGLISH,
 	LC_HONGKONG,
 	LC_GERMANY,
@@ -52,7 +51,6 @@ eLocalization LC_GetLocalType();
 
 bool LC_IsLocale( const eLocalization t );
 bool LC_IsYMIR();
-bool LC_IsJapan();
 bool LC_IsEnglish();
 bool LC_IsHongKong();
 bool LC_IsGermany();
