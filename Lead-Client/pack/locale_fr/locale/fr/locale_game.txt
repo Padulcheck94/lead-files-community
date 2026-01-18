@@ -288,12 +288,6 @@ MESSENGER_EMPTY_LIST	Vide
 MESSENGER_FAMILY	Famille
 MESSENGER_FRIEND	Ami
 MESSENGER_GUILD	Guilde
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Entrez le numéro de confirmation qui sera envoyé pour votre numéro de téléphone portable.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Entrez le numéro de confirmation
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Entrez le numéro de téléphone portable pour l'envoi d'un message textuel.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Souhaitez-vous entrer le numéro maintenant ?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Entrez le numéro de téléphone portable
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Envoyer un message
 MINIMAP	Ouvrir Mini-carte
 MINIMAP_CANNOT_SEE	La mini carte ne peut pas être affichée.
 MINIMAP_CAN_NOT_SHOW_AREAMAP	La carte générale ne peut pas être affichée.

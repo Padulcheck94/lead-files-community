@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Vuoto
 MESSENGER_FAMILY	Famiglia
 MESSENGER_FRIEND	Amici
 MESSENGER_GUILD	Gilda
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Inserisci il codice di conferma che è stato inviato al tuo cellulare.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Inserisci il codice di conferma
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Inserisci il numero di cellulare per l'invio di SMS.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Desideri inserire il numero ora?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Inserisci numero di cellulare
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Invia messaggio.
 METIN_TEST	
 MINIMAP	Mini-mappa
 MINIMAP_CANNOT_SEE	La mappa miniaturizzata non può essere visualizzata.

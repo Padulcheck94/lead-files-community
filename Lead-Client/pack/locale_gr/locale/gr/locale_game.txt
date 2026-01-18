@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	’δειο
 MESSENGER_FAMILY	Οικογένεια
 MESSENGER_FRIEND	Φίλοι
 MESSENGER_GUILD	Συντεχνία
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Εισήγαγε τον αριθμό επιβεβαίωσης που αποστάλθηκε στο κινητό σου.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Εισαγωγή αριθμού επιβεβαίωσης.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Εισήγαγε τον αριθμό κινητού τηλεφώνου για την αποστολή του Μηνύματος.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Θέλεις να εισάγεις τώρα τον αριθμό;
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Εισαγωγή αριθμού κινητού τηλεφώνου.
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Αποστολή μηνύματος.
 METIN_TEST	
 MINIMAP	’νοιγμα μικρού χάρτη
 MINIMAP_CANNOT_SEE	Δε μπορείς να δεις το Μικρό Χάρτη.

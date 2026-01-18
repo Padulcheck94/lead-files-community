@@ -310,7 +310,6 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool SendC2CPacket(DWORD dwSize, void * pData);
 		bool SendChatPacket(const char * c_szChat, BYTE byType = CHAT_TYPE_TALKING);
 		bool SendWhisperPacket(const char * name, const char * c_szChat);
-		bool SendMobileMessagePacket(const char * name, const char * c_szChat);
 		bool SendMessengerAddByVIDPacket(DWORD vid);
 		bool SendMessengerAddByNamePacket(const char * c_szName);
 		bool SendMessengerRemovePacket(const char * c_szKey, const char * c_szName);

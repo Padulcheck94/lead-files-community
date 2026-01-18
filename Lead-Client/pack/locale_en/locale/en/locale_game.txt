@@ -288,12 +288,6 @@ MESSENGER_EMPTY_LIST	Empty
 MESSENGER_FAMILY	Family	
 MESSENGER_FRIEND	Friends	
 MESSENGER_GUILD	Guild	
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Enter the confirmation number that was sent to your cell phone.	
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Enter confirmation number	
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Enter the cell phone number for the Text message sending.	
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Do you want to enter the number now?	
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Enter cell phone number.	
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Send message.	
 MINIMAP	Open Mini Map	
 MINIMAP_CANNOT_SEE	Mini Map cannot be seen.	
 MINIMAP_CAN_NOT_SHOW_AREAMAP	Large Map cannot be shown.

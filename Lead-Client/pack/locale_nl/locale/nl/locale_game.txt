@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Leeg
 MESSENGER_FAMILY	Familie	
 MESSENGER_FRIEND	Vrienden	
 MESSENGER_GUILD	Gilde	
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Voer het confirmatie nummer in dat naar je mobiele telefoon is gestuurd.	
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Voer confirmatie nummer in	
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Voer mobiele telefoon nummer in voor het sms.	
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Wil je nu het nummer invoeren?	
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Voer mobiele telefoon nummr in.	
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Stuur bericht.	
 METIN_TEST	
 MINIMAP	Open Mini Map	
 MINIMAP_CANNOT_SEE	Mini Map kan niet gezien worden.	

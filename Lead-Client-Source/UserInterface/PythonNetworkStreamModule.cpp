@@ -484,21 +484,6 @@ PyObject* netSendWhisperPacket(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject* netSendMobileMessagePacket(PyObject* poSelf, PyObject* poArgs)
-{
-	char* szName;
-	char* szLine;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
-
-	if (!PyTuple_GetString(poArgs, 1, &szLine))
-		return Py_BuildException();
-
-	CPythonNetworkStream& rkNetStream=CPythonNetworkStream::Instance();
-	rkNetStream.SendMobileMessagePacket(szName, szLine);
-	return Py_BuildNone();
-}
-
 PyObject* netSendCharacterPositionPacket(PyObject* poSelf, PyObject* poArgs)
 {
 	int iPosition;
@@ -1732,7 +1717,6 @@ void initnet()
 		{ "SendChatPacket",						netSendChatPacket,						METH_VARARGS },
 		{ "SendEmoticon",						netSendEmoticon,						METH_VARARGS },
 		{ "SendWhisperPacket",					netSendWhisperPacket,					METH_VARARGS },
-		{ "SendMobileMessagePacket",			netSendMobileMessagePacket,				METH_VARARGS },
 
 		{ "SendCharacterPositionPacket",		netSendCharacterPositionPacket,			METH_VARARGS },
 

@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Pusto
 MESSENGER_FAMILY	Rodzina
 MESSENGER_FRIEND	Znajomi
 MESSENGER_GUILD	Gildia
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	WprowadŸ numer potwierdzaj¹cy, który zosta³ wys³any na twój telefon komórkowy.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	WprowadŸ numer potwierdzaj¹cy
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	WprowadŸ numer telefonu komórkowego do wysy³ania wiadomoœci tekstowych.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Czy chcesz teraz wprowadziæ numer?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	WprowadŸ numer telefonu komórkowego.
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Wyœlij wiadomoœæ.
 METIN_TEST	
 MINIMAP	Otwórz Mini Mapê
 MINIMAP_CANNOT_SEE	Nie mo¿na zobaczyæ Mini Mapy.

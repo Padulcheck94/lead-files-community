@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Boþ
 MESSENGER_FAMILY	Aile
 MESSENGER_FRIEND	Arkadaþlar
 MESSENGER_GUILD	Lonca
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Cep telefonunuza gönderilen onay numarasýný giriniz.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Onaylama kodunu gir.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Text mesajlarýnýn gönderilmesi için cep telefonu numaranýzý giriniz.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Numarayý þimdi girmek istiyor musun?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Cep telefonu numaranýzý giriniz.
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Mesaj gönder.
 METIN_TEST	
 MINIMAP	Küçük Haritayý aç
 MINIMAP_CANNOT_SEE	Küçük Haritayi göremezsiniz.

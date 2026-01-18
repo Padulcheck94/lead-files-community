@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Vazio
 MESSENGER_FAMILY	Família
 MESSENGER_FRIEND	Amigos
 MESSENGER_GUILD	Guild
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Insere o número de confirmação que foi enviado para o teu telemóvel.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Insere o número de confirmação
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Insere o número de telemóvel para enviar a mensagem de texto.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Queres inserir o número agora?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Insere o número de telemóvel.
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Enviar mensagem.
 METIN_TEST	
 MINIMAP	Abrir Mini Mapa
 MINIMAP_CANNOT_SEE	O Mini-Mapa não pode ser visto.

@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Gol
 MESSENGER_FAMILY	Familie
 MESSENGER_FRIEND	Prieteni
 MESSENGER_GUILD	Breaslã
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Trimite codul de pe telefonul mobil.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Introdu codul
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Introdu numãrul de mobil pentru trimiterea SMS-ului.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Vrei sã introduci acum numãrul de mobil?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Introdu numãrul de mobil
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Trimite mesaj.
 METIN_TEST	
 MINIMAP	Deschide mini harta
 MINIMAP_CANNOT_SEE	Harta mini nu poate fi afiºatã.

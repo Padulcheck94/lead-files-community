@@ -62,7 +62,6 @@ enum
 	HEADER_GD_RELOAD_PROTO		= 43,
 
 	HEADER_GD_CHANGE_NAME		= 44,
-	HEADER_GD_SMS				= 45,
 
 	HEADER_GD_GUILD_CHANGE_LADDER_POINT	= 46,
 	HEADER_GD_GUILD_USE_SKILL		= 47,
@@ -423,7 +422,6 @@ typedef struct SPlayerTable
 
 	BYTE	skill_group;
 	long	lAlignment;
-	char	szMobile[MOBILE_MAX_LEN + 1];
 
 	short	stat_reset_count;
 
@@ -970,14 +968,6 @@ typedef struct SPacketGuildLadderPoint
 	DWORD dwGuild;
 	long lChange;
 } TPacketGuildLadderPoint;
-
-typedef struct SPacketGDSMS
-{
-	char szFrom[CHARACTER_NAME_MAX_LEN + 1];
-	char szTo[CHARACTER_NAME_MAX_LEN + 1];
-	char szMobile[MOBILE_MAX_LEN + 1];
-	char szMsg[SMS_MAX_LEN + 1];
-} TPacketGDSMS;
 
 typedef struct SPacketGuildUseSkill
 {

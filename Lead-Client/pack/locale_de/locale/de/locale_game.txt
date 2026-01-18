@@ -288,12 +288,6 @@ MESSENGER_EMPTY_LIST	Leer
 MESSENGER_FAMILY	Familie
 MESSENGER_FRIEND	Freunde
 MESSENGER_GUILD	Gilde
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Gib die Bestätigungsnr. ein, die an dein Handy gesendet wurde.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Bestätigungsnr. eingeben
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Gib die Handynr. für den SMS-Versand ein.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Möchtest du die Nummer jetzt eingeben?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Handynummer eingeben
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Nachricht senden.
 MINIMAP	Minikarte öffnen
 MINIMAP_CANNOT_SEE	Minikarte kann nicht angezeigt werden.
 MINIMAP_CAN_NOT_SHOW_AREAMAP	Übersichtskarte kann nicht angezeigt werden.

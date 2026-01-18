@@ -1863,11 +1863,6 @@ PyObject * playerGetPKMode(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildValue("i", CPythonPlayer::Instance().GetPKMode());
 }
 
-PyObject * playerHasMobilePhoneNumber(PyObject* poSelf, PyObject* poArgs)
-{
-	return Py_BuildValue("i", CPythonPlayer::Instance().HasMobilePhoneNumber());
-}
-
 PyObject * playerSetWeaponAttackBonusFlag(PyObject* poSelf, PyObject* poArgs)
 {
 	int iFlag;
@@ -2297,9 +2292,6 @@ void initPlayer()
 
 		// PK Mode
 		{ "GetPKMode",					playerGetPKMode,					METH_VARARGS },
-
-		// Mobile
-		{ "HasMobilePhoneNumber",		playerHasMobilePhoneNumber,			METH_VARARGS },
 
 		// Emotion
 		{ "RegisterEmotionIcon",		playerRegisterEmotionIcon,			METH_VARARGS },
