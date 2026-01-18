@@ -363,7 +363,7 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 				inet_ntoa(ch->GetDesc()->GetAddr().sin_addr), ch->GetGold(), g_bChannel, ch->GetMapIndex(), ch->GetAlignment());
 		LogManager::instance().CharLog(ch, 0, "LOGIN", buf);
 
-		if (LC_IsYMIR() || LC_IsKorea() || LC_IsJapan())
+		if (LC_IsYMIR() || LC_IsKorea())
 		{
 			LogManager::instance().LoginLog(true, 
 					ch->GetDesc()->GetAccountTable().id, ch->GetPlayerID(), ch->GetLevel(), ch->GetJob(), ch->GetRealPoint(POINT_PLAYTIME));

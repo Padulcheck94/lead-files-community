@@ -153,10 +153,6 @@ bool CClientManager::Initialize()
 
 	LoadEventFlag();
 
-	// database character-set을 강제로 맞춤
-	if (g_stLocale == "big5" || g_stLocale == "sjis")
-	    CDBManager::instance().QueryLocaleSet();
-
 	return true;
 }
 
@@ -1908,10 +1904,7 @@ void CClientManager::BlockChat(TPacketBlockChat* p)
 {
 	char szQuery[256];
 
-	if (g_stLocale == "sjis")
-		snprintf(szQuery, sizeof(szQuery), "SELECT id FROM player%s WHERE name = '%s' collate sjis_japanese_ci", GetTablePostfix(), p->szName);
-	else
-		snprintf(szQuery, sizeof(szQuery), "SELECT id FROM player%s WHERE name = '%s'", GetTablePostfix(), p->szName);
+	snprintf(szQuery, sizeof(szQuery), "SELECT id FROM player%s WHERE name = '%s'", GetTablePostfix(), p->szName);
 	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
 	SQLResult * pRes = pmsg->Get();
 
@@ -3136,16 +3129,6 @@ bool CClientManager::InitializeLocalization()
 				g_stLocale = "euckr";
 				g_stLocaleNameColumn = "name";	
 			}	
-			else if (strcmp(locale.szValue, "japan") == 0)
-			{
-				sys_log(0, "locale[LOCALE] = %s", locale.szValue);
-
-				if (g_stLocale != locale.szValue)
-					sys_log(0, "Changed g_stLocale %s to %s", g_stLocale.c_str(), "sjis");
-
-				g_stLocale = "sjis";		
-				g_stLocaleNameColumn = "locale_name";	
-			}
 			else if (strcmp(locale.szValue, "english") == 0)
 			{
 				sys_log(0, "locale[LOCALE] = %s", locale.szValue);

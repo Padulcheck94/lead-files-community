@@ -28,8 +28,6 @@ enum
 	// END_OF_PCBANG_IP_LIST
 
 	QID_PROTECT_CHILD,
-
-	QID_JAPAN_CREATE_ID,
 };
 
 class CQueryInfo
