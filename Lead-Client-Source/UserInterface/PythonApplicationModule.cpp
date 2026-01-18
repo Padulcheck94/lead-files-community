@@ -315,19 +315,6 @@ PyObject* appGetDefaultCodePage(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildValue("i", LocaleService_GetCodePage());
 }
 
-#ifdef __VTUNE__
-
-PyObject* appGetImageInfo(PyObject* poSelf, PyObject* poArgs)
-{
-	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
-
-	return Py_BuildValue("iii", 0, 0, 0);
-}
-
-#else
-
 #include <il/il.h>
 	
 PyObject* appGetImageInfo(PyObject* poSelf, PyObject* poArgs)
@@ -354,7 +341,7 @@ PyObject* appGetImageInfo(PyObject* poSelf, PyObject* poArgs)
 
 	return Py_BuildValue("iii", canLoad, uWidth, uHeight);
 }
-#endif
+
 
 #include "../EterPack/EterPackManager.h"
 

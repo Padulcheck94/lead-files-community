@@ -546,126 +546,11 @@ bool CPythonApplication::Process()
 		bCurrentLateUpdate = TRUE;
 	}
 
-	//s_bFrameSkip = false;
-
-	//if (dwCurrentTime > s_uiNextFrameTime)
-	//{
-	//	int dt = dwCurrentTime - s_uiNextFrameTime;
-
-	//	//너무 늦었을 경우 따라잡는다.
-	//	//그리고 m_dwCurUpdateTime는 delta인데 delta랑 absolute time이랑 비교하면 어쩌자는겨?
-	//	//if (dt >= 500 || m_dwCurUpdateTime > s_uiNextFrameTime)
-
-	//	//기존코드대로 하면 0.5초 이하 차이난 상태로 update가 지속되면 계속 rendering frame skip발생
-	//	if (dt >= 500 || m_dwCurUpdateTime > s_uiNextFrameTime)
-	//	{
-	//		s_uiNextFrameTime += dt / uiFrameTime * uiFrameTime; 
-	//		printf("FrameSkip 보정 %d\n", dt / uiFrameTime * uiFrameTime);
-	//		CTimer::Instance().Adjust((dt / uiFrameTime) * uiFrameTime);
-	//		s_bFrameSkip = true;
-	//	}
-	//}
-
 	if (m_isFrameSkipDisable)
 		s_bFrameSkip = false;
 
-#ifdef __VTUNE__
-	s_bFrameSkip = false;
-#endif
-	/*
-	static bool s_isPrevFrameSkip=false;
-	static DWORD s_dwFrameSkipCount=0;
-	static DWORD s_dwFrameSkipEndTime=0;
-
-	static DWORD ERROR_FRAME_SKIP_COUNT = 60*5;
-	static DWORD ERROR_FRAME_SKIP_TIME = ERROR_FRAME_SKIP_COUNT*18;
-
-	//static DWORD MAX_FRAME_SKIP=0;
-
-	if (IsActive())
-	{
-	DWORD dwFrameSkipCurTime=ELTimer_GetMSec();
-
-	if (s_bFrameSkip)
-	{
-	// 이전 프레임도 스킵이라면..
-	if (s_isPrevFrameSkip)
-	{
-	if (s_dwFrameSkipEndTime==0)
-	{
-	s_dwFrameSkipCount=0; // 프레임 체크는 로딩 대비
-	s_dwFrameSkipEndTime=dwFrameSkipCurTime+ERROR_FRAME_SKIP_TIME; // 시간 체크는 로딩후 프레임 스킵 체크
-
-	//printf("FrameSkipCheck Start\n");
-	}
-	++s_dwFrameSkipCount;
-
-	//if (MAX_FRAME_SKIP<s_dwFrameSkipCount)
-	//	MAX_FRAME_SKIP=s_dwFrameSkipCount;
-
-	//printf("u %d c %d/%d t %d\n", 
-	//	dwUpdateTime9-dwUpdateTime1,
-	//	s_dwFrameSkipCount, 
-	//	MAX_FRAME_SKIP,
-	//	s_dwFrameSkipEndTime);
-
-	//#ifndef _DEBUG
-	// 일정 시간동안 계속 프레임 스킵만 한다면...
-	if (s_dwFrameSkipCount>ERROR_FRAME_SKIP_COUNT && s_dwFrameSkipEndTime<dwFrameSkipCurTime)
-	{
-	s_isPrevFrameSkip=false;
-	s_dwFrameSkipEndTime=0;
-	s_dwFrameSkipCount=0;
-
-	//m_pyNetworkStream.AbsoluteExitGame();
-
-	/*
-	TraceError("무한 프레임 스킵으로 접속을 종료합니다");
-
-	{
-	FILE* fp=fopen("errorlog.txt", "w");
-	if (fp)
-	{
-	fprintf(fp, "FRAMESKIP\n");
-	fprintf(fp, "Total %d\n",		dwUpdateTime9-dwUpdateTime1);
-	fprintf(fp, "Timer %d\n",		dwUpdateTime2-dwUpdateTime1);
-	fprintf(fp, "Network %d\n",		dwUpdateTime3-dwUpdateTime2);
-	fprintf(fp, "Keyboard %d\n",	dwUpdateTime4-dwUpdateTime3);
-	fprintf(fp, "Controll %d\n",	dwUpdateTime5-dwUpdateTime4);
-	fprintf(fp, "Resource %d\n",	dwUpdateTime6-dwUpdateTime5);
-	fprintf(fp, "Camera %d\n",		dwUpdateTime7-dwUpdateTime6);
-	fprintf(fp, "Mouse %d\n",		dwUpdateTime8-dwUpdateTime7);
-	fprintf(fp, "UI %d\n",			dwUpdateTime9-dwUpdateTime8);
-	fclose(fp);
-
-	WinExec("errorlog.exe", SW_SHOW);
-	}
-	}
-	}
-	}
-
-	s_isPrevFrameSkip=true;
-	}
-	else
-	{
-	s_isPrevFrameSkip=false;
-	s_dwFrameSkipCount=0;
-	s_dwFrameSkipEndTime=0;
-	}
-	}
-	else
-	{
-	s_isPrevFrameSkip=false;
-	s_dwFrameSkipCount=0;
-	s_dwFrameSkipEndTime=0;
-	}
-	*/
 	if (!s_bFrameSkip)
 	{
-		//		static double pos=0.0f;
-		//		CGrannyMaterial::TranslateSpecularMatrix(fabs(sin(pos)*0.005), fabs(cos(pos)*0.005), 0.0f);
-		//		pos+=0.01f;
-
 		CGrannyMaterial::TranslateSpecularMatrix(g_specularSpd, g_specularSpd, 0.0f);
 
 		DWORD dwRenderStartTime = ELTimer_GetMSec();		
@@ -695,7 +580,6 @@ bool CPythonApplication::Process()
 			SkipRenderBuffering(3000);
 		}
 
-		// 리스토어 처리때를 고려해 일정 시간동안은 버퍼링을 하지 않는다
 		if (!canRender)
 		{
 			SkipRenderBuffering(3000);

@@ -373,9 +373,7 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 		system("patchupdater.exe");
 		return false;
 	}
-#ifndef __VTUNE__
-	ilInit();
-#endif
+
 	if (!Setup(lpCmdLine))
 		return false;
 
