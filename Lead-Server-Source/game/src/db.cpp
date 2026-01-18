@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <sstream>
 #include "../../common/length.h"
 
@@ -481,12 +481,12 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					MYSQL_ROW row;
 					while ((row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, "%s %s sec", row[0], row[1]);
+						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s %s sec"), row[0], row[1]);
 					}
 				}
 				else
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "No one currently blocked.");
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("No one currently blocked."));
 				}
 			}
 			break;

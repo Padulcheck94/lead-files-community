@@ -44,22 +44,22 @@ static void _send_bonus_info(LPCHARACTER ch)
 	if (item_drop_bonus)
 	{
 		ch->ChatPacket(CHAT_TYPE_NOTICE, 
-				LC_TEXT("아이템 드롭률  %d%% 추가 이벤트 중입니다."), item_drop_bonus);
+				LC_TEXT("The quota of the Item Drop is at the moment plus %d%%"), item_drop_bonus);
 	}
 	if (gold_drop_bonus)
 	{
 		ch->ChatPacket(CHAT_TYPE_NOTICE, 
-				LC_TEXT("골드 드롭률 %d%% 추가 이벤트 중입니다."), gold_drop_bonus);
+				LC_TEXT("The quota of the Yang Drop is at the moment plus %d%%"), gold_drop_bonus);
 	}
 	if (gold10_drop_bonus)
 	{
 		ch->ChatPacket(CHAT_TYPE_NOTICE, 
-				LC_TEXT("대박골드 드롭률 %d%% 추가 이벤트 중입니다."), gold10_drop_bonus);
+				LC_TEXT("The drop rate for Yang rain is currently %d%% higher."), gold10_drop_bonus);
 	}
 	if (exp_bonus)
 	{
 		ch->ChatPacket(CHAT_TYPE_NOTICE, 
-				LC_TEXT("경험치 %d%% 추가 획득 이벤트 중입니다."), exp_bonus);
+				LC_TEXT("The experience bonus is currently an additional %d%%."), exp_bonus);
 	}
 }
 
@@ -604,7 +604,7 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 				//if (0 != g_stClientVersion.compare(d->GetClientVersion()))
 				if (version > date)
 				{
-					ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("클라이언트 버전이 틀려 로그아웃 됩니다. 정상적으로 패치 후 접속하세요."));
+					ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("You do not have the correct client version. Please install the normal patch."));
 					d->DelayedDisconnect(10);
 					LogManager::instance().HackLog("VERSION_CONFLICT", ch);
 
@@ -630,7 +630,7 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	if (LC_IsEurope() == true)
 	{
 		if (ch->IsGM() == true)
-			ch->ChatPacket(CHAT_TYPE_COMMAND, "ConsoleEnable");
+			ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("ConsoleEnable"));
 	}
 
 	if (ch->GetMapIndex() >= 10000)

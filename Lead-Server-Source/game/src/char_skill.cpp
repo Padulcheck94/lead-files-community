@@ -268,7 +268,7 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 
 	if (!IsLearnableSkill(dwSkillVnum))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("수련할 수 없는 스킬입니다."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot train this skill."));
 		return false;
 	}
 
@@ -283,7 +283,7 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 	   {
 	// 주안술서 사용중에는 시간 제한 무시
 	RemoveAffect(AFFECT_SKILL_NO_BOOK_DELAY);
-	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("주안술서를 통해 주화입마에서 빠져나왔습니다."));
+	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have escaped the evil ghost curse with the help of an Exorcism Scroll."));
 	}
 	else 	    
 	{
@@ -297,16 +297,16 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 	// bType이 0이면 처음부터 책으로 수련 가능
 	if (pkSk->dwType == 0)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("그랜드 마스터 수련을 할 수 없는 스킬입니다."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot train this skill up to Grand Master level."));
 		return false;
 	}
 
 	if (GetSkillMasterType(dwSkillVnum) != SKILL_GRAND_MASTER)
 	{
 		if (GetSkillMasterType(dwSkillVnum) > SKILL_GRAND_MASTER)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("퍼펙트 마스터된 스킬입니다. 더 이상 수련 할 수 없습니다."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You already are a Master of this skill. You cannot train this skill any further."));
 		else
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 스킬은 아직 그랜드 마스터 수련을 할 경지에 이르지 않았습니다."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Your Skill is not high enough to become a Grand Master."));
 		return false;
 	}
 
@@ -387,15 +387,15 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 
 	if (bLastLevel == GetSkillLevel(dwSkillVnum))
 	{
-		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("크윽, 기가 역류하고 있어! 이거 설마 주화입마인가!? 젠장!"));
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("수련이 실패로 끝났습니다. 다시 도전해주시기 바랍니다."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("That did not work. Damn!"));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Training has failed. Please try again later."));
 		LogManager::instance().CharLog(this, dwSkillVnum, "GM_READ_FAIL", "");
 		return false;
 	}
 
-	ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("몸에서 뭔가 힘이 터져 나오는 기분이야!"));
-	ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("뜨거운 무엇이 계속 용솟음치고 있어! 이건, 이것은!"));
-	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("더 높은 경지의 수련을 성공적으로 끝내셨습니다."));
+	ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("My body is full of energy!"));
+	ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("The training seems to be working already..."));
+	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You successfully finished your training with the book."));
 	LogManager::instance().CharLog(this, dwSkillVnum, "GM_READ_SUCCESS", "");
 	return true;
 }
@@ -422,7 +422,7 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 
 	if (!IsLearnableSkill(dwSkillVnum))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("수련할 수 없는 스킬입니다."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot train this skill."));
 		return false;
 	}
 
@@ -434,7 +434,7 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 
 		if ( GetExp() < need_exp )
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("경험치가 부족하여 책을 읽을 수 없습니다."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot read this due to your lack of experience."));
 			return false;
 		}
 	}
@@ -445,9 +445,9 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 		if (GetSkillMasterType(dwSkillVnum) != SKILL_MASTER)
 		{
 			if (GetSkillMasterType(dwSkillVnum) > SKILL_MASTER)
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 스킬은 책으로 더이상 수련할 수 없습니다."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot train this skill with a Book."));
 			else
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 스킬은 아직 책으로 수련할 경지에 이르지 않았습니다."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This skill's level is not high enough to be trained with a Book."));
 			return false;
 		}
 	}
@@ -460,7 +460,7 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 			{
 				// 주안술서 사용중에는 시간 제한 무시
 				RemoveAffect(AFFECT_SKILL_NO_BOOK_DELAY);
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("주안술서를 통해 주화입마에서 빠져나왔습니다."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have escaped the evil ghost curse with the help of an Exorcism Scroll."));
 			}
 			else 	    
 			{
@@ -536,7 +536,7 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 						SkillLevelUp(dwSkillVnum, SKILL_UP_BY_BOOK);
 						pPC->SetFlag(flag, 0);
 
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("책으로 더 높은 경지의 수련을 성공적으로 끝내셨습니다."));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have successfully finished your training with the Book."));
 						LogManager::instance().CharLog(this, dwSkillVnum, "READ_SUCCESS", "");
 						return true;
 					}
@@ -547,20 +547,20 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 						switch (number(1, 3))
 						{
 							case 1:
-								ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("어느정도 이 기술에 대해 이해가 되었지만 조금 부족한듯 한데.."));
+								ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("I'm making progress, but I still haven't understood everything."));
 								break;
 											
 							case 2:
-								ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("드디어 끝이 보이는 건가...  이 기술은 이해하기가 너무 힘들어.."));
+								ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("These instructions are difficult to understand. I have to carry on studying."));
 								break;
 
 							case 3:
 							default:
-								ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("열심히 하는 배움을 가지는 것만이 기술을 배울수 있는 유일한 길이다.."));
+								ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("I understand this chapter. But I've got to carry on working hard."));
 								break;
 						}
 
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d 권을 더 읽어야 수련을 완료 할 수 있습니다."), need_bookcount - read_count);
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have to read %d more skill books to improve this skill."), need_bookcount - read_count);
 						return true;
 					}
 				}
@@ -605,15 +605,15 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 
 	if (bLastLevel != GetSkillLevel(dwSkillVnum))
 	{
-		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("몸에서 뭔가 힘이 터져 나오는 기분이야!"));
-		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("뜨거운 무엇이 계속 용솟음치고 있어! 이건, 이것은!"));
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("책으로 더 높은 경지의 수련을 성공적으로 끝내셨습니다."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("My body is full of energy!"));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("The training seems to be working already..."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have successfully finished your training with the Book."));
 		LogManager::instance().CharLog(this, dwSkillVnum, "READ_SUCCESS", "");
 	}
 	else
 	{
-		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("크윽, 기가 역류하고 있어! 이거 설마 주화입마인가!? 젠장!"));
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("수련이 실패로 끝났습니다. 다시 도전해주시기 바랍니다."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("That did not work. Damn!"));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Training has failed. Please try again later."));
 		LogManager::instance().CharLog(this, dwSkillVnum, "READ_FAIL", "");
 	}
 
@@ -697,7 +697,7 @@ void CHARACTER::SkillLevelUp(DWORD dwVnum, BYTE bMethod)
 
 	if (IsPolymorphed())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("둔갑 중에는 능력을 올릴 수 없습니다."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot change your status while you are transformed."));
 		return;
 	}
 
@@ -1185,7 +1185,7 @@ struct FuncSplashDamage
 
 		if (test_server && iAmount == 0 && m_pkSk->bPointOn != POINT_NONE)
 		{
-			m_pkChr->ChatPacket(CHAT_TYPE_INFO, "효과가 없습니다. 스킬 공식을 확인하세요");
+			m_pkChr->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("It doesn't work. Check the skill formula"));
 		}
 		////////////////////////////////////////////////////////////////////////////////
 		iAmount = -iAmount;
@@ -1653,7 +1653,7 @@ EVENTFUNC(skill_gwihwan_event)
 	else
 	{
 		//실패
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("귀환에 실패하였습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Teleportation has failed."));
 	}
 	return 0;
 }
@@ -1768,7 +1768,7 @@ int CHARACTER::ComputeSkillAtPosition(DWORD dwVnum, const PIXEL_POSITION& posTar
 
 	if (test_server && iAmount == 0 && pkSk->bPointOn != POINT_NONE)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "효과가 없습니다. 스킬 공식을 확인하세요");
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("It doesn't work. Check the skill formula"));
 	}
 
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_REMOVE_BAD_AFFECT))
@@ -2113,7 +2113,7 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 
 	if (test_server && iAmount == 0 && pkSk->bPointOn != POINT_NONE)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "효과가 없습니다. 스킬 공식을 확인하세요");
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("It doesn't work. Check the skill formula"));
 	}
 	// END_OF_ADD_GRANDMASTER_SKILL
 
@@ -2445,9 +2445,9 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 			return false;
 
 		if (GetHorseLevel() <= 0)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말이 없습니다. 마굿간 경비병을 찾아가세요."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("No Horse here. Ask the Stable Boy."));
 		else
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말 소환 아이템을 사용하세요."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Please use an item to call a Horse."));
 
 		return true;
 	}
@@ -2512,7 +2512,7 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		else
 			m_bComboIndex = GetSkillLevel(SKILL_COMBO);
 
-		ChatPacket(CHAT_TYPE_COMMAND, "combo %d", m_bComboIndex);
+		ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("combo %d"), m_bComboIndex);
 		return true;
 	}
 
@@ -2584,7 +2584,7 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 			return false;
 
 		if (test_server)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s SP소모: %d"), pkSk->szName, iNeededSP);
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s FP-Consumption: %d"), pkSk->szName, iNeededSP);
 
 		PointChange(POINT_SP, -iNeededSP);
 	}
@@ -2611,7 +2611,7 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 				   	lMaxHit))
 		{
 			if (test_server)
-				ChatPacket(CHAT_TYPE_NOTICE, "cooltime not finished %s %d", pkSk->szName, iCooltime);
+				ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("cooltime not finished %s %d"), pkSk->szName, iCooltime);
 
 			return false;
 		}
@@ -2770,41 +2770,41 @@ void CHARACTER::SkillLearnWaitMoreTimeMessage(DWORD ms)
 	//const char* str = "";
 	//
 	if (ms < 3 * 60)
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("몸 속이 뜨겁군. 하지만 아주 편안해. 이대로 기를 안정시키자."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("I am burning inside, but it is calming down my body. My Chi has to stabilise."));
 	else if (ms < 5 * 60)
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("그래, 천천히. 좀더 천천히, 그러나 막힘 없이 빠르게!"));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("A little slow, but steady... Without stopping!"));
 	else if (ms < 10 * 60) // 10분
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("그래, 이 느낌이야. 체내에 기가 아주 충만해."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("Yes, that feels great. My body is full of Chi."));
 	else if (ms < 30 * 60) // 30분
 	{
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("다 읽었다! 이제 비급에 적혀있는 대로 전신에 기를 돌리기만 하면,"));
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("그것으로 수련은 끝난 거야!"));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("I have read it! Now the Chi will spread through my body."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("The training is completed."));
 	}
 	else if (ms < 1 * 3600) // 1시간
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("이제 책의 마지막 장이야! 수련의 끝이 눈에 보이고 있어!"));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("I am on the last page of the book. The training is nearly finished!"));
 	else if (ms < 2 * 3600) // 2시간
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("얼마 안 남았어! 조금만 더!"));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("Nearly finished! Just a little bit more to go!"));
 	else if (ms < 3 * 3600)
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("좋았어! 조금만 더 읽으면 끝이다!"));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("Eureka! I have nearly finished reading it!"));
 	else if (ms < 6 * 3600)
 	{
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("책장도 이제 얼마 남지 않았군."));
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("뭔가 몸 안에 힘이 생기는 기분인 걸."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("Only a few more pages and then I'll have read everything."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("I feel refreshed."));
 	}
 	else if (ms < 12 * 3600)
 	{
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("이제 좀 슬슬 가닥이 잡히는 것 같은데."));
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("좋아, 이 기세로 계속 나간다!"));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("Now I understand it!"));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("Okay I have to stay concentrated!"));
 	}
 	else if (ms < 18 * 3600)
 	{
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("아니 어떻게 된 게 종일 읽어도 머리에 안 들어오냐."));
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("공부하기 싫어지네."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("I keep reading the same line over and over again."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("I do not want to learn any more."));
 	}
 	else //if (ms < 2 * 86400)
 	{
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("생각만큼 읽기가 쉽지가 않군. 이해도 어렵고 내용도 난해해."));
-		ChatPacket(CHAT_TYPE_TALKING, "%s", LC_TEXT("이래서야 공부가 안된다구."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("It is a lot more complicated and more difficult to understand than I thought."));
+		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("It's hard for me to concentrate. I should take a break."));
 	}
 	/*
 	   str = "30%";
@@ -2815,7 +2815,7 @@ void CHARACTER::SkillLearnWaitMoreTimeMessage(DWORD ms)
 	   else
 	   str = "0%";*/
 
-	//ChatPacket(CHAT_TYPE_TALKING, "%s", str);
+	//ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), str);
 }
 
 void CHARACTER::DisableCooltime()

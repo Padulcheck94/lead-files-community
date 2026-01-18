@@ -116,7 +116,7 @@ void CEntity::SetObserverMode(bool bFlag)
 	if (IsType(ENTITY_CHARACTER))
 	{
 		LPCHARACTER ch = (LPCHARACTER) this;
-		ch->ChatPacket(CHAT_TYPE_COMMAND, "ObserverMode %d", m_bIsObserver ? 1 : 0);
+		ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("ObserverMode %d"), m_bIsObserver ? 1 : 0);
 	}
 }
 

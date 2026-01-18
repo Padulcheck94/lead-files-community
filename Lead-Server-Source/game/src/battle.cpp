@@ -147,10 +147,10 @@ int battle_melee_attack(LPCHARACTER ch, LPCHARACTER victim)
 	}
 
 	if (timed_event_cancel(ch))
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("전투가 시작 되어 취소 되었습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Action cancelled. You have entered a battle."));
 
 	if (timed_event_cancel(victim))
-		victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("전투가 시작 되어 취소 되었습니다."));
+		victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Action cancelled. You have entered a battle."));
 
 	ch->SetPosition(POS_FIGHTING);
 	ch->SetVictim(victim);
@@ -540,8 +540,8 @@ int CalcMeleeDamage(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, bool bIgnoreDe
 				fAR,
 				szPT);
 
-		pkAttacker->ChatPacket(CHAT_TYPE_TALKING, "%s", szMeleeAttack);
-		pkVictim->ChatPacket(CHAT_TYPE_TALKING, "%s", szMeleeAttack);
+		pkAttacker->ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), szMeleeAttack);
+		pkVictim->ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), szMeleeAttack);
 	}
 
 	return CalcBattleDamage(iDam, pkAttacker->GetLevel(), pkVictim->GetLevel());
@@ -601,7 +601,7 @@ int CalcArrowDamage(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, LPITEM pkBow, 
 
 	if (test_server)
 	{
-		pkAttacker->ChatPacket(CHAT_TYPE_INFO, "ARROW %s -> %s, DAM %d DIST %d GAP %d %% %d",
+		pkAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ARROW %s -> %s, DAM %d DIST %d GAP %d %% %d"),
 				pkAttacker->GetName(), 
 				pkVictim->GetName(), 
 				iPureDam, 
@@ -773,7 +773,7 @@ bool IS_SPEED_HACK(LPCHARACTER ch, LPCHARACTER victim, DWORD current_time)
 						GET_ATTACK_SPEED(ch),
 						ch->m_speed_hack_count);
 
-				ch->ChatPacket(CHAT_TYPE_INFO, "%s attack hack! time (delta, limit)=(%u, %u) hack_count %d",
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s attack hack! time (delta, limit)=(%u, %u) hack_count %d"),
 						ch->GetName(),
 						current_time - ch->m_kAttackLog.dwTime,
 						GET_ATTACK_SPEED(ch),
@@ -802,7 +802,7 @@ bool IS_SPEED_HACK(LPCHARACTER ch, LPCHARACTER victim, DWORD current_time)
 						GET_ATTACK_SPEED(ch),
 						ch->m_speed_hack_count);
 
-				ch->ChatPacket(CHAT_TYPE_INFO, "Attack Speed Hack(%s), (delta, limit)=(%u, %u)",
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Attack Speed Hack(%s), (delta, limit)=(%u, %u)"),
 						ch->GetName(),
 						current_time - victim->m_AttackedLog.dwAttackedTime,
 						GET_ATTACK_SPEED(ch));

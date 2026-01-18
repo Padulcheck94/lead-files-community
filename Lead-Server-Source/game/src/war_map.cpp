@@ -382,8 +382,8 @@ void CWarMap::IncMember(LPCHARACTER ch)
 		++m_iObserverCount; 
 		sys_log(0, "WarMap +o %d", m_iObserverCount);
 		ch->SetObserverMode(true);
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("관전 모드로 길드전에 참가하셨습니다."));
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("자신을 선택하시면 밖으로 나갈 수 있는 <관람 종료> 버튼이 나옵니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can participate in the guild battle in viewer mode."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("While choosing a character, an icon appears."));
 	}
 
 	UpdateUserCount();
@@ -480,8 +480,8 @@ void CWarMap::CheckWarEnd()
 		if (m_pkTimeoutEvent)
 			return;
 
-		Notice(LC_TEXT("길드전에 참가한 상대방 길드원이 아무도 없습니다."));
-		Notice(LC_TEXT("1분 이내에 아무도 접속하지 않으면 길드전이 자동 종료됩니다."));
+		Notice(LC_TEXT("There are no opponents."));
+		Notice(LC_TEXT("If no enemy can be found, the guild war will be ended automatically."));
 
 		sys_log(0, "CheckWarEnd: Timeout begin %u vs %u", m_TeamData[0].dwID, m_TeamData[1].dwID);
 
@@ -523,7 +523,7 @@ void CWarMap::Timeout()
 
 	if (get_dword_time() - m_dwStartTime < 60000 * 5)
 	{
-		Notice(LC_TEXT("길드전이 일찍 종료되어 무승부로 판정 되었습니다. (5분이 지나지 않음)"));
+		Notice(LC_TEXT("Because the guild war finished early, the result will judged as a draw."));
 		dwWinner = 0;
 		dwLoser = 0;
 	}
@@ -601,7 +601,7 @@ namespace
 
 		void operator() (LPCHARACTER ch)
 		{
-			ch->ChatPacket(CHAT_TYPE_NOTICE, "%s", m_psz);
+			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("%s"), m_psz);
 		}
 
 		const char * m_psz;

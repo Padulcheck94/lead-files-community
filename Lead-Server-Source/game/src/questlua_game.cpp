@@ -79,7 +79,7 @@ namespace quest
 		CQuestManager& q = CQuestManager::instance();
 		LPCHARACTER ch = q.GetCurrentCharacterPtr();
 		ch->SetSafeboxOpenPosition();
-		ch->ChatPacket(CHAT_TYPE_COMMAND, "ShowMeSafeboxPassword");
+		ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("ShowMeSafeboxPassword"));
 		return 0;
 	}
 
@@ -88,7 +88,7 @@ namespace quest
 		CQuestManager& q = CQuestManager::instance();
 		LPCHARACTER ch = q.GetCurrentCharacterPtr();
 		ch->SetSafeboxOpenPosition();
-		ch->ChatPacket(CHAT_TYPE_COMMAND, "ShowMeMallPassword");
+		ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("ShowMeMallPassword"));
 		return 0;
 	}
 

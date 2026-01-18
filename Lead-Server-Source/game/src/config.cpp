@@ -1144,7 +1144,7 @@ void CheckClientVersion()
 		//if (0 != g_stClientVersion.compare(d->GetClientVersion()) )
 		if (version > date)
 		{
-			d->GetCharacter()->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("클라이언트 버전이 틀려 로그아웃 됩니다. 정상적으로 패치 후 접속하세요."));
+			d->GetCharacter()->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("You do not have the correct client version. Please install the normal patch."));
 			d->DelayedDisconnect(10);
 		}
 	}

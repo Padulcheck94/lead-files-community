@@ -78,8 +78,8 @@ namespace marriage
 
 		m_pEndEvent = event_create(wedding_end_event, info, PASSES_PER_SEC(5));
 
-		Notice(LC_TEXT("결혼식이 종료됩니다."));
-		Notice(LC_TEXT("자동으로 나가게됩니다."));
+		Notice(LC_TEXT("The wedding is finishing soon."));
+		Notice(LC_TEXT("Will be left automatically."));
 
 		for (itertype(m_set_pkChr) it = m_set_pkChr.begin(); it != m_set_pkChr.end(); ++it)
 		{
@@ -104,7 +104,7 @@ namespace marriage
 
 		void operator() (LPCHARACTER ch)
 		{
-			ch->ChatPacket(CHAT_TYPE_NOTICE, "%s", m_psz);
+			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("%s"), m_psz);
 		}
 
 		const char * m_psz;
@@ -261,9 +261,9 @@ namespace marriage
 		char szCommand[256];
 
 		if (m_isDark)
-			ch->ChatPacket(CHAT_TYPE_COMMAND, "DayMode dark");
+			ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("DayMode dark"));
 		if (m_isSnow)
-			ch->ChatPacket(CHAT_TYPE_COMMAND, "xmas_snow 1");
+			ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("xmas_snow 1"));
 		if (m_isMusic)
 			ch->ChatPacket(CHAT_TYPE_COMMAND, __BuildCommandPlayMusic(szCommand, sizeof(szCommand), 1, m_stMusicFileName.c_str()));	
 	}

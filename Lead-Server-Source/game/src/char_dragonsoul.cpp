@@ -73,7 +73,7 @@ bool CHARACTER::DragonSoul_ActivateDeck(int deck_idx)
 
 	if (!DragonSoul_IsQualified())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("용혼석 상자가 활성화되지 않았습니다."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Dragon Soulstone Chest is not activated."));
 		return false;
 	}
 

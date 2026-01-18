@@ -43,7 +43,7 @@ void CGuild::GuildWarPacket(DWORD dwOppGID, BYTE bWarType, BYTE bWarState)
 		LPCHARACTER ch = *it;
 
 		if (bWarState == GUILD_WAR_ON_WAR)
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드전중에는 사냥에 따른 이익이 없습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Guild] There are no experience points for hunting during a guild war."));
 
 		LPDESC d = ch->GetDesc();
 
@@ -313,7 +313,7 @@ void CGuild::RequestDeclareWar(DWORD dwOppGID, BYTE type)
 					GetID(), dwOppGID, type, GuildWar_GetTypeMapIndex(type));
 
 			map_allow_log();
-			NotifyGuildMaster(LC_TEXT("전쟁 서버가 열려있지 않아 길드전을 시작할 수 없습니다."));
+			NotifyGuildMaster(LC_TEXT("[Guild] The enemy's guild leader is offline."));
 			return;
 		}
 
@@ -353,7 +353,7 @@ void CGuild::RequestDeclareWar(DWORD dwOppGID, BYTE type)
 							GetID(), dwOppGID, type, GuildWar_GetTypeMapIndex(type));
 
 					map_allow_log();
-					NotifyGuildMaster(LC_TEXT("전쟁 서버가 열려있지 않아 길드전을 시작할 수 없습니다."));
+					NotifyGuildMaster(LC_TEXT("[Guild] The enemy's guild leader is offline."));
 					return;
 				}
 
@@ -379,7 +379,7 @@ void CGuild::RequestDeclareWar(DWORD dwOppGID, BYTE type)
 			break;
 		case GUILD_WAR_SEND_DECLARE:
 			{
-				NotifyGuildMaster(LC_TEXT("이미 선전포고 중인 길드입니다."));
+				NotifyGuildMaster(LC_TEXT("[Guild] This guild is already participating in a war."));
 			}
 			break;
 		default:
@@ -651,7 +651,7 @@ void CGuild::GuildWarEntryAccept(DWORD dwOppGID, LPCHARACTER ch)
 
 	if (gw.state != GUILD_WAR_ON_WAR)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이미 전쟁이 끝났습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The war is already over."));
 		return;
 	}
 
@@ -727,7 +727,7 @@ void CGuild::SetLadderPoint(int point)
 	if (m_data.ladder_point != point)
 	{
 		char buf[256];
-		snprintf(buf, sizeof(buf), LC_TEXT("<길드> 래더 점수가 %d 점이 되었습니다"), point);
+		snprintf(buf, sizeof(buf), LC_TEXT("[Guild] The guild has reached %d points."), point);
 		for (itertype(m_memberOnline) it = m_memberOnline.begin(); it!=m_memberOnline.end();++it)
 		{
 			LPCHARACTER ch = (*it);

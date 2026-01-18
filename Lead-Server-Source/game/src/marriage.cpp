@@ -55,8 +55,8 @@ namespace marriage
 		StopNearCheckEvent();
 		if (IsOnline())
 		{
-			ch1->ChatPacket(CHAT_TYPE_COMMAND, "lover_divorce");
-			ch2->ChatPacket(CHAT_TYPE_COMMAND, "lover_divorce");
+			ch1->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_divorce"));
+			ch2->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_divorce"));
 		}
 		M2_DELETE(pWeddingInfo);
 		pWeddingInfo = NULL;
@@ -251,8 +251,8 @@ namespace marriage
 
 			if (d1 && d2)
 			{
-				d1->ChatPacket(CHAT_TYPE_COMMAND, "lover_login");
-				d2->ChatPacket(CHAT_TYPE_COMMAND, "lover_login");
+				d1->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_login"));
+				d2->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_login"));
 				sys_log(0, "lover_login %u %u", m_pid1, m_pid2);
 			}
 		}
@@ -297,7 +297,7 @@ namespace marriage
 			}
 
 			if (d1 && !g_bShutdown) {
-				d1->ChatPacket(CHAT_TYPE_COMMAND, "lover_logout");
+				d1->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_logout"));
 			}
 
 			d2 = ch2 ? ch2->GetDesc() : NULL;
@@ -314,7 +314,7 @@ namespace marriage
 			}
 
 			if (d2 && !g_bShutdown) {
-				d2->ChatPacket(CHAT_TYPE_COMMAND, "lover_logout");
+				d2->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_logout"));
 			}
 		}
 	}
@@ -334,14 +334,14 @@ namespace marriage
 		if (IsNear() && !isLastNear)
 		{
 			isLastNear = true;
-			ch1->ChatPacket(CHAT_TYPE_COMMAND, "lover_near");
-			ch2->ChatPacket(CHAT_TYPE_COMMAND, "lover_near");
+			ch1->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_near"));
+			ch2->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_near"));
 		}
 		else if (!IsNear() && isLastNear)
 		{
 			isLastNear = false;
-			ch1->ChatPacket(CHAT_TYPE_COMMAND, "lover_far");
-			ch2->ChatPacket(CHAT_TYPE_COMMAND, "lover_far");
+			ch1->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_far"));
+			ch2->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_far"));
 		}
 
 		if (byLastLovePoint != GetMarriagePoint())
@@ -418,8 +418,8 @@ namespace marriage
 			SendLoverInfo(ch1, name2, GetMarriagePoint());
 			SendLoverInfo(ch2, name1, GetMarriagePoint());
 
-			ch1->ChatPacket(CHAT_TYPE_COMMAND, "lover_login");
-			ch2->ChatPacket(CHAT_TYPE_COMMAND, "lover_login");
+			ch1->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_login"));
+			ch2->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("lover_login"));
 		}
 	}
 
@@ -440,10 +440,10 @@ namespace marriage
 				LPCHARACTER ch;
 				ch = CHARACTER_MANAGER::instance().FindByPID(m_pid1);
 				if (ch)
-					ch->ChatPacket(CHAT_TYPE_PARTY, "lovepoint bykill %.3g total %d", love_point / 1000000., GetMarriagePoint());
+					ch->ChatPacket(CHAT_TYPE_PARTY, LC_TEXT("lovepoint bykill %.3g total %d"), love_point / 1000000., GetMarriagePoint());
 				ch = CHARACTER_MANAGER::instance().FindByPID(m_pid2);
 				if (ch)
-					ch->ChatPacket(CHAT_TYPE_PARTY, "lovepoint bykill %.3g total %d", love_point / 1000000., GetMarriagePoint());
+					ch->ChatPacket(CHAT_TYPE_PARTY, LC_TEXT("lovepoint bykill %.3g total %d"), love_point / 1000000., GetMarriagePoint());
 			}
 		}
 	}

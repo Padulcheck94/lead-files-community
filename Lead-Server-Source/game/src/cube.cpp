@@ -313,12 +313,12 @@ void Cube_open (LPCHARACTER ch)
 
 	if (ch->IsCubeOpen())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이미 제조창이 열려있습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The Build window is already open."));
 		return;
 	}
 	if ( ch->GetExchange() || ch->GetMyShop() || ch->GetShopOwner() || ch->IsOpenSafebox() || ch->IsCubeOpen() )
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("다른 거래중(창고,교환,상점)에는 사용할 수 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot build something while another trade/storeroom window is open."));
 		return;
 	}
 
@@ -333,7 +333,7 @@ void Cube_open (LPCHARACTER ch)
 
 	Cube_clean_item(ch);
 	ch->SetCubeNpc(npc);
-	ch->ChatPacket(CHAT_TYPE_COMMAND, "cube open %d", npc->GetRaceNum());
+	ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("cube open %d"), npc->GetRaceNum());
 }
 
 // 큐브 캔슬
@@ -342,7 +342,7 @@ void Cube_close (LPCHARACTER ch)
 	RETURN_IF_CUBE_IS_NOT_OPENED(ch);
 	Cube_clean_item(ch);
 	ch->SetCubeNpc(NULL);
-	ch->ChatPacket(CHAT_TYPE_COMMAND, "cube close");
+	ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("cube close"));
 	dev_log(LOG_DEB0, "<CUBE> close (%s)", ch->GetName());
 }
 
@@ -498,11 +498,11 @@ static bool FN_update_cube_status(LPCHARACTER ch)
 
 	if (NULL == cube)
 	{
-		ch->ChatPacket(CHAT_TYPE_COMMAND, "cube info 0 0 0");
+		ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("cube info 0 0 0"));
 		return false;
 	}
 
-	ch->ChatPacket(CHAT_TYPE_COMMAND, "cube info %d %d %d", cube->gold, 0, 0);
+	ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("cube info %d %d %d"), cube->gold, 0, 0);
 	return true;
 }
 
@@ -522,7 +522,7 @@ bool Cube_make (LPCHARACTER ch)
 
 	if (!(ch)->IsCubeOpen())
 	{
-		(ch)->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("제조창이 열려있지 않습니다"));
+		(ch)->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The build window is not open."));
 		return false;
 	}
 
@@ -537,13 +537,13 @@ bool Cube_make (LPCHARACTER ch)
 
 	if (NULL == cube_proto)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("제조 재료가 부족합니다"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You do not have the right material."));
 		return false;
 	}
 
 	if (ch->GetGold() < cube_proto->gold)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("돈이 부족하거나 아이템이 제자리에 없습니다."));	// 이 텍스트는 이미 널리 쓰이는거라 추가번역 필요 없음
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Not enough Yang or not enough space in the inventory."));	// 이 텍스트는 이미 널리 쓰이는거라 추가번역 필요 없음
 		return false;
 	}
 
@@ -560,7 +560,7 @@ bool Cube_make (LPCHARACTER ch)
 	if ( percent_number<=cube_proto->percent)
 	{
 		// 성공
-		ch->ChatPacket(CHAT_TYPE_COMMAND, "cube success %d %d", reward_value->vnum, reward_value->count);
+		ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("cube success %d %d"), reward_value->vnum, reward_value->count);
 		new_item = ch->AutoGiveItem(reward_value->vnum, reward_value->count);
 
 		LogManager::instance().CubeLog(ch->GetPlayerID(), ch->GetX(), ch->GetY(),
@@ -570,8 +570,8 @@ bool Cube_make (LPCHARACTER ch)
 	else
 	{
 		// 실패
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("제조에 실패하였습니다."));	// 2012.11.12 새로 추가된 메세지 (locale_string.txt 에 추가해야 함)
-		ch->ChatPacket(CHAT_TYPE_COMMAND, "cube fail");
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Manufacturing failed."));	// 2012.11.12 새로 추가된 메세지 (locale_string.txt 에 추가해야 함)
+		ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("cube fail"));
 		LogManager::instance().CubeLog(ch->GetPlayerID(), ch->GetX(), ch->GetY(),
 				reward_value->vnum, 0, 0, 0);
 		return false;
@@ -596,7 +596,7 @@ void Cube_show_list (LPCHARACTER ch)
 		item = cube_item[i];
 		if (NULL==item)	continue;
 
-		ch->ChatPacket(CHAT_TYPE_INFO, "cube[%d]: inventory[%d]: %s",
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("cube[%d]: inventory[%d]: %s"),
 				i, item->GetCell(), item->GetName());
 	}
 }
@@ -638,7 +638,7 @@ void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index)
 	cube_item[cube_index] = item;
 
 	if (test_server)
-		ch->ChatPacket(CHAT_TYPE_INFO, "cube[%d]: inventory[%d]: %s added",
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("cube[%d]: inventory[%d]: %s added"),
 									cube_index, inven_index, item->GetName());
 
 	// 현재 상자에 올라온 아이템들로 무엇을 만들 수 있는지 클라이언트에 정보 전달
@@ -666,7 +666,7 @@ void Cube_delete_item (LPCHARACTER ch, int cube_index)
 	cube_item[cube_index] = NULL;
 
 	if (test_server)
-		ch->ChatPacket(CHAT_TYPE_INFO, "cube[%d]: cube[%d]: %s deleted",
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("cube[%d]: cube[%d]: %s deleted"),
 				cube_index, item->GetCell(), item->GetName());
 
 	// 현재 상자에 올라온 아이템들로 무엇을 만들 수 있는지 클라이언트에 정보 전달
@@ -922,7 +922,7 @@ void Cube_request_result_list(LPCHARACTER ch)
 	// (Server -> Client) /cube r_list npcVNUM resultCount vnum1,count1/vnum2,count2,/vnum3,count3/...
 	// (Server -> Client) /cube r_list 20383 4 123,1/125,1/128,1/130,5
 	
-	ch->ChatPacket(CHAT_TYPE_COMMAND, "cube r_list %d %d %s", npcVNUM, resultCount, resultText.c_str());
+	ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("cube r_list %d %d %s"), npcVNUM, resultCount, resultText.c_str());
 }
 
 // 
@@ -974,7 +974,7 @@ void Cube_request_material_info(LPCHARACTER ch, int requestStartIndex, int reque
 		sys_err("[CubeInfo] Too long material info. (NPC: %d, requestStart: %d, requestCount: %d, length: %d)", npcVNUM, requestStartIndex, requestCount, materialInfoText.size());
 	}
 
-	ch->ChatPacket(CHAT_TYPE_COMMAND, "cube m_info %d %d %s", requestStartIndex, requestCount, materialInfoText.c_str());
+	ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("cube m_info %d %d %s"), requestStartIndex, requestCount, materialInfoText.c_str());
 
 	
 }

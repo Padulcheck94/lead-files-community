@@ -24,7 +24,7 @@ namespace xmas
 				if (!ch)
 					continue;
 
-				ch->ChatPacket(CHAT_TYPE_COMMAND, "%s %d", name.c_str(), value);
+				ch->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("%s %d"), name.c_str(), value);
 			}
 
 			if (name == "xmas_boom")

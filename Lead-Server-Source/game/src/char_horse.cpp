@@ -17,13 +17,13 @@ bool CHARACTER::StartRiding()
 {
 	if (IsDead() == true)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("쓰러진 상태에서는 말에 탈 수 없습니다."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot ride a horse while downed."));
 		return false;
 	}
 	
 	if (IsPolymorphed())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("변신 상태에서는 말에 탈 수 없습니다."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot ride a Horse while you are transformed."));
 		return false;
 	}
 
@@ -32,7 +32,7 @@ bool CHARACTER::StartRiding()
 
 	if (armor && (armor->GetVnum() >= 11901 && armor->GetVnum() <= 11904))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("예복을 입은 상태에서 말을 탈 수 없습니다."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot ride while you are wearing a Wedding Dress or a Tuxedo."));
 		return false;
 	}
 
@@ -48,11 +48,11 @@ bool CHARACTER::StartRiding()
 	if (false == CHorseRider::StartRiding())
 	{
 		if (GetHorseLevel() <= 0)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말을 소유하고 있지 않습니다."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You do not have a Horse."));
 		else if (GetHorseHealth() <= 0)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말이 죽어있는 상태 입니다."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Your Horse is dead."));
 		else if (GetHorseStamina() <= 0)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말의 스테미너가 부족하여 말을 탈 수 없습니다."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Your Horse's endurance is too low."));
 
 		return false;
 	}
@@ -178,7 +178,7 @@ void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const cha
 
 		if (!m_chHorse)
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("말 소환에 실패하였습니다."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Calling the Horse has failed."));
 			return;
 		}
 
@@ -204,7 +204,7 @@ void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const cha
 		else
 		{
 			m_chHorse->m_stName = GetName();
-			m_chHorse->m_stName += LC_TEXT("님의 말");
+			m_chHorse->m_stName += LC_TEXT("'s Horse");
 		}
 
 		if (!m_chHorse->Show(GetMapIndex(), x, y, GetZ()))
@@ -289,7 +289,7 @@ void CHARACTER::ClearHorseInfo()
 {
 	if (!IsHorseRiding())
 	{
-		ChatPacket(CHAT_TYPE_COMMAND, "hide_horse_state");
+		ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("hide_horse_state"));
 
 		m_bSendHorseLevel = 0;
 		m_bSendHorseHealthGrade = 0;
@@ -342,7 +342,7 @@ STM
 				m_bSendHorseHealthGrade != iHealthGrade || 
 				m_bSendHorseStaminaGrade != iStaminaGrade)
 		{
-			ChatPacket(CHAT_TYPE_COMMAND, "horse_state %d %d %d", GetHorseLevel(), iHealthGrade, iStaminaGrade);
+			ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("horse_state %d %d %d"), GetHorseLevel(), iHealthGrade, iStaminaGrade);
 
 			// FIX : 클라이언트에 "말 상태 버프" 아이콘을 표시하지 않을 목적으로 함수 초입에 return함으로써 아래 코드를 무시한다면
 			// 말을 무한대로 소환하는 무시무시한 버그가 생김.. 정확한 원인은 파악 안해봐서 모름.

@@ -147,11 +147,11 @@ void ShutdownOnFatalError()
 		{
 			char buf[256];
 
-			strlcpy(buf, LC_TEXT("서버에 치명적인 오류가 발생하여 자동으로 재부팅됩니다."), sizeof(buf));
+			strlcpy(buf, LC_TEXT("A critical server error has occurred. The server will restart automatically."), sizeof(buf));
 			SendNotice(buf);
-			strlcpy(buf, LC_TEXT("10초후 자동으로 접속이 종료되며,"), sizeof(buf));
+			strlcpy(buf, LC_TEXT("You will be disconnected automatically in 10 seconds."), sizeof(buf));
 			SendNotice(buf);
-			strlcpy(buf, LC_TEXT("5분 후에 정상적으로 접속하실수 있습니다."), sizeof(buf));
+			strlcpy(buf, LC_TEXT("You can connect again after 5 minutes."), sizeof(buf));
 			SendNotice(buf);
 		}
 
@@ -173,7 +173,7 @@ namespace
 			if (d->GetCharacter())
 			{
 				if (d->GetCharacter()->GetGMLevel() == GM_PLAYER)
-					d->GetCharacter()->ChatPacket(CHAT_TYPE_COMMAND, "quit Shutdown(SendDisconnectFunc)");
+					d->GetCharacter()->ChatPacket(CHAT_TYPE_COMMAND, LC_TEXT("quit Shutdown(SendDisconnectFunc)"));
 			}
 		}
 	};

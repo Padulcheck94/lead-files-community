@@ -1,4 +1,4 @@
-#include "stdafx.h" 
+﻿#include "stdafx.h" 
 #include "config.h"
 #include "desc_client.h"
 #include "desc_manager.h"
@@ -176,7 +176,7 @@ struct FuncShout
 		if (!d->GetCharacter() || (d->GetCharacter()->GetGMLevel() == GM_PLAYER && d->GetEmpire() != m_bEmpire))
 			return;
 
-		d->GetCharacter()->ChatPacket(CHAT_TYPE_SHOUT, "%s", m_str);
+		d->GetCharacter()->ChatPacket(CHAT_TYPE_SHOUT, LC_TEXT("%s"), m_str);
 	}
 };
 
