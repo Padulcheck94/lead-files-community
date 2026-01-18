@@ -59,18 +59,6 @@ bool FN_IS_VALID_LOGIN_STRING(const char *str)
 			}
 		}
 
-		if (LC_IsJapan() == true)
-		{
-			switch (*tmp)
-			{
-				case '-' :
-				case '_' :
-				case '@':
-				case '#':
-					continue;
-			}
-		}
-
 		return false;
 	}
 

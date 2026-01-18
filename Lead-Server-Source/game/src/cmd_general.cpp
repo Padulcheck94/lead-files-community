@@ -1786,12 +1786,6 @@ ACMD(do_in_game_mall)
 		return;
 	}
 
-	if (LC_IsJapan() == true)
-	{
-		ch->ChatPacket(CHAT_TYPE_COMMAND, "mall http://mt2.oge.jp/itemmall/itemList.php");
-		return;
-	}
-
 	if (LC_IsSingapore() == true)
 	{
 		ch->ChatPacket(CHAT_TYPE_COMMAND, "mall http://www.metin2.sg/ishop.php");

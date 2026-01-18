@@ -325,7 +325,6 @@ int check_name_alphabet(const char * str)
 
 	for (tmp = str; *tmp; ++tmp)
 	{
-		// 알파벳과 수자만 허용
 		if (isdigit(*tmp) || isalpha(*tmp))
 			continue;
 		else
@@ -334,86 +333,7 @@ int check_name_alphabet(const char * str)
 
 	return check_name_independent(str);
 }
-// DISABLE_SPECIAL_CHAR_NAMING
-bool sjis_is_disable_name_char(const char* src)
-{
-	static const char* sjis_symbols = "?";
 
-	if (strncmp(src, sjis_symbols, 2) == 0)
-		return true;
-
-	return false;
-}
-// END_OF_DISABLE_SPECIAL_CHAR_NAMING
-
-
-
-//-----------------------------------------------
-// CHECK SJIS STRING
-//-----------------------------------------------
-#define issjishead(c) ((0x81<=(c) && (c)<=0x9f) || \
-		                               ((0xe0<=(c)) && (c)<=0xfc))
-#define issjistail(c) ((0x40<=(c) && (c)<=0x7e) || \
-		                               (0x80<=(c) && (c)<=0xfc))
-
-static int is_char_sjis(const char *p, const char *e)
-{
-	return (issjishead((BYTE) *p) && (e-p)>1 && issjistail((BYTE)p[1]) ? true : false);
-}
-
-int is_twobyte_sjis(const char *str)
-{
-	if (str && str[0] && str[1])
-		return issjishead((BYTE)str[0]) && issjistail((BYTE)str[1]);
-	else
-		return 0;
-}
-
-int check_name_sjis(const char *str)
-{
-	const char	*p = str;
-	const char	*e = str + strlen(str);	// NULL position
-
-	// 일본은 캐릭터 이름길이 16byte 까지
-	if ( strlen(str) < 2 || strlen(str) > 16 )
-		return 0;
-
-	while (*p)
-	{
-		if (is_char_sjis(p, e))
-		{
-			// DISABLE_SPECIAL_CHAR_NAMING
-			if (sjis_is_disable_name_char(p))
-				return false;
-
-			// END_OF_DISABLE_SPECIAL_CHAR_NAMING
-			// 이문자는 허용되지 않는다.
-			if ((BYTE)p[0]==0x81 && (BYTE)p[1]==0x40) return false;
-
-			p += 2;
-			continue;
-		}
-		else
-		{
-			// 영문이나 수자는 허용한다.
-			if (isalpha(*p) || isdigit(*p))
-			{
-				p += 1;
-				continue;
-			}
-			else
-			{
-				return 0;
-			}
-		}
-	}
-
-
-	return check_name_independent(str);
-}
-//-----------------------------------------------
-// END OF CHECK SJIS STRING
-//-----------------------------------------------
 void LocaleService_LoadLocaleStringFile()
 {
 	if (g_stLocaleFilename.empty())
@@ -450,24 +370,6 @@ static void __LocaleService_Init_DEFAULT()
 
 	g_setQuestObjectDir.clear();	
 	g_setQuestObjectDir.insert(g_stQuestDir + "/object");
-}
-
-static void __LocaleService_Init_JAPAN()
-{
-	g_stLocale = "sjis";
-	g_stServiceBasePath = "locale/japan";
-	g_stQuestDir = "locale/japan/quest";
-	g_stServiceMapPath = "locale/japan/map";
-
-	g_setQuestObjectDir.clear();
-	g_setQuestObjectDir.insert("locale/japan/quest/object");
-	g_stLocaleFilename = "locale/japan/sjis_string.txt";
-
-	g_iUseLocale = TRUE;
-
-	check_name = check_name_sjis;
-	is_twobyte = is_twobyte_sjis;
-	exp_table = exp_table_euckr;
 }
 
 static void __LocaleService_Init_English()
@@ -1031,11 +933,7 @@ bool LocaleService_Init(const std::string& c_rstServiceName)
 
 	g_stServiceName = c_rstServiceName;
 
-	if ( "japan" == g_stServiceName)
-	{
-		__LocaleService_Init_JAPAN();
-	}
-	else if ( "english" == g_stServiceName)
+	if ( "english" == g_stServiceName)
 	{
 		__LocaleService_Init_English();
 	}
@@ -1219,8 +1117,6 @@ bool LC_InitLocalization( const std::string& szLocal )
 
 	if ( !g_stLocal.compare("ymir") )
 		g_eLocalType = LC_YMIR;
-	else if ( !g_stLocal.compare("japan") )
-		g_eLocalType = LC_JAPAN;
 	else if ( !g_stLocal.compare("english") )
 		g_eLocalType = LC_ENGLISH;
 	else if ( !g_stLocal.compare("hongkong") )
@@ -1296,7 +1192,6 @@ bool LC_IsLocale( const eLocalization t )
 }
 
 bool LC_IsYMIR()		{ return LC_GetLocalType() == LC_YMIR ? true : false; }
-bool LC_IsJapan()		{ return LC_GetLocalType() == LC_JAPAN ? true : false; }
 bool LC_IsEnglish()		{ return LC_GetLocalType() == LC_ENGLISH ? true : false; } 
 bool LC_IsHongKong()	{ return LC_GetLocalType() == LC_HONGKONG ? true : false; }
 bool LC_IsGermany()		{ return LC_GetLocalType() == LC_GERMANY ? true : false; }
@@ -1341,7 +1236,6 @@ bool LC_IsEurope()
 		case LC_USA:
 		case LC_WE_KOREA:	// 한국이지만 UK 버전 기반이므로 여기 넣음
 		case LC_TAIWAN:		// 대만이지만 WE_KOREA 버전 기반이므로 여기 넣음
-		case LC_JAPAN:		// 일본이지만 WE(World Edition -_-) 버전이므로 여기 넣음
 		case LC_CANADA:	// 캐나다 GF에서 서비스 시작
 			return true;
 	}

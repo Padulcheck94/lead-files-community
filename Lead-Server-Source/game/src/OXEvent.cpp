@@ -215,14 +215,8 @@ EVENTFUNC(oxevent_timer)
 				SendNoticeMap(LC_TEXT("X 입니다"), OXEVENT_MAP_INDEX, true);
 			}
 
-			if (LC_IsJapan())
-			{
-				SendNoticeMap("듩댾궑궫뺴갲귩둖궸댷벍궠궧귏궥갃", OXEVENT_MAP_INDEX, true);
-			}
-			else
-			{
-				SendNoticeMap(LC_TEXT("5초 뒤 틀리신 분들을 바깥으로 이동 시키겠습니다."), OXEVENT_MAP_INDEX, true);
-			}
+
+			SendNoticeMap(LC_TEXT("5초 뒤 틀리신 분들을 바깥으로 이동 시키겠습니다."), OXEVENT_MAP_INDEX, true);
 
 			flag++;
 			return PASSES_PER_SEC(5);
