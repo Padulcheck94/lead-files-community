@@ -258,20 +258,7 @@ protected:
 	void		WeddingStart(TPacketWeddingStart* p);
 	void		WeddingEnd(TPacketWeddingEnd* p);
 
-	void		TakeMonarchMoney(LPDESC d, const char * data );
-	void		AddMonarchMoney(LPDESC d, const char * data );
-	void		DecMonarchMoney(LPDESC d, const char * data );
-	void		SetMonarch( LPDESC d, const char * data );
-
-	void		ChangeMonarchLord(TPacketChangeMonarchLordACK* data);
-	void		UpdateMonarchInfo(TMonarchInfo* data);
-
 	// MYSHOP_PRICE_LIST
-	/// 아이템 가격정보 리스트 요청에 대한 응답 패킷(HEADER_DG_MYSHOP_PRICELIST_RES) 처리함수
-	/**
-	* @param	d 아이템 가격정보 리스트를 요청한 플레이어의 descriptor
-	* @param	p 패킷데이터의 포인터
-	*/
 	void		MyshopPricelistRes( LPDESC d, const TPacketMyshopPricelistHeader* p );
 	// END_OF_MYSHOP_PRICE_LIST
 	//
@@ -280,7 +267,7 @@ protected:
 	//END_RELOAD_ADMIN
 
 	void		DetailLog(const TPacketNeedLoginLogInfo* info);
-	// 독일 선물 기능 테스트
+
 	void		ItemAwardInformer(TPacketItemAwardInfromer* data);
 
 	void		RespondChannelStatus(LPDESC desc, const char* pcData);
@@ -305,8 +292,6 @@ class CInputP2P : public CInputProcessor
 		void		Logout(LPDESC d, const char * c_pData);
 		int			Relay(LPDESC d, const char * c_pData, size_t uiBytes);
 		int			Notice(LPDESC d, const char * c_pData, size_t uiBytes);
-		int			MonarchNotice(LPDESC d, const char * c_pData, size_t uiBytes);
-		int			MonarchTransfer(LPDESC d, const char * c_pData);
 		int			Guild(LPDESC d, const char* c_pData, size_t uiBytes);
 		void		Shout(const char * c_pData);
 		void		Disconnect(const char * c_pData);

@@ -298,10 +298,6 @@ enum
 	HEADER_GG_LOGIN_PING			= 20,
 	HEADER_GG_CHECK_CLIENT_VERSION		= 21,
 	HEADER_GG_BLOCK_CHAT			= 22,
-
-	HEADER_GG_MONARCH_NOTICE		= 26,
-	HEADER_GG_MONARCH_TRANSFER		= 27,
-
 	HEADER_GG_CHECK_AWAKENESS		= 29,
 };
 
@@ -341,13 +337,6 @@ typedef struct SPacketGGNotice
 	BYTE	bHeader;
 	long	lSize;
 } TPacketGGNotice;
-
-typedef struct SPacketGGMonarchNotice
-{
-	BYTE	bHeader;
-	BYTE	bEmpire;
-	long	lSize;
-} TPacketGGMonarchNotice;
 
 //FORKED_ROAD
 typedef struct SPacketGGForkedMapInfo
@@ -2071,14 +2060,6 @@ typedef struct packet_damage_info
 	BYTE flag;
 	int damage;
 } TPacketGCDamageInfo;
-
-typedef struct SPacketGGMonarchTransfer
-{
-	BYTE	bHeader;
-	DWORD	dwTargetPID;
-	long	x;
-	long	y;
-} TPacketMonarchGGTransfer;
 
 typedef struct SPacketGGCheckAwakeness
 {

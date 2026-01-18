@@ -15,7 +15,6 @@
 #include "log.h"
 #include "db.h"
 #include "questmanager.h"
-#include "monarch.h"
 #include "mob_manager.h"
 #include "locale_service.h"
 #include "desc_client.h"
@@ -359,9 +358,6 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 	}
 	else
 		item->SetCount(item->GetCount() - bCount);
-
-	//군주 시스템 : 세금 징수
-	CMonarch::instance().SendtoDBAddMoney(dwTax, ch->GetEmpire(), ch);
 
 	ch->PointChange(POINT_GOLD, dwPrice, false);
 }
