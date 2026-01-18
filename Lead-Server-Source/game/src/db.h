@@ -140,10 +140,6 @@ template <class Functor> void DBManager::FuncAfterQuery(Functor f, const char* c
 	m_sql.ReturnQuery(szQuery, p);
 }
 
-////////////////////////////////////////////////////////////////
-extern void VCardUse(LPCHARACTER CardOwner, LPCHARACTER CardTaker, LPITEM item);
-
-
 // ACCOUNT_DB
 class AccountDB : public singleton<AccountDB>
 {
