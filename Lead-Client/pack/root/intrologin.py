@@ -241,14 +241,10 @@ class LoginWindow(ui.ScriptWindow):
 		else:
 			connectingIP = self.stream.GetConnectAddr()
 			if connectingIP:
-				if app.USE_OPENID and not app.OPENID_TEST :
-					self.__RefreshServerList()
-					self.__OpenServerBoard()
-				else:
-					self.__OpenLoginBoard()
-					if IsFullBackImage():
-						self.GetChild("bg1").Hide()
-						self.GetChild("bg2").Show()
+				self.__OpenLoginBoard()
+				if IsFullBackImage():
+					self.GetChild("bg1").Hide()
+					self.GetChild("bg2").Show()
 
 			else:
 				self.__RefreshServerList()
@@ -1052,15 +1048,8 @@ class LoginWindow(ui.ScriptWindow):
 			exception.Abort("LoginWindow.__OnClickSelectServerButton - ��ũ ���� ����")
 
 
-		if app.USE_OPENID and not app.OPENID_TEST :
-			## 2012.07.19 OpenID : ����
-			# ä�� ���� ȭ�鿡�� "Ȯ��"(SelectServerButton) �� ��������,
-			# �α��� ȭ������ �Ѿ�� �ʰ� �ٷ� ������ OpenID ����Ű�� �������� ����
-			self.stream.SetConnectInfo(ip, tcp_port, account_ip, account_port)
-			self.Connect(0, 0)
-		else :
-			self.stream.SetConnectInfo(ip, tcp_port, account_ip, account_port)
-			self.__OpenLoginBoard()
+		self.stream.SetConnectInfo(ip, tcp_port, account_ip, account_port)
+		self.__OpenLoginBoard()
 		
 
 	def __OnClickSelectConnectButton(self):

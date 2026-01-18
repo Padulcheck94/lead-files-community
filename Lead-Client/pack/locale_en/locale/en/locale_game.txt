@@ -288,12 +288,6 @@ MESSENGER_EMPTY_LIST	Empty
 MESSENGER_FAMILY	Family	
 MESSENGER_FRIEND	Friends	
 MESSENGER_GUILD	Guild	
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Enter the confirmation number that was sent to your cell phone.	
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Enter confirmation number	
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Enter the cell phone number for the Text message sending.	
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Do you want to enter the number now?	
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Enter cell phone number.	
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Send message.	
 MINIMAP	Open Mini Map	
 MINIMAP_CANNOT_SEE	Mini Map cannot be seen.	
 MINIMAP_CAN_NOT_SHOW_AREAMAP	Large Map cannot be shown.
@@ -678,13 +672,11 @@ TOOLTIP_MALL_AUTOLOOT	A hand that picks up dropped Yang automatically	SNA
 TOOLTIP_MALL_DEFBONUS	Defence +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Defence +12~15%	SNA
 TOOLTIP_MALL_EXPBONUS	EXP +%d%%	SA
-TOOLTIP_MALL_EXPBONUS_P_STATIC	iCafe EXP Bonus +%d%%	SA
 TOOLTIP_MALL_EXPBONUS_STATIC	Increases gaining EXP by 50%	SNA
 TOOLTIP_MALL_FISH_MIND	Your chance of catching a rare fish is doubled.	SNA
 TOOLTIP_MALL_GOLDBONUS	Chance of capturing Yang multiplied with %.1f	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Doubles your chance to capture Yang	SNA
 TOOLTIP_MALL_ITEMBONUS	Chance of capturing Items multiplied with %.1f	SA
-TOOLTIP_MALL_ITEMBONUS_P_STATIC	iCafe Chance of capturing Items plus %.1f%%	SA
 TOOLTIP_MALL_ITEMBONUS_STATIC	Doubles your chances of capturing items	SNA
 TOOLTIP_MALL_MARRIAGE_FAST	Lovepoints raise faster.	SNA
 TOOLTIP_MALL_SAFEBOX	Your Storeroom gets 2 storage rooms	SNA

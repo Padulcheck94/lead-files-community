@@ -37,7 +37,6 @@ class LogManager : public singleton<LogManager>
 		void		HackLog(const char * c_pszHackName, LPCHARACTER ch);
 		void		HackCRCLog(const char * c_pszHackName, const char * c_pszLogin, const char * c_pszName, const char * c_pszIP, DWORD dwCRC);
 		void		GoldBarLog(DWORD dwPID, DWORD dwItemID, GOLDBAR_HOW eHow, const char * c_pszHint);
-		void		PCBangLoginLog(DWORD dwPCBangID, const char * c_szPCBangIP, DWORD dwPlayerID, DWORD dwPlayTime);
 		void		CubeLog(DWORD dwPID, DWORD x, DWORD y, DWORD item_vnum, DWORD item_uid, int item_count, bool success);
 		void		GMCommandLog(DWORD dwPID, const char * szName, const char * szIP, BYTE byChannel, const char * szCommand);
 		void		SpeedHackLog(DWORD pid, DWORD x, DWORD y, int hack_count);
@@ -46,7 +45,6 @@ class LogManager : public singleton<LogManager>
 		void		ShoutLog(BYTE bChannel, BYTE bEmpire, const char * pszText);
 		void		LevelLog(LPCHARACTER pChar, unsigned int level, unsigned int playhour);
 		void		BootLog(const char * c_pszHostName, BYTE bChannel);
-		void		VCardLog(DWORD vcard_id, DWORD x, DWORD y, const char * hostname, const char * giver_name, const char * giver_ip, const char * taker_name, const char * taker_ip);
 		void		FishLog(DWORD dwPID, int prob_idx, int fish_id, int fish_level, DWORD dwMiliseconds, DWORD dwVnum = false, DWORD dwValue = 0);
 		void		QuestRewardLog(const char * c_pszQuestName, DWORD dwPID, DWORD dwLevel, int iValue1, int iValue2);
 		void		DetailLoginLog(bool isLogin, LPCHARACTER ch);

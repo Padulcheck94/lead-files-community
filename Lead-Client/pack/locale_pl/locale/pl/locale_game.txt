@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Pusto
 MESSENGER_FAMILY	Rodzina
 MESSENGER_FRIEND	Znajomi
 MESSENGER_GUILD	Gildia
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	WprowadŸ numer potwierdzaj¹cy, który zosta³ wys³any na twój telefon komórkowy.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	WprowadŸ numer potwierdzaj¹cy
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	WprowadŸ numer telefonu komórkowego do wysy³ania wiadomoœci tekstowych.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Czy chcesz teraz wprowadziæ numer?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	WprowadŸ numer telefonu komórkowego.
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Wyœlij wiadomoœæ.
 METIN_TEST	
 MINIMAP	Otwórz Mini Mapê
 MINIMAP_CANNOT_SEE	Nie mo¿na zobaczyæ Mini Mapy.
@@ -797,13 +791,11 @@ TOOLTIP_MALL_AUTOLOOT	Rêka, która automatycznie podnosi upuszczone Yang.	SNA
 TOOLTIP_MALL_DEFBONUS	Obrona: +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Obrona +12~15%	SNA
 TOOLTIP_MALL_EXPBONUS	Punkty Doœwiadczenia: +%d%%	SA
-TOOLTIP_MALL_EXPBONUS_P_STATIC	iCafe DOŒ Bonus +%d%%	SA
 TOOLTIP_MALL_EXPBONUS_STATIC	Zwiêksza zdobywanie PD o 50%	SNA
 TOOLTIP_MALL_FISH_MIND	Szansa schwytania rzadkiej ryby zostanie podwojona.	SNA
 TOOLTIP_MALL_GOLDBONUS	Szansa na zdobycie Yang pomno¿ona o %.1f	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Szansa znalezienia Yang zostanie podwojona	SNA
 TOOLTIP_MALL_ITEMBONUS	Szansa na zdobycie Przedmiotów pomno¿ona o %.1f	SA
-TOOLTIP_MALL_ITEMBONUS_P_STATIC	iCafe Szansa na zdobycie Przedmiotów plus %.1f%%	SA
 TOOLTIP_MALL_ITEMBONUS_STATIC	Podwojona szansa na zdobycie przedmiotu	SNA
 TOOLTIP_MALL_MARRIAGE_FAST	Punkty Mi³oœci szybciej siê regeneruj¹.	SNA
 TOOLTIP_MALL_SAFEBOX	Zwiêkszona pojemnoœæ Magazynu	SNA

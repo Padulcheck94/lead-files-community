@@ -24,14 +24,12 @@
 #include "war_map.h"
 #include "questmanager.h"
 #include "item_manager.h"
-#include "monarch.h"
 #include "mob_manager.h"
 #include "dev_log.h"
 #include "item.h"
 #include "arena.h"
 #include "buffer_manager.h"
 #include "unique_item.h"
-#include "threeway_war.h"
 #include "log.h"
 #include "../../common/VnumHelper.h"
 #ifdef __AUCTION__
@@ -367,7 +365,6 @@ ACMD(do_cmd)
 	int nExitLimitTime = 10;
 
 	if (ch->IsHack(false, true, nExitLimitTime) &&
-		false == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()) &&
 	   	(!ch->GetWarMap() || ch->GetWarMap()->GetType() == GUILD_WAR_TYPE_FLAG))
 	{
 		return;
@@ -495,12 +492,8 @@ ACMD(do_restart)
 		{
 			if (ch->IsHack())
 			{
-				//성지 맵일경우에는 체크 하지 않는다.
-				if (false == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아직 재시작 할 수 없습니다. (%d초 남음)"), iTimeToDead - (180 - g_nPortalLimitTime));
-					return;
-				}
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아직 재시작 할 수 없습니다. (%d초 남음)"), iTimeToDead - (180 - g_nPortalLimitTime));
+				return;
 			}
 
 			if (iTimeToDead > 170)
@@ -519,8 +512,7 @@ ACMD(do_restart)
 		if (ch->IsHack())
 		{
 			//길드맵, 성지맵에서는 체크 하지 않는다.
-			if ((!ch->GetWarMap() || ch->GetWarMap()->GetType() == GUILD_WAR_TYPE_FLAG) ||
-			   	false == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
+			if ((!ch->GetWarMap() || ch->GetWarMap()->GetType() == GUILD_WAR_TYPE_FLAG))
 			{
 				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아직 재시작 할 수 없습니다. (%d초 남음)"), iTimeToDead - (180 - g_nPortalLimitTime));
 				return;
@@ -540,47 +532,6 @@ ACMD(do_restart)
 	ch->GetDesc()->SetPhase(PHASE_GAME);
 	ch->SetPosition(POS_STANDING);
 	ch->StartRecoveryEvent();
-
-	//FORKED_LOAD
-	//DESC: 삼거리 전투시 부활을 할경우 맵의 입구가 아닌 삼거리 전투의 시작지점으로 이동하게 된다.
-	if (1 == quest::CQuestManager::instance().GetEventFlag("threeway_war"))
-	{
-		if (subcmd == SCMD_RESTART_TOWN || subcmd == SCMD_RESTART_HERE)
-		{
-			if (true == CThreeWayWar::instance().IsThreeWayWarMapIndex(ch->GetMapIndex()) &&
-					false == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
-			{
-				ch->WarpSet(EMPIRE_START_X(ch->GetEmpire()), EMPIRE_START_Y(ch->GetEmpire()));
-
-				ch->ReviveInvisible(5);
-				ch->PointChange(POINT_HP, ch->GetMaxHP() - ch->GetHP());
-				ch->PointChange(POINT_SP, ch->GetMaxSP() - ch->GetSP());
-
-				return;
-			}
-
-			//성지 
-			if (true == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
-			{
-				if (CThreeWayWar::instance().GetReviveTokenForPlayer(ch->GetPlayerID()) <= 0)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("성지에서 부활 기회를 모두 잃었습니다! 마을로 이동합니다!"));
-					ch->WarpSet(EMPIRE_START_X(ch->GetEmpire()), EMPIRE_START_Y(ch->GetEmpire()));
-				}
-				else
-				{
-					ch->Show(ch->GetMapIndex(), GetSungziStartX(ch->GetEmpire()), GetSungziStartY(ch->GetEmpire()));
-				}
-
-				ch->PointChange(POINT_HP, ch->GetMaxHP() - ch->GetHP());
-				ch->PointChange(POINT_SP, ch->GetMaxSP() - ch->GetSP());
-				ch->ReviveInvisible(5);
-
-				return;
-			}
-		}
-	}
-	//END_FORKED_LOAD
 
 	if (ch->GetDungeon())
 		ch->GetDungeon()->UseRevive(ch);
@@ -1433,278 +1384,6 @@ ACMD(do_party_request_deny)
 		ch->DenyToParty(tch);
 }
 
-ACMD(do_monarch_warpto)
-{
-	if (true == LC_IsYMIR() || true == LC_IsKorea())
-		return;
-
-	if (!CMonarch::instance().IsMonarch(ch->GetPlayerID(), ch->GetEmpire()))
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주만이 사용 가능한 기능입니다"));
-		return;
-	}
-	
-	//군주 쿨타임 검사
-	if (!ch->IsMCOK(CHARACTER::MI_WARP))
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d 초간 쿨타임이 적용중입니다."), ch->GetMCLTime(CHARACTER::MI_WARP));
-		return;
-	}
-
-	//군주 몹 소환 비용 
-	const int WarpPrice = 10000;
-	
-	//군주 국고 검사 
-	if (!CMonarch::instance().IsMoneyOk(WarpPrice, ch->GetEmpire()))
-	{
-		int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("국고에 돈이 부족합니다. 현재 : %u 필요금액 : %u"), NationMoney, WarpPrice);
-		return;	
-	}
-
-	int x = 0, y = 0;
-	char arg1[256];
-
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("사용법: warpto <character name>"));
-		return;
-	}
-
-	LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(arg1);
-
-	if (!tch)
-	{
-		CCI * pkCCI = P2P_MANAGER::instance().Find(arg1);
-
-		if (pkCCI)
-		{
-			if (pkCCI->bEmpire != ch->GetEmpire())
-			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("타제국 유저에게는 이동할수 없습니다"));
-				return;
-			}
-
-			if (pkCCI->bChannel != g_bChannel)
-			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("해당 유저는 %d 채널에 있습니다. (현재 채널 %d)"), pkCCI->bChannel, g_bChannel);
-				return;
-			}
-			if (!IsMonarchWarpZone(pkCCI->lMapIndex))
-			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 이동할 수 없습니다."));
-				return;
-			}
-
-			PIXEL_POSITION pos;
-	
-			if (!SECTREE_MANAGER::instance().GetCenterPositionOfMap(pkCCI->lMapIndex, pos))
-				ch->ChatPacket(CHAT_TYPE_INFO, "Cannot find map (index %d)", pkCCI->lMapIndex);
-			else
-			{
-				//ch->ChatPacket(CHAT_TYPE_INFO, "You warp to (%d, %d)", pos.x, pos.y);
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 에게로 이동합니다"), arg1);
-				ch->WarpSet(pos.x, pos.y);
-				
-				//군주 돈 삭감	
-				CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
-
-				//쿨타임 초기화 
-				ch->SetMC(CHARACTER::MI_WARP);
-			}
-		}
-		else if (NULL == CHARACTER_MANAGER::instance().FindPC(arg1))
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "There is no one by that name");
-		}
-
-		return;
-	}
-	else
-	{
-		if (tch->GetEmpire() != ch->GetEmpire())
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("타제국 유저에게는 이동할수 없습니다"));
-			return;
-		}
-		if (!IsMonarchWarpZone(tch->GetMapIndex()))
-		{
-			ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 이동할 수 없습니다."));
-			return;
-		}
-		x = tch->GetX();
-		y = tch->GetY();
-	}
-
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 에게로 이동합니다"), arg1);
-	ch->WarpSet(x, y);
-	ch->Stop();
-
-	//군주 돈 삭감	
-	CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
-
-	//쿨타임 초기화 
-	ch->SetMC(CHARACTER::MI_WARP);
-}
-
-ACMD(do_monarch_transfer)
-{
-	if (true == LC_IsYMIR() || true == LC_IsKorea())
-		return;
-
-	char arg1[256];
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("사용법: transfer <name>"));
-		return;
-	}
-	
-	if (!CMonarch::instance().IsMonarch(ch->GetPlayerID(), ch->GetEmpire()))
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주만이 사용 가능한 기능입니다"));
-		return;
-	}
-	
-	//군주 쿨타임 검사
-	if (!ch->IsMCOK(CHARACTER::MI_TRANSFER))
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d 초간 쿨타임이 적용중입니다."), ch->GetMCLTime(CHARACTER::MI_TRANSFER));	
-		return;
-	}
-
-	//군주 워프 비용 
-	const int WarpPrice = 10000;
-
-	//군주 국고 검사 
-	if (!CMonarch::instance().IsMoneyOk(WarpPrice, ch->GetEmpire()))
-	{
-		int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("국고에 돈이 부족합니다. 현재 : %u 필요금액 : %u"), NationMoney, WarpPrice);
-		return;	
-	}
-
-
-	LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(arg1);
-
-	if (!tch)
-	{
-		CCI * pkCCI = P2P_MANAGER::instance().Find(arg1);
-
-		if (pkCCI)
-		{
-			if (pkCCI->bEmpire != ch->GetEmpire())
-			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("다른 제국 유저는 소환할 수 없습니다."));
-				return;
-			}
-			if (pkCCI->bChannel != g_bChannel)
-			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님은 %d 채널에 접속 중 입니다. (현재 채널: %d)"), arg1, pkCCI->bChannel, g_bChannel);
-				return;
-			}
-			if (!IsMonarchWarpZone(pkCCI->lMapIndex))
-			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 이동할 수 없습니다."));
-				return;
-			}
-			if (!IsMonarchWarpZone(ch->GetMapIndex()))
-			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 소환할 수 없습니다."));
-				return;
-			}
-
-			TPacketGGTransfer pgg;
-
-			pgg.bHeader = HEADER_GG_TRANSFER;
-			strlcpy(pgg.szName, arg1, sizeof(pgg.szName));
-			pgg.lX = ch->GetX();
-			pgg.lY = ch->GetY();
-
-			P2P_MANAGER::instance().Send(&pgg, sizeof(TPacketGGTransfer));
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님을 소환하였습니다."), arg1);
-			
-			//군주 돈 삭감	
-			CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
-			//쿨타임 초기화 
-			ch->SetMC(CHARACTER::MI_TRANSFER);
-		}
-		else
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("입력하신 이름을 가진 사용자가 없습니다."));
-		}
-
-		return;
-	}
-
-
-	if (ch == tch)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("자신을 소환할 수 없습니다."));
-		return;
-	}
-
-	if (tch->GetEmpire() != ch->GetEmpire())
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("다른 제국 유저는 소환할 수 없습니다."));
-		return;
-	}
-	if (!IsMonarchWarpZone(tch->GetMapIndex()))
-	{
-		ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 이동할 수 없습니다."));
-		return;
-	}
-	if (!IsMonarchWarpZone(ch->GetMapIndex()))
-	{
-		ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 소환할 수 없습니다."));
-		return;
-	}
-
-	//tch->Show(ch->GetMapIndex(), ch->GetX(), ch->GetY(), ch->GetZ());
-	tch->WarpSet(ch->GetX(), ch->GetY(), ch->GetMapIndex());
-	
-	//군주 돈 삭감	
-	CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
-	//쿨타임 초기화 
-	ch->SetMC(CHARACTER::MI_TRANSFER);
-}
-
-ACMD(do_monarch_info)
-{
-	if (CMonarch::instance().IsMonarch(ch->GetPlayerID(), ch->GetEmpire()))	
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("나의 군주 정보"));
-		TMonarchInfo * p = CMonarch::instance().GetMonarch();
-		for (int n = 1; n < 4; ++n)
-		{
-			if (n == ch->GetEmpire())
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%s군주] : %s  보유금액 %lld "), EMPIRE_NAME(n), p->name[n], p->money[n]);
-			else
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%s군주] : %s  "), EMPIRE_NAME(n), p->name[n]);
-				
-		}
-	}
-	else
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주 정보"));
-		TMonarchInfo * p = CMonarch::instance().GetMonarch();
-		for (int n = 1; n < 4; ++n)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%s군주] : %s  "), EMPIRE_NAME(n), p->name[n]);
-				
-		}
-	}
-	
-}	
-
-ACMD(do_elect)
-{
-	db_clientdesc->DBPacketHeader(HEADER_GD_COME_TO_VOTE, ch->GetDesc()->GetHandle(), 0);
-}
-
 // LUA_ADD_GOTO_INFO
 struct GotoInfo
 {
@@ -1746,174 +1425,6 @@ struct GotoInfo
 };
 
 extern void BroadcastNotice(const char * c_pszBuf);
-
-ACMD(do_monarch_tax)
-{
-	char arg1[256];
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: monarch_tax <1-50>");
-		return;
-	}
-
-	// 군주 검사	
-	if (!ch->IsMonarch())
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주만이 사용할수 있는 기능입니다"));
-		return;
-	}
-
-	// 세금설정 
-	int tax = 0;
-	str_to_number(tax,  arg1);
-
-	if (tax < 1 || tax > 50)
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("1-50 사이의 수치를 선택해주세요"));
-
-	quest::CQuestManager::instance().SetEventFlag("trade_tax", tax); 
-
-	// 군주에게 메세지 하나
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("세금이 %d %로 설정되었습니다"));
-
-	// 공지 
-	char szMsg[1024];	
-
-	snprintf(szMsg, sizeof(szMsg), "군주의 명으로 세금이 %d %% 로 변경되었습니다", tax);
-	BroadcastNotice(szMsg);
-
-	snprintf(szMsg, sizeof(szMsg), "앞으로는 거래 금액의 %d %% 가 국고로 들어가게됩니다.", tax);
-	BroadcastNotice(szMsg);
-
-	// 쿨타임 초기화 
-	ch->SetMC(CHARACTER::MI_TAX); 
-}
-
-static const DWORD cs_dwMonarchMobVnums[] =
-{
-	191, //	산견신
-	192, //	저신
-	193, //	웅신
-	194, //	호신
-	391, //	미정
-	392, //	은정
-	393, //	세랑
-	394, //	진희
-	491, //	맹환
-	492, //	보우
-	493, //	구패
-	494, //	추흔
-	591, //	비류단대장
-	691, //	웅귀 족장
-	791, //	밀교교주
-	1304, // 누렁범귀
-	1901, // 구미호
-	2091, // 여왕거미
-	2191, // 거대사막거북
-	2206, // 화염왕i
-	0,
-};
-
-ACMD(do_monarch_mob)
-{
-	char arg1[256];
-	LPCHARACTER	tch;
-
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!ch->IsMonarch())
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주만이 사용할수 있는 기능입니다"));
-		return;
-	}
-	
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: mmob <mob name>");
-		return;
-	}
-
-	BYTE pcEmpire = ch->GetEmpire();
-	BYTE mapEmpire = SECTREE_MANAGER::instance().GetEmpireFromMapIndex(ch->GetMapIndex());
-
-	if (LC_IsYMIR() == true || LC_IsKorea() == true)
-	{
-		if (mapEmpire != pcEmpire && mapEmpire != 0)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("자국 영토에서만 사용할 수 있는 기능입니다"));
-			return;
-		}
-	}
-
-	// 군주 몹 소환 비용 
-	const int SummonPrice = 5000000;
-
-	// 군주 쿨타임 검사
-	if (!ch->IsMCOK(CHARACTER::MI_SUMMON))
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d 초간 쿨타임이 적용중입니다."), ch->GetMCLTime(CHARACTER::MI_SUMMON));	
-		return;
-	}
-	
-	// 군주 국고 검사 
-	if (!CMonarch::instance().IsMoneyOk(SummonPrice, ch->GetEmpire()))
-	{
-		int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("국고에 돈이 부족합니다. 현재 : %u 필요금액 : %u"), NationMoney, SummonPrice);
-		return;	
-	}
-
-	const CMob * pkMob;
-	DWORD vnum = 0;
-
-	if (isdigit(*arg1))
-	{
-		str_to_number(vnum, arg1);
-
-		if ((pkMob = CMobManager::instance().Get(vnum)) == NULL)
-			vnum = 0;
-	}
-	else
-	{
-		pkMob = CMobManager::Instance().Get(arg1, true);
-
-		if (pkMob)
-			vnum = pkMob->m_table.dwVnum;
-	}
-
-	DWORD count;
-
-	// 소환 가능 몹 검사
-	for (count = 0; cs_dwMonarchMobVnums[count] != 0; ++count)
-		if (cs_dwMonarchMobVnums[count] == vnum)
-			break;
-
-	if (0 == cs_dwMonarchMobVnums[count])
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소환할수 없는 몬스터 입니다. 소환가능한 몬스터는 홈페이지를 참조하세요"));
-		return;
-	}
-
-	tch = CHARACTER_MANAGER::instance().SpawnMobRange(vnum, 
-			ch->GetMapIndex(),
-			ch->GetX() - number(200, 750), 
-			ch->GetY() - number(200, 750), 
-			ch->GetX() + number(200, 750), 
-			ch->GetY() + number(200, 750), 
-			true,
-			pkMob->m_table.bType == CHAR_TYPE_STONE,
-			true);
-
-	if (tch)
-	{
-		// 군주 돈 삭감	
-		CMonarch::instance().SendtoDBDecMoney(SummonPrice, ch->GetEmpire(), ch);
-
-		// 쿨타임 초기화 
-		ch->SetMC(CHARACTER::MI_SUMMON); 
-	}
-}
 
 static const char* FN_point_string(int apply_number)
 {
@@ -1998,8 +1509,6 @@ static const char* FN_point_string(int apply_number)
 		case POINT_NORMAL_HIT_DAMAGE_BONUS:	return LC_TEXT("평타 데미지 %d%%");
 		case POINT_SKILL_DEFEND_BONUS:		return LC_TEXT("스킬 데미지 저항 %d%%");
 		case POINT_NORMAL_HIT_DEFEND_BONUS:	return LC_TEXT("평타 데미지 저항 %d%%");
-//		case POINT_PC_BANG_EXP_BONUS:	return LC_TEXT("");
-//		case POINT_PC_BANG_DROP_BONUS:	return LC_TEXT("");
 //		case POINT_EXTRACT_HP_PCT:	return LC_TEXT("");
 		case POINT_RESIST_WARRIOR:	return LC_TEXT("무사공격에 %d%% 저항");
 		case POINT_RESIST_ASSASSIN:	return LC_TEXT("자객공격에 %d%% 저항");

@@ -179,11 +179,7 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	bool		InitializeLandTable();
 	bool		InitializeObjectProto();
 	bool		InitializeObjectTable();
-	bool		InitializeMonarch();
 
-	// mob_proto.txt, item_proto.txt에서 읽은 mob_proto, item_proto를 real db에 반영.
-	//	item_proto, mob_proto를 db에 반영하지 않아도, 게임 돌아가는데는 문제가 없지만,
-	//	운영툴 등에서 db의 item_proto, mob_proto를 읽어 쓰기 때문에 문제가 발생한다.
 	bool		MirrorMobTableIntoDB();
 	bool		MirrorItemTableIntoDB();
 
@@ -312,7 +308,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	void		QUERY_CHANGE_NAME(CPeer * peer, DWORD dwHandle, TPacketGDChangeName * p);
 	void		GetPlayerFromRes(TPlayerTable * player_table, MYSQL_RES* res);
 
-	void		QUERY_SMS(CPeer * pkPeer, TPacketGDSMS * p);
 	void		QUERY_LOGIN_KEY(CPeer * pkPeer, TPacketGDLoginKey * p);
 
 	void		AddGuildPriv(TPacketGiveGuildPriv* p);
@@ -364,10 +359,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	void		DeleteObject(DWORD dwID);
 	void		UpdateLand(DWORD * pdw);
 
-	// VCard
-	void 		VCard(TPacketGDVCard * p);
-	void		VCardProcess();
-
 	// BLOCK_CHAT
 	void		BlockChat(TPacketBlockChat * p);
 	// END_OF_BLOCK_CHAT
@@ -417,8 +408,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	std::vector<building::TLand>		m_vec_kLandTable;
 	std::vector<building::TObjectProto>	m_vec_kObjectProto;
 	std::map<DWORD, building::TObject *>	m_map_pkObjectTable;
-
-	std::queue<TPacketGDVCard>		m_queue_vcard;
 
 	bool					m_bShutdowned;
 
@@ -506,22 +495,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	void UpdateItemCacheSet(DWORD pid);
 
 	void FlushPlayerCacheSet(DWORD pid);
-
-	//MONARCH
-	void Election(CPeer * peer, DWORD dwHandle, const char * p);
-	void Candidacy(CPeer * peer, DWORD dwHandle, const char * p);
-	void AddMonarchMoney(CPeer * peer, DWORD dwHandle, const char * p);
-	void TakeMonarchMoney(CPeer * peer, DWORD dwHandle, const char * p);
-	void ComeToVote(CPeer * peer, DWORD dwHandle, const char * p);
-	void RMCandidacy(CPeer * peer, DWORD dwHandle, const char * p);
-	void SetMonarch(CPeer * peer, DWORD dwHandle, const char * p);
-	void RMMonarch(CPeer * peer, DWORD dwHandle, const char * p);
-								
-
-	void DecMonarchMoney(CPeer * peer, DWORD dwHandle, const char * p);
-	//END_MONARCH
-
-	void ChangeMonarchLord(CPeer* peer, DWORD dwHandle, TPacketChangeMonarchLord* info);
 
 	void SendSpareItemIDRange(CPeer* peer);
 

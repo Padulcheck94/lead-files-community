@@ -3,7 +3,6 @@
 #include "stdafx.h"
 #include "ClientManager.h"
 #include "Main.h"
-#include "Monarch.h"
 #include "CsvReader.h"
 #include "ProtoReader.h"
 
@@ -90,13 +89,6 @@ bool CClientManager::InitializeTables()
 		sys_err("InitializeObjectTable FAILED");
 		return false;
 	}
-
-	if (!InitializeMonarch())
-	{
-		sys_err("InitializeMonarch FAILED");
-		return false;
-	}
-
 
 	return true;
 }
@@ -1332,13 +1324,6 @@ bool CClientManager::InitializeObjectTable()
 
 			m_map_pkObjectTable.insert(std::make_pair(k->dwID, k));
 		}
-
-	return true;
-}
-
-bool CClientManager::InitializeMonarch()
-{
-	CMonarch::instance().LoadMonarch();
 
 	return true;
 }

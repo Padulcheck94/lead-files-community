@@ -62,7 +62,6 @@ enum
 	HEADER_GD_RELOAD_PROTO		= 43,
 
 	HEADER_GD_CHANGE_NAME		= 44,
-	HEADER_GD_SMS				= 45,
 
 	HEADER_GD_GUILD_CHANGE_LADDER_POINT	= 46,
 	HEADER_GD_GUILD_USE_SKILL		= 47,
@@ -98,7 +97,6 @@ enum
 
 	HEADER_GD_AUTH_LOGIN		= 100,
 	HEADER_GD_LOGIN_BY_KEY		= 101,
-	HEADER_GD_VCARD				= 105,
 	HEADER_GD_MALL_LOAD			= 107,
 
 	HEADER_GD_MYSHOP_PRICELIST_UPDATE	= 108,		///< 가격정보 갱신 요청
@@ -106,26 +104,8 @@ enum
 
 	HEADER_GD_BLOCK_CHAT				= 110,
 
-	// PCBANG_IP_LIST_BY_AUTH
-	HEADER_GD_PCBANG_REQUEST_IP_LIST	= 111,
-	HEADER_GD_PCBANG_CLEAR_IP_LIST		= 112,
-	HEADER_GD_PCBANG_INSERT_IP			= 113,
-	// END_OF_PCBANG_IP_LIST_BY_AUTH
-
 	HEADER_GD_RELOAD_ADMIN			= 115,			///<운영자 정보 요청
 	HEADER_GD_BREAK_MARRIAGE		= 116,			///< 결혼 파기
-	HEADER_GD_ELECT_MONARCH			= 117,			///< 군주 투표
-	HEADER_GD_CANDIDACY				= 118,			///< 군주 등록
-	HEADER_GD_ADD_MONARCH_MONEY		= 119,			///< 군주 돈 증가 
-	HEADER_GD_TAKE_MONARCH_MONEY	= 120,			///< 군주 돈 감소 
-	HEADER_GD_COME_TO_VOTE			= 121,			///< 표결
-	HEADER_GD_RMCANDIDACY			= 122,			///< 후보 제거 (운영자)
-	HEADER_GD_SETMONARCH			= 123,			///<군주설정 (운영자)
-	HEADER_GD_RMMONARCH			= 124,			///<군주삭제
-	HEADER_GD_DEC_MONARCH_MONEY = 125,
-
-	HEADER_GD_CHANGE_MONARCH_LORD = 126,
-
 	HEADER_GD_REQ_CHANGE_GUILD_MASTER	= 129,
 
 	HEADER_GD_REQ_SPARE_ITEM_ID_RANGE	= 130,
@@ -232,8 +212,6 @@ enum
 
 	HEADER_DG_CHANGE_CHARACTER_PRIV	= 127,
 
-	HEADER_DG_VCARD			= 131,
-
 	HEADER_DG_CREATE_OBJECT		= 140,
 	HEADER_DG_DELETE_OBJECT		= 141,
 	HEADER_DG_UPDATE_LAND		= 142,
@@ -250,19 +228,6 @@ enum
 	HEADER_DG_MYSHOP_PRICELIST_RES	= 157,		///< 가격정보 리스트 응답
 	HEADER_DG_RELOAD_ADMIN = 158, 				///< 운영자 정보 리로드 
 	HEADER_DG_BREAK_MARRIAGE = 159,				///< 결혼 파기
-	HEADER_DG_ELECT_MONARCH			= 160,			///< 군주 투표
-	HEADER_DG_CANDIDACY				= 161,			///< 군주 등록
-	HEADER_DG_ADD_MONARCH_MONEY		= 162,			///< 군주 돈 증가 
-	HEADER_DG_TAKE_MONARCH_MONEY	= 163,			///< 군주 돈 감소 
-	HEADER_DG_COME_TO_VOTE			= 164,			///< 표결
-	HEADER_DG_RMCANDIDACY			= 165,			///< 후보 제거 (운영자)
-	HEADER_DG_SETMONARCH			= 166,			///<군주설정 (운영자)
-	HEADER_DG_RMMONARCH			= 167,			///<군주삭제
-	HEADER_DG_DEC_MONARCH_MONEY = 168,
-
-	HEADER_DG_CHANGE_MONARCH_LORD_ACK = 169,
-	HEADER_DG_UPDATE_MONARCH_INFO	= 170,
-
 	HEADER_DG_ACK_CHANGE_GUILD_MASTER = 173,
 
 	HEADER_DG_ACK_SPARE_ITEM_ID_RANGE = 174,
@@ -432,7 +397,6 @@ typedef struct SPlayerTable
 
 	BYTE	skill_group;
 	long	lAlignment;
-	char	szMobile[MOBILE_MAX_LEN + 1];
 
 	short	stat_reset_count;
 
@@ -980,14 +944,6 @@ typedef struct SPacketGuildLadderPoint
 	long lChange;
 } TPacketGuildLadderPoint;
 
-typedef struct SPacketGDSMS
-{
-	char szFrom[CHARACTER_NAME_MAX_LEN + 1];
-	char szTo[CHARACTER_NAME_MAX_LEN + 1];
-	char szMobile[MOBILE_MAX_LEN + 1];
-	char szMsg[SMS_MAX_LEN + 1];
-} TPacketGDSMS;
-
 typedef struct SPacketGuildUseSkill
 {
 	DWORD dwGuild;
@@ -1154,15 +1110,6 @@ typedef struct SPacketGDHammerOfTor
 	DWORD	delay;
 } TPacketGDHammerOfTor;
 
-typedef struct SPacketGDVCard
-{
-	DWORD	dwID;
-	char	szSellCharacter[CHARACTER_NAME_MAX_LEN + 1];
-	char	szSellAccount[LOGIN_MAX_LEN + 1];
-	char	szBuyCharacter[CHARACTER_NAME_MAX_LEN + 1];
-	char	szBuyAccount[LOGIN_MAX_LEN + 1];
-} TPacketGDVCard;
-
 typedef struct SGuildReserve
 {
 	DWORD       dwID;
@@ -1267,15 +1214,6 @@ typedef struct
 	long lDuration;
 } TPacketBlockChat;
 
-// PCBANG_IP_LIST
-typedef struct SPacketPCBangIP
-{
-	DWORD id;
-	DWORD ip;
-} TPacketPCBangIP;
-// END_OF_PCBANG_IP_LIST
-
-
 //ADMIN_MANAGER
 typedef struct TAdminInfo
 {
@@ -1302,43 +1240,6 @@ typedef struct SPacketReloadAdmin
 	char szIP[16];
 } TPacketReloadAdmin;
 //END_RELOAD_ADMIN
-
-typedef struct TMonarchInfo
-{
-	DWORD pid[4];  // 군주의 PID
-	int64_t money[4];  // 군주의 별개 돈	
-	char name[4][32];  // 군주의 이름	
-	char date[4][32];  // 군주 등록 날짜
-} MonarchInfo;
-
-typedef struct TMonarchElectionInfo
-{
-	DWORD pid;  // 투표 한사람 PID
-	DWORD selectedpid; // 투표 당한 PID ( 군주 참가자 )
-	char date[32]; // 투표 날짜
-} MonarchElectionInfo;
-
-// 군주 출마자
-typedef struct tMonarchCandidacy
-{
-	DWORD pid;
-	char name[32];
-	char date[32];
-} MonarchCandidacy;
-
-typedef struct tChangeMonarchLord
-{
-	BYTE bEmpire;
-	DWORD dwPID;
-} TPacketChangeMonarchLord;
-
-typedef struct tChangeMonarchLordACK
-{
-	BYTE bEmpire;
-	DWORD dwPID;
-	char szName[32];
-	char szDate[32];
-} TPacketChangeMonarchLordACK;
 
 typedef struct tChangeGuildMaster
 {

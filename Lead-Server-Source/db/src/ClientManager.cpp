@@ -16,7 +16,6 @@
 #include "MoneyLog.h"
 #include "ItemAwardManager.h"
 #include "Marriage.h"
-#include "Monarch.h"
 #include "ItemIDRangeManager.h"
 #include "Cache.h"
 #ifdef __AUCTION__
@@ -271,8 +270,6 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 		sizeof(WORD) + sizeof(WORD) + 16 * vHost.size() +
 		sizeof(WORD) + sizeof(WORD) +  sizeof(tAdminInfo) *  vAdmin.size() +
 		//END_ADMIN_MANAGER
-		sizeof(WORD) + sizeof(WORD) + sizeof(TMonarchInfo) + 
-		sizeof(WORD) + sizeof(WORD) + sizeof(MonarchCandidacy)* CMonarch::instance().MonarchCandidacySize() +
 		sizeof(WORD); 
 
 	peer->EncodeHeader(HEADER_DG_BOOT, 0, dwPacketSize);
@@ -296,7 +293,6 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 	//ADMIN_MANAGER
 	sys_log(0, "sizeof(tAdminInfo) = %d * %d ", sizeof(tAdminInfo) * vAdmin.size());
 	//END_ADMIN_MANAGER
-	sys_log(0, "sizeof(TMonarchInfo) = %d * %d", sizeof(TMonarchInfo));
 
 	peer->EncodeWORD(sizeof(TMobTable));
 	peer->EncodeWORD(m_vec_mobTable.size());
@@ -383,24 +379,6 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 		sys_log(0, "Admin name %s ConntactIP %s", vAdmin[n].m_szName, vAdmin[n].m_szContactIP);
 	}
 	//END_ADMIN_MANAGER
-
-	//MONARCH
-	peer->EncodeWORD(sizeof(TMonarchInfo));
-	peer->EncodeWORD(1);
-	peer->Encode(CMonarch::instance().GetMonarch(), sizeof(TMonarchInfo));
-
-	CMonarch::VEC_MONARCHCANDIDACY & rVecMonarchCandidacy = CMonarch::instance().GetVecMonarchCandidacy();
-	
-	size_t num_monarch_candidacy = CMonarch::instance().MonarchCandidacySize();
-	peer->EncodeWORD(sizeof(MonarchCandidacy));
-	peer->EncodeWORD(num_monarch_candidacy);
-	if (num_monarch_candidacy != 0) {
-		peer->Encode(&rVecMonarchCandidacy[0], sizeof(MonarchCandidacy) * num_monarch_candidacy);
-	}
-	//END_MONARCE
-
-	if (g_test_server)
-		sys_log(0, "MONARCHCandidacy Size %d", CMonarch::instance().MonarchCandidacySize());
 
 	peer->EncodeWORD(0xffff);
 }
@@ -1592,22 +1570,6 @@ void CClientManager::QUERY_FLUSH_CACHE(CPeer * pkPeer, const char * c_pData)
 	delete pkCache;
 }
 
-void CClientManager::QUERY_SMS(CPeer * pkPeer, TPacketGDSMS * pack)
-{
-	char szQuery[QUERY_MAX_LEN];
-
-	char szMsg[256+1];
-	//unsigned long len = CDBManager::instance().EscapeString(szMsg, pack->szMsg, strlen(pack->szMsg), SQL_ACCOUNT);
-	unsigned long len = CDBManager::instance().EscapeString(szMsg, pack->szMsg, strlen(pack->szMsg));
-	szMsg[len] = '\0';
-
-	snprintf(szQuery, sizeof(szQuery),
-			"INSERT INTO sms_pool (server, sender, receiver, mobile, msg) VALUES(%d, '%s', '%s', '%s', '%s')",
-			(m_iPlayerIDStart + 2) / 3, pack->szFrom, pack->szTo, pack->szMobile, szMsg);
-
-	CDBManager::instance().AsyncQuery(szQuery);
-}
-
 void CClientManager::QUERY_RELOAD_PROTO()
 {
 	if (!InitializeTables())
@@ -1879,28 +1841,6 @@ void CClientManager::UpdateLand(DWORD * pdw)
 
 	if (i < m_vec_kLandTable.size())
 		ForwardPacket(HEADER_DG_UPDATE_LAND, p, sizeof(building::TLand));
-}
-
-void CClientManager::VCard(TPacketGDVCard * p)
-{
-	sys_log(0, "VCARD: %u %s %s %s %s", 
-			p->dwID, p->szSellCharacter, p->szSellAccount, p->szBuyCharacter, p->szBuyAccount);
-
-	m_queue_vcard.push(*p);
-}
-
-void CClientManager::VCardProcess()
-{
-	if (!m_pkAuthPeer)
-		return;
-
-	while (!m_queue_vcard.empty())
-	{
-		m_pkAuthPeer->EncodeHeader(HEADER_DG_VCARD, 0, sizeof(TPacketGDVCard));
-		m_pkAuthPeer->Encode(&m_queue_vcard.front(), sizeof(TPacketGDVCard));
-
-		m_queue_vcard.pop();
-	}
 }
 
 // BLOCK_CHAT
@@ -2274,10 +2214,6 @@ void CClientManager::ProcessPackets(CPeer * peer)
 				QUERY_CHANGE_NAME(peer, dwHandle, (TPacketGDChangeName *) data);
 				break;
 
-			case HEADER_GD_SMS:
-				QUERY_SMS(peer, (TPacketGDSMS *) data);
-				break;
-
 			case HEADER_GD_AUTH_LOGIN:
 				QUERY_AUTH_LOGIN(peer, dwHandle, (TPacketGDAuthLogin *) data);
 				break;
@@ -2330,10 +2266,6 @@ void CClientManager::ProcessPackets(CPeer * peer)
 				UpdateLand((DWORD *) data);
 				break;
 
-			case HEADER_GD_VCARD:
-				VCard((TPacketGDVCard *) data);
-				break;
-
 			case HEADER_GD_MARRIAGE_ADD:
 				MarriageAdd((TPacketMarriageAdd *) data);
 				break;
@@ -2382,48 +2314,6 @@ void CClientManager::ProcessPackets(CPeer * peer)
 
 			case HEADER_GD_BREAK_MARRIAGE:
 				BreakMarriage(peer, data);
-				break;
-
-			//MOANRCH
-			case HEADER_GD_ELECT_MONARCH:
-				Election(peer, dwHandle, data);
-				break;
-
-			case HEADER_GD_CANDIDACY:
-				Candidacy(peer, dwHandle, data);
-				break;
-
-			case HEADER_GD_ADD_MONARCH_MONEY:
-				AddMonarchMoney(peer, dwHandle, data);
-				break;
-
-			case HEADER_GD_DEC_MONARCH_MONEY:
-				DecMonarchMoney(peer, dwHandle, data);
-				break;
-
-			case HEADER_GD_TAKE_MONARCH_MONEY:
-				TakeMonarchMoney(peer, dwHandle, data);
-				break;
-
-			case HEADER_GD_COME_TO_VOTE:
-				ComeToVote(peer, dwHandle, data);
-				break;
-
-			case HEADER_GD_RMCANDIDACY:		//< 후보 제거 (운영자)
-				RMCandidacy(peer, dwHandle, data);
-				break;
-
-			case HEADER_GD_SETMONARCH:		///<군주설정 (운영자)
-				SetMonarch(peer, dwHandle, data);
-				break;
-
-			case HEADER_GD_RMMONARCH:		///<군주삭제
-				RMMonarch(peer, dwHandle, data);
-				break;
-			//END_MONARCH
-
-			case HEADER_GD_CHANGE_MONARCH_LORD :
-				ChangeMonarchLord(peer, dwHandle, (TPacketChangeMonarchLord*)data);
 				break;
 
 			case HEADER_GD_REQ_SPARE_ITEM_ID_RANGE :
@@ -2988,7 +2878,6 @@ int CClientManager::Process()
 	}
 #endif
 
-	VCardProcess();
 	return 1;
 }
 
@@ -3633,366 +3522,6 @@ void CClientManager::UpdateItemCacheSet(DWORD pid)
 
 	if (g_log)
 		sys_log(0, "UPDATE_ITEMCACHESET : UpdateItemCachsSet pid(%d)", pid);
-}
-
-void CClientManager::Election(CPeer * peer, DWORD dwHandle, const char* data)
-{
-	DWORD idx;
-	DWORD selectingpid;
-
-	idx = *(DWORD *) data;
-	data += sizeof(DWORD);
-
-	selectingpid = *(DWORD *) data;
-	data += sizeof(DWORD);
-
-	int Success = 0;
-
-	if (!(Success = CMonarch::instance().VoteMonarch(selectingpid, idx)))
-	{
-		if (g_test_server)
-		sys_log(0, "[MONARCH_VOTE] Failed %d %d", idx, selectingpid);
-		peer->EncodeHeader(HEADER_DG_ELECT_MONARCH, dwHandle, sizeof(int));
-		peer->Encode(&Success, sizeof(int));
-		return;
-	}
-	else
-	{
-		if (g_test_server)
-		sys_log(0, "[MONARCH_VOTE] Success %d %d", idx, selectingpid);
-		peer->EncodeHeader(HEADER_DG_ELECT_MONARCH, dwHandle, sizeof(int));
-		peer->Encode(&Success, sizeof(int));
-		return;
-	}
-
-}
-void CClientManager::Candidacy(CPeer *  peer, DWORD dwHandle, const char* data)
-{
-	DWORD pid;
-
-	pid = *(DWORD *) data;
-	data += sizeof(DWORD);
-
-	if (!CMonarch::instance().AddCandidacy(pid, data))
-	{
-		if (g_test_server)
-			sys_log(0, "[MONARCH_CANDIDACY] Failed %d %s", pid, data);
-
-		peer->EncodeHeader(HEADER_DG_CANDIDACY, dwHandle, sizeof(int) + 32);
-		peer->Encode(0, sizeof(int));
-		peer->Encode(data, 32);
-		return;
-	}
-	else
-	{
-		if (g_test_server)
-			sys_log(0, "[MONARCH_CANDIDACY] Success %d %s", pid, data);
-
-		for (itertype(m_peerList) it = m_peerList.begin(); it != m_peerList.end(); ++it)
-		{
-			CPeer * p = *it;
-
-			if (!p->GetChannel())
-				continue;
-
-			if (0 && p->GetChannel() != 0)
-				continue;
-
-			if (p == peer)
-			{	
-				p->EncodeHeader(HEADER_DG_CANDIDACY, dwHandle, sizeof(int) + 32);
-				p->Encode(&pid, sizeof(int));
-				p->Encode(data, 32);
-			}
-			else
-			{
-				p->EncodeHeader(HEADER_DG_CANDIDACY, 0, sizeof(int) + 32);
-				p->Encode(&pid, sizeof(int));
-				p->Encode(data, 32);
-			}
-		}
-	}
-}
-
-void CClientManager::AddMonarchMoney(CPeer * peer, DWORD dwHandle, const char * data)
-{
-	int Empire = *(int *) data;
-	data += sizeof(int);
-
-	int Money = *(int *) data;
-	data += sizeof(int);
-
-	if (g_test_server)
-		sys_log(0, "[MONARCH] Add money Empire(%d) Money(%d)", Empire, Money);
-
-	CMonarch::instance().AddMoney(Empire, Money);
-	
-	for (itertype(m_peerList) it = m_peerList.begin(); it != m_peerList.end(); ++it)
-	{
-		CPeer * p = *it;
-
-		if (!p->GetChannel())
-			continue;
-
-		if (p == peer)
-		{	
-			p->EncodeHeader(HEADER_DG_ADD_MONARCH_MONEY, dwHandle, sizeof(int) + sizeof(int));
-			p->Encode(&Empire, sizeof(int));
-			p->Encode(&Money, sizeof(int));
-		}
-		else
-		{
-			p->EncodeHeader(HEADER_DG_ADD_MONARCH_MONEY, 0, sizeof(int) + sizeof(int));
-			p->Encode(&Empire, sizeof(int));
-			p->Encode(&Money, sizeof(int));
-		}
-
-	}
-}
-void CClientManager::DecMonarchMoney(CPeer * peer, DWORD dwHandle, const char * data)
-{
-	int Empire = *(int *) data;
-	data += sizeof(int);
-
-	int Money = *(int *) data;
-	data += sizeof(int);
-		
-	if (g_test_server)
-		sys_log(0, "[MONARCH] Dec money Empire(%d) Money(%d)", Empire, Money);
-
-	CMonarch::instance().DecMoney(Empire, Money);
-	
-	for (itertype(m_peerList) it = m_peerList.begin(); it != m_peerList.end(); ++it)
-	{
-		CPeer * p = *it;
-
-		if (!p->GetChannel())
-			continue;
-
-		if (p == peer)
-		{	
-			p->EncodeHeader(HEADER_DG_DEC_MONARCH_MONEY, dwHandle, sizeof(int) + sizeof(int));
-			p->Encode(&Empire, sizeof(int));
-			p->Encode(&Money, sizeof(int));
-		}
-		else
-		{
-			p->EncodeHeader(HEADER_DG_DEC_MONARCH_MONEY, 0, sizeof(int) + sizeof(int));
-			p->Encode(&Empire, sizeof(int));
-			p->Encode(&Money, sizeof(int));
-		}
-	}
-}
-
-void CClientManager::TakeMonarchMoney(CPeer * peer, DWORD dwHandle, const char * data)
-{
-	int Empire = *(int *) data;
-	data += sizeof(int);
-
-	DWORD pid = *(DWORD *) data;
-	data += sizeof(int);
-
-	int Money = *(int *) data;
-	data += sizeof(int);
-
-	if (g_test_server)
-		sys_log(0, "[MONARCH] Take money Empire(%d) Money(%d)", Empire, Money);
-
-	if (CMonarch::instance().TakeMoney(Empire, pid, Money) == true)
-	{
-		peer->EncodeHeader(HEADER_DG_TAKE_MONARCH_MONEY, dwHandle, sizeof(int) + sizeof(int));
-		peer->Encode(&Empire, sizeof(int));
-		peer->Encode(&Money, sizeof(int));
-	}
-	else
-	{
-		Money = 0;
-		peer->EncodeHeader(HEADER_DG_TAKE_MONARCH_MONEY, dwHandle, sizeof(int) + sizeof(int));
-		peer->Encode(&Empire, sizeof(int));
-		peer->Encode(&Money, sizeof(int));
-	}
-}
-
-void CClientManager::ComeToVote(CPeer * peer, DWORD dwHandle, const char * data)
-{
-	CMonarch::instance().ElectMonarch();	
-}
-
-void CClientManager::RMCandidacy(CPeer * peer, DWORD dwHandle, const char * data)
-{
-	char szName[32];
-
-	strlcpy(szName, data, sizeof(szName));
-	sys_log(0, "[MONARCH_GM] Remove candidacy name(%s)", szName); 
-
-	int iRet = CMonarch::instance().DelCandidacy(szName) ? 1 : 0;
-
-	if (1 == iRet)
-	{
-		for (itertype(m_peerList) it = m_peerList.begin(); it != m_peerList.end(); ++it)
-		{
-			CPeer * p = *it;
-
-			if (!p->GetChannel())
-				continue;
-
-			if (p == peer)
-			{
-				p->EncodeHeader(HEADER_DG_RMCANDIDACY, dwHandle, sizeof(int) + sizeof(szName));
-				p->Encode(&iRet, sizeof(int));
-				p->Encode(szName, sizeof(szName));
-			}
-			else
-			{
-				p->EncodeHeader(HEADER_DG_RMCANDIDACY, dwHandle, sizeof(int) + sizeof(szName));
-				p->Encode(&iRet, sizeof(int));
-				p->Encode(szName, sizeof(szName));
-			}
-		}
-	}
-	else
-	{
-		CPeer * p = peer;
-		p->EncodeHeader(HEADER_DG_RMCANDIDACY, dwHandle, sizeof(int) + sizeof(szName));
-		p->Encode(&iRet, sizeof(int));
-		p->Encode(szName, sizeof(szName));
-	}
-}
-
-void CClientManager::SetMonarch(CPeer * peer, DWORD dwHandle, const char * data)
-{
-	char szName[32];
-
-	strlcpy(szName, data, sizeof(szName));
-
-	if (g_test_server)
-		sys_log(0, "[MONARCH_GM] Set Monarch name(%s)", szName); 
-	
-	int iRet = CMonarch::instance().SetMonarch(szName) ? 1 : 0;
-
-	if (1 == iRet)
-	{
-		for (itertype(m_peerList) it = m_peerList.begin(); it != m_peerList.end(); ++it)
-		{
-			CPeer * p = *it;
-
-			if (!p->GetChannel())
-				continue;
-
-			if (p == peer)
-			{
-				p->EncodeHeader(HEADER_DG_RMCANDIDACY, dwHandle, sizeof(int) + sizeof(szName));
-				p->Encode(&iRet, sizeof(int));
-				p->Encode(szName, sizeof(szName));
-			}
-			else
-			{
-				p->EncodeHeader(HEADER_DG_RMCANDIDACY, dwHandle, sizeof(int) + sizeof(szName));
-				p->Encode(&iRet, sizeof(int));
-				p->Encode(szName, sizeof(szName));
-			}
-		}
-	}
-	else
-	{
-		CPeer * p = peer;
-		p->EncodeHeader(HEADER_DG_RMCANDIDACY, dwHandle, sizeof(int) + sizeof(szName));
-		p->Encode(&iRet, sizeof(int));
-		p->Encode(szName, sizeof(szName));
-	}
-}
-
-void CClientManager::RMMonarch(CPeer * peer, DWORD dwHandle, const char * data)
-{
-	char szName[32];
-
-	strlcpy(szName, data, sizeof(szName));
-	
-	if (g_test_server)
-		sys_log(0, "[MONARCH_GM] Remove Monarch name(%s)", szName); 
-	
-	CMonarch::instance().DelMonarch(szName);
-	
-	int iRet = CMonarch::instance().DelMonarch(szName) ? 1 : 0;
-
-	if (1 == iRet)
-	{
-		for (itertype(m_peerList) it = m_peerList.begin(); it != m_peerList.end(); ++it)
-		{
-			CPeer * p = *it;
-
-			if (!p->GetChannel())
-				continue;
-
-			if (p == peer)
-			{
-				p->EncodeHeader(HEADER_DG_RMMONARCH, dwHandle, sizeof(int) + sizeof(szName));
-				p->Encode(&iRet, sizeof(int));
-				p->Encode(szName, sizeof(szName));
-			}
-			else
-			{
-				p->EncodeHeader(HEADER_DG_RMMONARCH, dwHandle, sizeof(int) + sizeof(szName));
-				p->Encode(&iRet, sizeof(int));
-				p->Encode(szName, sizeof(szName));
-			}
-		}
-	}
-	else
-	{
-		CPeer * p = peer;
-		p->EncodeHeader(HEADER_DG_RMCANDIDACY, dwHandle, sizeof(int) + sizeof(szName));
-		p->Encode(&iRet, sizeof(int));
-		p->Encode(szName, sizeof(szName));
-	}
-}
-
-void CClientManager::ChangeMonarchLord(CPeer * peer, DWORD dwHandle, TPacketChangeMonarchLord* info)
-{
-	char szQuery[1024];
-	snprintf(szQuery, sizeof(szQuery), 
-			"SELECT a.name, NOW() FROM player%s AS a, player_index%s AS b WHERE (a.account_id=b.id AND a.id=%u AND b.empire=%u) AND "
-		    "(b.pid1=%u OR b.pid2=%u OR b.pid3=%u OR b.pid4=%u)", 
-			GetTablePostfix(), GetTablePostfix(), info->dwPID, info->bEmpire,
-		   	info->dwPID, info->dwPID, info->dwPID, info->dwPID);
-
-	SQLMsg * pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
-
-	if (pMsg->Get()->uiNumRows != 0)
-	{
-		TPacketChangeMonarchLordACK ack;
-		ack.bEmpire = info->bEmpire;
-		ack.dwPID = info->dwPID;
-		
-		MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
-		strlcpy(ack.szName, row[0], sizeof(ack.szName));
-		strlcpy(ack.szDate, row[1], sizeof(ack.szDate));
-		
-		snprintf(szQuery, sizeof(szQuery), "UPDATE monarch SET pid=%u, windate=NOW() WHERE empire=%d", ack.dwPID, ack.bEmpire);
-		SQLMsg* pMsg2 = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
-
-		if (pMsg2->Get()->uiAffectedRows > 0)
-		{
-			CMonarch::instance().LoadMonarch();
-
-			TMonarchInfo* newInfo = CMonarch::instance().GetMonarch();
-
-			for (itertype(m_peerList) it = m_peerList.begin(); it != m_peerList.end(); it++)
-			{
-				CPeer* client = *it;
-
-				client->EncodeHeader(HEADER_DG_CHANGE_MONARCH_LORD_ACK, 0, sizeof(TPacketChangeMonarchLordACK));
-				client->Encode(&ack, sizeof(TPacketChangeMonarchLordACK));
-
-				client->EncodeHeader(HEADER_DG_UPDATE_MONARCH_INFO, 0, sizeof(TMonarchInfo));
-				client->Encode(newInfo, sizeof(TMonarchInfo));
-			}
-		}
-
-		delete pMsg2;
-	}
-
-	delete pMsg;
 }
 
 void CClientManager::SendSpareItemIDRange(CPeer* peer)

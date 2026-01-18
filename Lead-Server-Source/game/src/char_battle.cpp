@@ -25,7 +25,6 @@
 #include "marriage.h"
 #include "arena.h"
 #include "regen.h"
-#include "monarch.h"
 #include "exchange.h"
 #include "shop_manager.h"
 #include "dev_log.h"
@@ -38,7 +37,6 @@
 #include "guild_manager.h"
 #include "questmanager.h"
 #include "questlua.h"
-#include "threeway_war.h"
 #include "BlueDragon.h"
 #include "DragonLair.h"
 
@@ -1219,7 +1217,6 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	bool isAgreedPVP = false;
 	bool isUnderGuildWar = false;
 	bool isDuel = false;
-	bool isForked = false;
 
 	if (pkKiller && pkKiller->IsPC())
 	{
@@ -1247,31 +1244,16 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		}
 	}
 
-	//CHECK_FORKEDROAD_WAR
-	if (IsPC())
-	{
-		if (CThreeWayWar::instance().IsThreeWayWarMapIndex(GetMapIndex()))
-			isForked = true;
-	}
-	//END_CHECK_FORKEDROAD_WAR
-
 	if (pkKiller &&
 			!isAgreedPVP &&
 			!isUnderGuildWar &&
 			IsPC() &&
-			!isDuel &&
-			!isForked)
+			!isDuel)
 	{
 		if (GetGMLevel() == GM_PLAYER || test_server)
 		{
 			ItemDropPenalty(pkKiller);
 		}
-	}
-
-
-	if (true == isForked)
-	{
-		CThreeWayWar::instance().onDead( this, pkKiller );
 	}
 
 	SetPosition(POS_DEAD);
@@ -1281,12 +1263,9 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	{
 		if (!pkKiller->IsPC())
 		{
-			if (!isForked)
-			{
-				sys_log(1, "DEAD: %s %p WITH PENALTY", GetName(), this);
-				SET_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_DEATH_PENALTY);
-				LogManager::instance().CharLog(this, pkKiller->GetRaceNum(), "DEAD_BY_NPC", pkKiller->GetName());
-			}
+			sys_log(1, "DEAD: %s %p WITH PENALTY", GetName(), this);
+			SET_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_DEATH_PENALTY);
+			LogManager::instance().CharLog(this, pkKiller->GetRaceNum(), "DEAD_BY_NPC", pkKiller->GetName());
 		}
 		else
 		{
@@ -1315,7 +1294,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			}
 			else
 			{
-				if (!isAgreedPVP && !isUnderGuildWar && !IsKillerMode() && GetAlignment() >= 0 && !isDuel && !isForked)
+				if (!isAgreedPVP && !isUnderGuildWar && !IsKillerMode() && GetAlignment() >= 0 && !isDuel)
 				{
 					int iNoPenaltyProb = 0;
 
@@ -2126,21 +2105,6 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 			Stun();
 			return true;
 		}
-
-		//
-		// 군주의 금강권 & 사자후 
-		//
-		if (pAttacker->IsPC() && CMonarch::instance().IsPowerUp(pAttacker->GetEmpire()))
-		{
-			// 10% 피해 증가
-			dam += dam / 10;
-		}
-
-		if (IsPC() && CMonarch::instance().IsDefenceUp(GetEmpire()))
-		{
-			// 10% 피해 감소
-			dam -= dam / 10;
-		}
 	}
 	//puAttr.Pop();
 
@@ -2389,13 +2353,6 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 			iExp += (iExp * 50 / 100);
 		}
 
-		// PC방 아템 경치 보너스
-		if (to->GetPoint(POINT_PC_BANG_EXP_BONUS) > 0)
-		{
-			if (to->IsPCBang() == true)
-				iExp += (iExp * to->GetPoint(POINT_PC_BANG_EXP_BONUS)/100);
-		}
-
 		// 결혼 보너스
 		iExp += iExp * to->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_EXP_BONUS) / 100;
 	}
@@ -2410,13 +2367,6 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 		if (to->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_EXP) == true)
 		{
 			iExp += (iExp * 20 / 100);
-		}
-
-		// PC방 아템 경치 보너스
-		if (to->GetPoint(POINT_PC_BANG_EXP_BONUS) > 0)
-		{
-			if (to->IsPCBang() == true)
-				iExp += (iExp * to->GetPoint(POINT_PC_BANG_EXP_BONUS)/100);
 		}
 
 		// 결혼 보너스

@@ -401,12 +401,6 @@ MESSENGER_EMPTY_LIST	Vuoto
 MESSENGER_FAMILY	Famiglia
 MESSENGER_FRIEND	Amici
 MESSENGER_GUILD	Gilda
-MESSENGER_INPUT_MOBILE_AUTHORITY_DESCRIPTION	Inserisci il codice di conferma che è stato inviato al tuo cellulare.
-MESSENGER_INPUT_MOBILE_AUTHORITY_TITLE	Inserisci il codice di conferma
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_1	Inserisci il numero di cellulare per l'invio di SMS.
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_2	Desideri inserire il numero ora?
-MESSENGER_INPUT_MOBILE_PHONE_NUMBER_TITLE	Inserisci numero di cellulare
-MESSENGER_SEND_MOBILE_MESSAGE_TITLE	Invia messaggio.
 METIN_TEST	
 MINIMAP	Mini-mappa
 MINIMAP_CANNOT_SEE	La mappa miniaturizzata non può essere visualizzata.
@@ -797,13 +791,11 @@ TOOLTIP_MALL_AUTOLOOT	Drop di Yang vengono raccolti automaticamete.	SNA
 TOOLTIP_MALL_DEFBONUS	Difesa +%d%%	SA
 TOOLTIP_MALL_DEFBONUS_STATIC	Difesa +12~15%	SNA
 TOOLTIP_MALL_EXPBONUS	EXP +%d%%	SA
-TOOLTIP_MALL_EXPBONUS_P_STATIC	iCafe EXP-Bonus +%d%%	SA
 TOOLTIP_MALL_EXPBONUS_STATIC	50% in più EXP	SNA
 TOOLTIP_MALL_FISH_MIND	La possibilità di catturare un pesce è aumentata.	SNA
 TOOLTIP_MALL_GOLDBONUS	Possibilità di drop di Yang (%.1f)	SA
 TOOLTIP_MALL_GOLDBONUS_STATIC	Doppia possibilità di drop di Yang	SNA
 TOOLTIP_MALL_ITEMBONUS	Possibilità di drop di oggetti (%.1f)	SA
-TOOLTIP_MALL_ITEMBONUS_P_STATIC	iCafe Possibilità sul razziare oggetti più %.1f%%	SA
 TOOLTIP_MALL_ITEMBONUS_STATIC	Doppia possibilità di drop di oggetti	SNA
 TOOLTIP_MALL_MARRIAGE_FAST	Punti amore aumentano più veocemente.	SNA
 TOOLTIP_MALL_SAFEBOX	Più spazio a disposizione nel magazzino.	SNA

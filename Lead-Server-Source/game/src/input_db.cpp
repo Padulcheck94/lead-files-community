@@ -29,7 +29,6 @@
 #include "login_data.h"
 #include "unique_item.h"
 
-#include "monarch.h"
 #include "affect.h"
 #include "motion.h"
 
@@ -38,7 +37,6 @@
 #include "log.h"
 
 #include "horsename_manager.h"
-#include "pcbang.h"
 #include "gm.h"
 #include "panama.h"
 #include "map_location.h"
@@ -54,7 +52,6 @@ extern int auction_server;
 extern void gm_insert(const char * name, BYTE level);
 extern BYTE	gm_get_level(const char * name, const char * host, const char* account );
 extern void gm_host_insert(const char * host);
-extern int openid_server;
 
 #define MAPNAME_DEFAULT	"none"
 
@@ -771,35 +768,6 @@ void CInputDB::Boot(const char* data)
 	}
 	
 	//END_ADMIN_MANAGER
-		
-	//MONARCH
-	data += 2;
-	data += 2;
-
-	TMonarchInfo& p = *(TMonarchInfo *) data;
-	data += sizeof(TMonarchInfo);
-
-	CMonarch::instance().SetMonarchInfo(&p);
-
-	for (int n = 1; n < 4; ++n)
-	{
-		if (p.name[n] && *p.name[n])
-			sys_log(0, "[MONARCH] Empire %d Pid %d Money %d %s", n, p.pid[n], p.money[n], p.name[n]);
-	}
-	
-	int CandidacySize = decode_2bytes(data);
-	data += 2;
-
-	int CandidacyCount = decode_2bytes(data);
-	data += 2;
-
-	if (test_server)
-		sys_log (0, "[MONARCH] Size %d Count %d", CandidacySize, CandidacyCount);
-
-	data += CandidacySize * CandidacyCount;
-
-	
-	//END_MONARCH
 
 	WORD endCheck=decode_2bytes(data);
 	if (endCheck != 0xffff)
@@ -939,8 +907,6 @@ void CInputDB::Boot(const char* data)
 	{
 		CMobManager::instance().DumpRegenCount("mob_count");
 	}
-
-	CPCBangManager::instance().RequestUpdateIPList(0);
 }
 
 EVENTINFO(quest_login_event_info)
@@ -1683,42 +1649,6 @@ void CInputDB::AuthLogin(LPDESC d, const char * c_pData)
 	d->Packet(&ptoc, sizeof(TPacketGCAuthSuccess));
 	sys_log(0, "AuthLogin result %u key %u", bResult, d->GetLoginKey());
 }
-void CInputDB::AuthLoginOpenID(LPDESC d, const char * c_pData)
-{
-	if (!d)
-		return;
-
-	BYTE bResult = *(BYTE *) c_pData;
-
-	TPacketGCAuthSuccessOpenID ptoc;
-
-	ptoc.bHeader = HEADER_GC_AUTH_SUCCESS_OPENID;
-
-	if (bResult)
-	{
-		// Panama 암호화 팩에 필요한 키 보내기
-		SendPanamaList(d);
-		ptoc.dwLoginKey = d->GetLoginKey();
-
-		//NOTE: AuthSucess보다 먼저 보내야지 안그러면 PHASE Close가 되서 보내지지 않는다.-_-
-		//Send Client Package CryptKey
-		{
-			DESC_MANAGER::instance().SendClientPackageCryptKey(d);
-			DESC_MANAGER::instance().SendClientPackageSDBToLoadMap(d, MAPNAME_DEFAULT);
-		}
-	}
-	else
-	{
-		ptoc.dwLoginKey = 0;
-	}
-
-	strcpy(ptoc.login, d->GetLogin().c_str());
-
-	ptoc.bResult = bResult;
-
-	d->Packet(&ptoc, sizeof(TPacketGCAuthSuccessOpenID));
-	sys_log(0, "AuthLogin result %u key %u", bResult, d->GetLoginKey());
-}
 
 void CInputDB::ChangeEmpirePriv(const char* c_pData)
 {
@@ -1817,61 +1747,6 @@ void CInputDB::Notice(const char * c_pData)
 
 	//SendNotice(LC_TEXT(szBuf));
 	SendNotice(szBuf);
-}
-
-void CInputDB::VCard(const char * c_pData)
-{
-	TPacketGDVCard * p = (TPacketGDVCard *) c_pData;
-
-	sys_log(0, "VCARD: %u %s %s %s %s", p->dwID, p->szSellCharacter, p->szSellAccount, p->szBuyCharacter, p->szBuyAccount);
-
-	std::unique_ptr<SQLMsg> pmsg(DBManager::instance().DirectQuery("SELECT sell_account, buy_account, time FROM vcard WHERE id=%u", p->dwID));
-	if (pmsg->Get()->uiNumRows != 1)
-	{
-		sys_log(0, "VCARD_FAIL: no data");
-		return;
-	}
-
-	MYSQL_ROW row = mysql_fetch_row(pmsg->Get()->pSQLResult);
-
-	if (strcmp(row[0], p->szSellAccount))
-	{
-		sys_log(0, "VCARD_FAIL: sell account differ %s", row[0]);
-		return;
-	}
-
-	if (!row[1] || *row[1])
-	{
-		sys_log(0, "VCARD_FAIL: buy account already exist");
-		return;
-	}
-
-	int time = 0;
-	str_to_number(time, row[2]);
-
-	if (!row[2] || time < 0)
-	{
-		sys_log(0, "VCARD_FAIL: time null");
-		return;
-	}
-
-	std::unique_ptr<SQLMsg> pmsg1(DBManager::instance().DirectQuery("UPDATE GameTime SET LimitTime=LimitTime+%d WHERE UserID='%s'", time, p->szBuyAccount));
-
-	if (pmsg1->Get()->uiAffectedRows == 0 || pmsg1->Get()->uiAffectedRows == (uint32_t)-1)
-	{
-		sys_log(0, "VCARD_FAIL: cannot modify GameTime table");
-		return;
-	}
-
-	std::unique_ptr<SQLMsg> pmsg2(DBManager::instance().DirectQuery("UPDATE vcard,GameTime SET sell_pid='%s', buy_pid='%s', buy_account='%s', sell_time=NOW(), new_time=GameTime.LimitTime WHERE vcard.id=%u AND GameTime.UserID='%s'", p->szSellCharacter, p->szBuyCharacter, p->szBuyAccount, p->dwID, p->szBuyAccount));
-
-	if (pmsg2->Get()->uiAffectedRows == 0 || pmsg2->Get()->uiAffectedRows == (uint32_t)-1)
-	{
-		sys_log(0, "VCARD_FAIL: cannot modify vcard table");
-		return;
-	}
-
-	sys_log(0, "VCARD_SUCCESS: %s %s", p->szBuyAccount, p->szBuyCharacter);
 }
 
 void CInputDB::GuildWarReserveAdd(TGuildWarReserve * p)
@@ -2173,10 +2048,7 @@ int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		break;
 
 	case HEADER_DG_AUTH_LOGIN:
-		if (openid_server)
-			AuthLoginOpenID(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		else
-			AuthLogin(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
+		AuthLogin(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
 		break;
 
 	case HEADER_DG_CHANGE_EMPIRE_PRIV:
@@ -2205,10 +2077,6 @@ int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 	case HEADER_DG_SET_EVENT_FLAG:
 		SetEventFlag(c_pData);
-		break;
-
-	case HEADER_DG_VCARD:
-		VCard(c_pData);
 		break;
 
 	case HEADER_DG_CREATE_OBJECT:
@@ -2278,26 +2146,6 @@ int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		ReloadAdmin(c_pData );		
 		break;
 	//END_RELOAD_ADMIN
-
-	case HEADER_DG_ADD_MONARCH_MONEY:
-		AddMonarchMoney(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData ); 
-		break;
-
-	case HEADER_DG_DEC_MONARCH_MONEY:
-		DecMonarchMoney(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData );
-		break;
-
-	case HEADER_DG_TAKE_MONARCH_MONEY:
-		TakeMonarchMoney(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData );
-		break;
-
-	case HEADER_DG_CHANGE_MONARCH_LORD_ACK :
-		ChangeMonarchLord((TPacketChangeMonarchLordACK*)c_pData);
-		break;
-
-	case HEADER_DG_UPDATE_MONARCH_INFO :
-		UpdateMonarchInfo((TMonarchInfo*)c_pData);
-		break;
 
 	case HEADER_DG_ACK_CHANGE_GUILD_MASTER :
 		this->GuildChangeMaster((TPacketChangeGuildMaster*) c_pData);
@@ -2377,81 +2225,6 @@ bool CInputDB::Process(LPDESC d, const void * orig, int bytes, int & r_iBytesPro
 	}
 
 	return true;
-}
-
-void CInputDB::AddMonarchMoney(LPDESC d, const char * data )
-{
-	int Empire = *(int *) data;
-	data += sizeof(int);
-
-	int Money = *(int *) data;
-	data += sizeof(int);
-	
-	CMonarch::instance().AddMoney(Money, Empire);
-
-	DWORD pid = CMonarch::instance().GetMonarchPID(Empire);	
-
-	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pid);
-
-	if (ch)
-	{
-		if (number(1, 100) > 95) 
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("현재 %s 국고에는 %u 의 돈이 있습니다"), EMPIRE_NAME(Empire), CMonarch::instance().GetMoney(Empire));
-	}
-}
-	
-void CInputDB::DecMonarchMoney(LPDESC d, const char * data)
-{
-	int Empire = *(int *) data;
-	data += sizeof(int);
-	
-	int Money = *(int *) data;
-	data += sizeof(int);
-
-	CMonarch::instance().DecMoney(Money, Empire);
-	
-	DWORD pid = CMonarch::instance().GetMonarchPID(Empire);	
-
-	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pid);
-
-	if (ch)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("현재 %s 국고에는 %d 의 돈이 있습니다"), EMPIRE_NAME(Empire), CMonarch::instance().GetMoney(Empire));
-	}
-}
-
-void CInputDB::TakeMonarchMoney(LPDESC d, const char * data)
-{
-	int Empire = *(int *) data;
-	data += sizeof(int);
-	
-	int Money = *(int *) data;
-	data += sizeof(int);
-
-	if (!CMonarch::instance().DecMoney(Money, Empire))
-	{
-		if (!d)
-			return;
-
-		if (!d->GetCharacter())
-			return;
-
-		LPCHARACTER ch = d->GetCharacter();
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("국고에 돈이 부족하거나 돈을 가져올수 없는 상황입니다"));
-	}
-}
-
-void CInputDB::ChangeMonarchLord(TPacketChangeMonarchLordACK* info)
-{
-	char notice[256];
-	snprintf(notice, sizeof(notice), LC_TEXT("%s의 군주가 %s 님으로 교체되었습니다."), EMPIRE_NAME(info->bEmpire), info->szName);
-	SendNotice(notice);
-}
-
-void CInputDB::UpdateMonarchInfo(TMonarchInfo* info)
-{
-	CMonarch::instance().SetMonarchInfo(info);
-	sys_log(0, "MONARCH INFO UPDATED");
 }
 
 void CInputDB::GuildChangeMaster(TPacketChangeGuildMaster* p)

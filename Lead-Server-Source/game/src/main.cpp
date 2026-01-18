@@ -41,17 +41,14 @@
 #include "locale_service.h"
 #include "arena.h"
 #include "OXEvent.h"
-#include "monarch.h"
 #include "polymorph.h"
 #include "blend_item.h"
 #include "ani.h"
 #include "BattleArena.h"
 #include "horsename_manager.h"
-#include "pcbang.h"
 #include "MarkManager.h"
 #include "spam.h"
 #include "panama.h"
-#include "threeway_war.h"
 #include "DragonLair.h"
 #include "skill_power.h"
 #include "DragonSoul.h"
@@ -341,9 +338,7 @@ int main(int argc, char **argv)
 	CItemAddonManager	item_addon_manager;
 	CArenaManager arena_manager;
 	COXEventManager OXEvent_manager;
-	CMonarch		Monarch;
 	CHorseNameManager horsename_manager;
-	CPCBangManager pcbang_manager;
 
 	DESC_MANAGER	desc_manager;
 
@@ -352,7 +347,6 @@ int main(int argc, char **argv)
 	CProfiler		profiler;
 	CBattleArena	ba;
 	SpamManager		spam_mgr;
-	CThreeWayWar	threeway_war;
 	CDragonLairManager	dl_manager;
 
 	DSManager dsManager;
@@ -556,15 +550,6 @@ int start(int argc, char **argv)
 	{
 		fprintf(stderr, "Could not initialize thecore, check owner of pid, syslog\n");
 		exit(0);
-	}
-
-	if (false == CThreeWayWar::instance().LoadSetting("forkedmapindex.txt"))
-	{
-		if (false == g_bAuthServer)
-		{
-			fprintf(stderr, "Could not Load ThreeWayWar Setting file");
-			exit(0);
-		}
 	}
 
 	signal_timer_disable();

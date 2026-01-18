@@ -557,7 +557,6 @@ const char * GetSendHeaderName(BYTE header)
 		stringList[103] = "HEADER_CG_CRC_REPORT";
 		stringList[105] = "HEADER_CG_HACK";
 		stringList[106] = "HEADER_CG_CHANGE_NAME";
-		stringList[107] = "HEADER_CG_SMS";
 		stringList[109] = "HEADER_CG_LOGIN2";
 		stringList[110] = "HEADER_CG_DUNGEON";
 		stringList[111] = "HEADER_CG_LOGIN3";
@@ -696,7 +695,6 @@ const char * GetRecvHeaderName(BYTE header)
 		stringList[135] = "HEADER_GC_DAMAGE_INFO";
 		stringList[136] = "HEADER_GC_CHAR_ADDITIONAL_INFO";
 		stringList[150] = "HEADER_GC_AUTH_SUCCESS"
-		stringList[154] = "HEADER_GC_AUTH_SUCCESS_OPENID";
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 		stringList[0xfa] = "HEADER_GC_KEY_AGREEMENT_COMPLETED";
 		stringList[0xfb] = "HEADER_GC_KEY_AGREEMENT";

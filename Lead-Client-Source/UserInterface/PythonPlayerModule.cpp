@@ -1863,11 +1863,6 @@ PyObject * playerGetPKMode(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildValue("i", CPythonPlayer::Instance().GetPKMode());
 }
 
-PyObject * playerHasMobilePhoneNumber(PyObject* poSelf, PyObject* poArgs)
-{
-	return Py_BuildValue("i", CPythonPlayer::Instance().HasMobilePhoneNumber());
-}
-
 PyObject * playerSetWeaponAttackBonusFlag(PyObject* poSelf, PyObject* poArgs)
 {
 	int iFlag;
@@ -2298,9 +2293,6 @@ void initPlayer()
 		// PK Mode
 		{ "GetPKMode",					playerGetPKMode,					METH_VARARGS },
 
-		// Mobile
-		{ "HasMobilePhoneNumber",		playerHasMobilePhoneNumber,			METH_VARARGS },
-
 		// Emotion
 		{ "RegisterEmotionIcon",		playerRegisterEmotionIcon,			METH_VARARGS },
 		{ "GetEmotionIconImage",		playerGetEmotionIconImage,			METH_VARARGS },
@@ -2380,8 +2372,6 @@ void initPlayer()
 	PyModule_AddIntConstant(poModule, "POINT_NORMAL_HIT_DAMAGE_BONUS",		POINT_NORMAL_HIT_DAMAGE_BONUS);
 	PyModule_AddIntConstant(poModule, "POINT_SKILL_DEFEND_BONUS",		POINT_SKILL_DEFEND_BONUS);
 	PyModule_AddIntConstant(poModule, "POINT_NORMAL_HIT_DEFEND_BONUS",		POINT_NORMAL_HIT_DEFEND_BONUS);
-	PyModule_AddIntConstant(poModule, "POINT_PC_BANG_EXP_BONUS",		POINT_PC_BANG_EXP_BONUS);
-	PyModule_AddIntConstant(poModule, "POINT_PC_BANG_DROP_BONUS",		POINT_PC_BANG_DROP_BONUS);
 
 	PyModule_AddIntConstant(poModule, "ENERGY",		POINT_ENERGY);
 	PyModule_AddIntConstant(poModule, "ENERGY_END_TIME",		POINT_ENERGY_END_TIME);

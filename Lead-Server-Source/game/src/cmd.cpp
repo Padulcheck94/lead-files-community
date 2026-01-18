@@ -10,9 +10,6 @@ ACMD(do_user_horse_ride);
 ACMD(do_user_horse_back);
 ACMD(do_user_horse_feed);
 
-ACMD(do_pcbang_update);
-ACMD(do_pcbang_check);
-
 // ADD_COMMAND_SLOW_STUN
 ACMD(do_slow);
 ACMD(do_stun);
@@ -114,8 +111,6 @@ ACMD(do_cancel_guild_war);
 ACMD(do_guild_state);
 
 ACMD(do_pkmode);
-ACMD(do_mobile);
-ACMD(do_mobile_auth);
 ACMD(do_messenger_auth);
 
 ACMD(do_getqf);
@@ -185,23 +180,6 @@ ACMD(do_oxevent_log);
 ACMD(do_oxevent_get_attender);
 
 ACMD(do_effect);
-ACMD(do_threeway_war_info );
-ACMD(do_threeway_war_myinfo );
-//
-//군주 전용기능
-ACMD(do_monarch_warpto);
-ACMD(do_monarch_transfer);
-ACMD(do_monarch_info);
-ACMD(do_elect);
-ACMD(do_monarch_tax);
-ACMD(do_monarch_mob);
-ACMD(do_monarch_notice);
-
-//군주 관리 기능
-ACMD(do_rmcandidacy);
-ACMD(do_setmonarch);
-ACMD(do_rmmonarch);
-
 ACMD(do_hair);
 //gift notify quest command
 ACMD(do_gift);
@@ -210,8 +188,6 @@ ACMD(do_inventory);
 ACMD(do_cube);
 // 공성전
 ACMD(do_temp);
-
-ACMD(do_check_monarch_money);
 
 ACMD(do_reset_subskill );
 ACMD(do_flush);
@@ -444,9 +420,6 @@ struct command_info cmd_info[] =
 	{ "horse_unsummon",	do_horse_unsummon,	0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "horse_set_stat", do_horse_set_stat,	0,			POS_DEAD,	GM_HIGH_WIZARD	},
 
-	{ "pcbang_update", 	do_pcbang_update,	0,			POS_DEAD,	GM_LOW_WIZARD	},
-	{ "pcbang_check", 	do_pcbang_check,	0,			POS_DEAD,	GM_LOW_WIZARD	},
-
 	{ "emotion_allow",	do_emotion_allow,	0,			POS_FIGHTING,	GM_PLAYER	},
 	{ "kiss",		do_emotion,		0,			POS_FIGHTING,	GM_PLAYER	},
 	{ "slap",		do_emotion,		0,			POS_FIGHTING,	GM_PLAYER	},
@@ -500,28 +473,13 @@ struct command_info cmd_info[] =
 	{ "get_oxevent_att",	do_oxevent_get_attender,0,	POS_DEAD,	GM_LOW_WIZARD	},
 
 	{ "effect",				do_effect,				0,	POS_DEAD,	GM_LOW_WIZARD	},
-
-	{ "threeway_info",		do_threeway_war_info,	0,	POS_DEAD,	GM_LOW_WIZARD},
-	{ "threeway_myinfo",	do_threeway_war_myinfo, 0,	POS_DEAD,	GM_LOW_WIZARD},
-	{ "mto",				do_monarch_warpto,		0, 	POS_DEAD,	GM_PLAYER},
-	{ "mtr",				do_monarch_transfer,	0,	POS_DEAD,	GM_PLAYER},
-	{ "minfo",		do_monarch_info,		0,  POS_DEAD,   GM_PLAYER},	
-	{ "mtax",			do_monarch_tax,			0,	POS_DEAD,	GM_PLAYER},
-	{ "mmob",			do_monarch_mob,			0, 	POS_DEAD,	GM_PLAYER},
-	{ "elect",				do_elect,				0,	POS_DEAD,	GM_HIGH_WIZARD},
-	{ "rmcandidacy",		do_rmcandidacy,			0, 	POS_DEAD,	GM_LOW_WIZARD},
-	{ "setmonarch",			do_setmonarch,			0, 	POS_DEAD,	GM_LOW_WIZARD},
-	{ "rmmonarch",			do_rmmonarch,			0, 	POS_DEAD, 	GM_LOW_WIZARD},
 	{ "hair",				do_hair,				0,	POS_DEAD,	GM_PLAYER	},
 	{ "inventory",			do_inventory,			0,	POS_DEAD,	GM_LOW_WIZARD	},
 	{ "cube",				do_cube,				0,	POS_DEAD,	GM_PLAYER	},
 	{ "temp",				do_temp,				0,	POS_DEAD,	GM_IMPLEMENTOR	},
-	{ "check_mmoney",		do_check_monarch_money,	0,	POS_DEAD,	GM_IMPLEMENTOR	},
 	{ "reset_subskill",		do_reset_subskill,		0,	POS_DEAD,	GM_HIGH_WIZARD },
 	{ "flush",				do_flush,				0,	POS_DEAD,	GM_IMPLEMENTOR },
 	{ "gift",				do_gift,				0,  POS_DEAD,   GM_PLAYER	},	//gift
-
-	{ "mnotice",			do_monarch_notice,		0,	POS_DEAD,	GM_PLAYER	},
 	
 	{ "eclipse",			do_eclipse,				0,	POS_DEAD,	GM_HIGH_WIZARD	},
 
