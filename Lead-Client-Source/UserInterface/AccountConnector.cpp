@@ -132,9 +132,6 @@ bool CAccountConnector::__AuthState_Process()
 	if (!__AnalyzePacket(HEADER_GC_HANDSHAKE, sizeof(TPacketGCHandshake), &CAccountConnector::__AuthState_RecvHandshake))
 		return false;
 
-	if (!__AnalyzePacket(HEADER_GC_PANAMA_PACK, sizeof(TPacketGCPanamaPack), &CAccountConnector::__AuthState_RecvPanamaPack))
-		return false;
-
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 	if (!__AnalyzePacket(HEADER_GC_KEY_AGREEMENT, sizeof(TPacketKeyAgreement), &CAccountConnector::__AuthState_RecvKeyAgreement))
 		return false;
@@ -241,17 +238,6 @@ bool CAccountConnector::__AuthState_RecvHandshake()
 	return true;
 }
 
-bool CAccountConnector::__AuthState_RecvPanamaPack()
-{
-	TPacketGCPanamaPack kPacket;
-
-	if (!Recv(sizeof(TPacketGCPanamaPack), &kPacket))
-		return false;
-
-	CEterPackManager::instance().RegisterPack(kPacket.szPackName, "*", kPacket.abIV);
-	return true;
-}
-
 bool CAccountConnector::__AuthState_RecvHybridCryptKeys(int iTotalSize)
 {
 	int iFixedHeaderSize = TPacketGCHybridCryptKeys::GetFixedHeaderSize();
@@ -322,9 +308,6 @@ bool CAccountConnector::__AuthState_RecvAuthSuccess()
 	}
 	else
 	{
-		DWORD dwPanamaKey = kAuthSuccessPacket.dwLoginKey ^ g_adwEncryptKey[0] ^ g_adwEncryptKey[1] ^ g_adwEncryptKey[2] ^ g_adwEncryptKey[3];
-		CEterPackManager::instance().DecryptPackIV(dwPanamaKey);
-
 		CPythonNetworkStream & rkNet = CPythonNetworkStream::Instance();
 		rkNet.SetLoginKey(kAuthSuccessPacket.dwLoginKey);
 		rkNet.Connect(m_strAddr.c_str(), m_iPort);
