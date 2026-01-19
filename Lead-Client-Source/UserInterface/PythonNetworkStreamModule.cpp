@@ -2,8 +2,6 @@
 #include "PythonNetworkStream.h"
 #include "AccountConnector.h"
 #include "PythonGuild.h"
-#include "Test.h"
-
 #include "AbstractPlayer.h"
 
 static std::string gs_stServerInfo;
@@ -64,11 +62,6 @@ PyObject* netStartGame(PyObject* poSelf, PyObject* poArgs)
 	rkNetStream.StartGame();
 
 	return Py_BuildNone();
-}
-
-PyObject* netIsTest(PyObject* poSelf, PyObject* poArgs)
-{
-	return Py_BuildValue("i", __IS_TEST_SERVER_MODE__);
 }
 
 PyObject* netWarp(PyObject* poSelf, PyObject* poArgs)
@@ -1644,7 +1637,6 @@ void initnet()
 
 		{ "StartGame",							netStartGame,							METH_VARARGS },
 		{ "Warp",								netWarp,								METH_VARARGS },
-		{ "IsTest",								netIsTest,								METH_VARARGS },
 		{ "SetMarkServer",						netSetMarkServer,						METH_VARARGS },
 		{ "IsChatInsultIn",						netIsChatInsultIn,						METH_VARARGS },
 		{ "IsInsultIn",							netIsInsultIn,							METH_VARARGS },

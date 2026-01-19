@@ -4,7 +4,6 @@
     <ClCompile Include="AccountConnector.cpp" />
     <ClCompile Include="AffectFlagContainer.cpp" />
     <ClCompile Include="CameraProcedure.cpp" />
-    <ClCompile Include="CheckLatestFiles.cpp" />
     <ClCompile Include="GameType.cpp" />
     <ClCompile Include="GuildMarkDownloader.cpp" />
     <ClCompile Include="GuildMarkUploader.cpp" />
@@ -99,7 +98,6 @@
     <ClInclude Include="AbstractSingleton.h" />
     <ClInclude Include="AccountConnector.h" />
     <ClInclude Include="AffectFlagContainer.h" />
-    <ClInclude Include="CheckLatestFiles.h" />
     <ClInclude Include="CRC32_inc.h" />
     <ClInclude Include="GameType.h" />
     <ClInclude Include="GuildMarkDownloader.h" />
@@ -150,7 +148,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="ServerStateChecker.h" />
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="Test.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UserInterface.rc" />

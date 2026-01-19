@@ -12,9 +12,6 @@
 
 #include "ProcessScanner.h"
 
-#include "NProtectGameGuard.h"
-#include "CheckLatestFiles.h"
-
 extern void GrannyCreateSharedDeformBuffer();
 extern void GrannyDestroySharedDeformBuffer();
 
@@ -396,10 +393,6 @@ void CPythonApplication::SkipRenderBuffering(DWORD dwSleepMSec)
 
 bool CPythonApplication::Process()
 {
-#if defined(CHECK_LATEST_DATA_FILES)
-	if (CheckLatestFiles_PollEvent())
-		return false;
-#endif
 	ELTimer_SetFrameMSec();
 
 	// 	m_Profiler.Clear();
@@ -429,9 +422,6 @@ bool CPythonApplication::Process()
 	static BOOL s_bFrameSkip = false;
 	static UINT s_uiNextFrameTime = ELTimer_GetMSec();
 
-#ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime1=ELTimer_GetMSec();
-#endif
 	CTimer& rkTimer=CTimer::Instance();
 	rkTimer.Advance();
 
@@ -442,32 +432,20 @@ bool CPythonApplication::Process()
 	s_uiNextFrameTime += uiFrameTime;	//17 - 1초당 60fps기준.
 
 	DWORD updatestart = ELTimer_GetMSec();
-#ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime2=ELTimer_GetMSec();
-#endif
+
 	// Network I/O	
 	m_pyNetworkStream.Process();	
 
 	m_kGuildMarkUploader.Process();
 
-#ifdef USE_NPROTECT_GAMEGUARD
-	if (GameGuard_IsError())
-		return false;
-#endif
-
 	m_kGuildMarkDownloader.Process();
 	m_kAccountConnector.Process();
 
-#ifdef __PERFORMANCE_CHECK__		
-	DWORD dwUpdateTime3=ELTimer_GetMSec();
-#endif
 	//////////////////////
 	// Input Process
 	// Keyboard
 	UpdateKeyboard();
-#ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime4=ELTimer_GetMSec();
-#endif
+
 	// Mouse
 	POINT Point;
 	if (GetCursorPos(&Point))
@@ -475,52 +453,17 @@ bool CPythonApplication::Process()
 		ScreenToClient(m_hWnd, &Point);
 		OnMouseMove(Point.x, Point.y);		
 	}
-	//////////////////////
-#ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime5=ELTimer_GetMSec();
-#endif
-	//!@# Alt+Tab 중 SetTransfor 에서 튕김 현상 해결을 위해 - [levites]
-	//if (m_isActivateWnd)
+
 	__UpdateCamera();
-#ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime6=ELTimer_GetMSec();
-#endif
+
 	// Update Game Playing
 	CResourceManager::Instance().Update();
-#ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime7=ELTimer_GetMSec();
-#endif
+
 	OnCameraUpdate();
-#ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime8=ELTimer_GetMSec();
-#endif
+
 	OnMouseUpdate();
-#ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime9=ELTimer_GetMSec();
-#endif
+
 	OnUIUpdate();
-
-#ifdef __PERFORMANCE_CHECK__		
-	DWORD dwUpdateTime10=ELTimer_GetMSec();
-
-	if (dwUpdateTime10-dwUpdateTime1>10)
-	{			
-		static FILE* fp=fopen("perf_app_update.txt", "w");
-
-		fprintf(fp, "AU.Total %d (Time %d)\n", dwUpdateTime9-dwUpdateTime1, ELTimer_GetMSec());
-		fprintf(fp, "AU.TU %d\n", dwUpdateTime2-dwUpdateTime1);
-		fprintf(fp, "AU.NU %d\n", dwUpdateTime3-dwUpdateTime2);
-		fprintf(fp, "AU.KU %d\n", dwUpdateTime4-dwUpdateTime3);
-		fprintf(fp, "AU.MP %d\n", dwUpdateTime5-dwUpdateTime4);
-		fprintf(fp, "AU.CP %d\n", dwUpdateTime6-dwUpdateTime5);
-		fprintf(fp, "AU.RU %d\n", dwUpdateTime7-dwUpdateTime6);
-		fprintf(fp, "AU.CU %d\n", dwUpdateTime8-dwUpdateTime7);
-		fprintf(fp, "AU.MU %d\n", dwUpdateTime9-dwUpdateTime8);
-		fprintf(fp, "AU.UU %d\n", dwUpdateTime10-dwUpdateTime9);			
-		fprintf(fp, "----------------------------------\n");
-		fflush(fp);
-	}		
-#endif
 
 	//Update하는데 걸린시간.delta값
 	m_dwCurUpdateTime = ELTimer_GetMSec() - updatestart;
@@ -986,11 +929,6 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 		SET_EXCEPTION(CREATE_WINDOW);
 		return false;
 	}
-
-#ifdef USE_NPROTECT_GAMEGUARD
-	if (!GameGuard_Run(CMSWindow::GetWindowHandle()))
-		return false;
-#endif
 
 	if (m_pySystem.IsUseDefaultIME())
 	{

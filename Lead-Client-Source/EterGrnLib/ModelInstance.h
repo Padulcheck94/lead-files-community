@@ -194,9 +194,6 @@ class CGrannyModelInstance : public CGraphicCollisionObject
 		// TEST
 		CGrannyModelInstance** m_ppkSkeletonInst;
 		// END_OF_TEST
-#ifdef _TEST
-		D3DXMATRIX TEST_matWorld;
-#endif
 	public:
 		bool							HaveBlendThing() { return m_pModel->HaveBlendThing(); }
 };

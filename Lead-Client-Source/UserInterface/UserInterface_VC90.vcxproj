@@ -174,7 +174,6 @@
     <ClCompile Include="AccountConnector.cpp" />
     <ClCompile Include="AffectFlagContainer.cpp" />
     <ClCompile Include="CameraProcedure.cpp" />
-    <ClCompile Include="CheckLatestFiles.cpp" />
     <ClCompile Include="GameType.cpp" />
     <ClCompile Include="GuildMarkDownloader.cpp" />
     <ClCompile Include="GuildMarkUploader.cpp" />
@@ -191,7 +190,6 @@
     <ClCompile Include="MarkManager.cpp" />
     <ClCompile Include="MovieMan.cpp" />
     <ClCompile Include="NetworkActorManager.cpp" />
-    <ClCompile Include="NProtectGameGuard.cpp" />
     <ClCompile Include="ProcessCRC.cpp" />
     <ClCompile Include="ProcessScanner.cpp" />
     <ClCompile Include="PythonApplication.cpp" />
@@ -273,7 +271,6 @@
     <ClInclude Include="AbstractSingleton.h" />
     <ClInclude Include="AccountConnector.h" />
     <ClInclude Include="AffectFlagContainer.h" />
-    <ClInclude Include="CheckLatestFiles.h" />
     <ClInclude Include="CRC32_inc.h" />
     <ClInclude Include="GameType.h" />
     <ClInclude Include="GuildMarkDownloader.h" />
@@ -297,7 +294,6 @@
     <ClInclude Include="MarkManager.h" />
     <ClInclude Include="MovieMan.h" />
     <ClInclude Include="NetworkActorManager.h" />
-    <ClInclude Include="NProtectGameGuard.h" />
     <ClInclude Include="ProcessCRC.h" />
     <ClInclude Include="ProcessScanner.h" />
     <ClInclude Include="PythonApplication.h" />
@@ -325,7 +321,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="ServerStateChecker.h" />
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="Test.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Cursors\cursor.cur" />

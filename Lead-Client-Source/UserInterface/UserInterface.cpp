@@ -14,10 +14,6 @@
 #include "../CWebBrowser/CWebBrowser.h"
 #include "../eterBase/CPostIt.h"
 
-#include "CheckLatestFiles.h"
-
-#include "NProtectGameGuard.h"
-
 extern "C" {  
 extern int _fltused;  
 volatile int _AVOID_FLOATING_POINT_LIBRARY_BUG = _fltused;  
@@ -43,7 +39,6 @@ volatile int _AVOID_FLOATING_POINT_LIBRARY_BUG = _fltused;
 #pragma comment( lib, "dmoguids.lib" )
 //#pragma comment( lib, "wsock32.lib" )
 #include <stdlib.h>
-bool __IS_TEST_SERVER_MODE__=false;
 
 extern bool SetDefaultCodePage(DWORD codePage);
 
@@ -347,21 +342,11 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 
 bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 {
-#ifdef LOCALE_SERVICE_YMIR
-	extern bool g_isScreenShotKey;
-	g_isScreenShotKey = true;
-#endif
-
 	DWORD dwRandSeed=time(NULL)+DWORD(GetCurrentProcess());
 	srandom(dwRandSeed);
 	srand(random());
 
 	SetLogLevel(1);
-
-#ifdef LOCALE_SERVICE_VIETNAM_MILD
-	extern BOOL USE_VIETNAM_CONVERT_WEAPON_VNUM;
-	USE_VIETNAM_CONVERT_WEAPON_VNUM = true;
-#endif
 
 	if (_access("perf_game_update.txt", 0)==0)
 	{
@@ -460,16 +445,9 @@ bool __IsTimeStampOption(LPSTR lpCmdLine)
 void __PrintTimeStamp()
 {
 #ifdef	_DEBUG
-	if (__IS_TEST_SERVER_MODE__)
-		LogBoxf("METIN2 BINARY TEST DEBUG VERSION %s  ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);
-	else
-		LogBoxf("METIN2 BINARY DEBUG VERSION %s ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);
-	
+	LogBoxf("METIN2 BINARY DEBUG VERSION %s ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);
 #else
-	if (__IS_TEST_SERVER_MODE__)
-		LogBoxf("METIN2 BINARY TEST VERSION %s  ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);
-	else
-		LogBoxf("METIN2 BINARY DISTRIBUTE VERSION %s ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);			
+	LogBoxf("METIN2 BINARY DISTRIBUTE VERSION %s ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);			
 #endif			
 }
 
@@ -494,16 +472,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	LocaleService_LoadConfig("locale.cfg");
 	SetDefaultCodePage(LocaleService_GetCodePage());	
-
-#ifdef USE_NPROTECT_GAMEGUARD
-	if (!GameGuard_Init())
-		return 0;
-#endif
-
-#if defined(CHECK_LATEST_DATA_FILES)
-	if (!CheckLatestFiles())
-		return 0;
-#endif
 
 	bool bQuit = false;
 	int nArgc = 0;
@@ -590,10 +558,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	}
 
 	Main(hInstance, lpCmdLine);
-
-#ifdef USE_NPROTECT_GAMEGUARD
-	GameGuard_NoticeMessage();
-#endif
 
 	WebBrowser_Cleanup();
 

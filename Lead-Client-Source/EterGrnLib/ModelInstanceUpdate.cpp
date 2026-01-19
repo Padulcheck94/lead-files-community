@@ -16,22 +16,7 @@ void CGrannyModelInstance::Update(DWORD dwAniFPS)
 
 	m_dwOldUpdateFrame=c_dwCurUpdateFrame;
 
-	//DWORD t1=timeGetTime();
 	GrannySetModelClock(m_pgrnModelInstance, GetLocalTime());	
-	//DWORD t2=timeGetTime();
-
-#ifdef __PERFORMANCE_CHECKER__
-	{
-		static FILE* fp=fopen("perf_grn_setmodelclock.txt", "w");
-
-		if (t2-t1>3)
-		{
-			fprintf(fp, "%f:%x:- GrannySetModelClock(time=%f) = %dms\n", timeGetTime()/1000.0f, this, GetLocalTime(), t2-t1);
-			fflush(fp);
-		}			
-	}
-#endif	
-
 }
 
 void CGrannyModelInstance::UpdateLocalTime(float fElapsedTime)
@@ -189,10 +174,6 @@ void CGrannyModelInstance::UpdateWorldMatrices(const D3DXMATRIX* c_pWorldMatrix)
 			D3DXMatrixMultiply(&rWorldMatrix, &boneMatrices[iBone], c_pWorldMatrix);
 		}
 	}
-
-#ifdef _TEST
-	TEST_matWorld = *c_pWorldMatrix;
-#endif
 }
 
 void CGrannyModelInstance::DeformPNTVertices(void * pvDest)

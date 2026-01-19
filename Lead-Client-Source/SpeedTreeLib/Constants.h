@@ -25,10 +25,6 @@
 //#include "LibVector_Source/IdvVector.h"
 //#include "../Common Source/Filename.h"
 
-// used to isolate SpeedGrass usage
-#define USE_SPEEDGRASS
-
-
 // paths
 //const CFilename c_strTreePath = "../data/TheValley/Trees/";
 //const CFilename c_strDataPath = "../data/TheValley/";

@@ -160,32 +160,6 @@ struct PERF_PacketInfo
 	}
 };
 
-
-#ifdef __PERFORMANCE_CHECK__
-
-class PERF_PacketTimeAnalyzer
-{
-	public:
-		~PERF_PacketTimeAnalyzer()
-		{
-			FILE* fp=fopen("perf_dispatch_packet_result.txt", "w");		
-
-			for (std::map<DWORD, PERF_PacketInfo>::iterator i=m_kMap_kPacketInfo.begin(); i!=m_kMap_kPacketInfo.end(); ++i)
-			{
-				if (i->second.dwTime>0)
-					fprintf(fp, "header %d: count %d, time %d, tpc %d\n", i->first, i->second.dwCount, i->second.dwTime, i->second.dwTime/i->second.dwCount);
-			}
-			fclose(fp);
-		}
-
-	public:
-		std::map<DWORD, PERF_PacketInfo> m_kMap_kPacketInfo;
-};
-
-PERF_PacketTimeAnalyzer gs_kPacketTimeAnalyzer;
-
-#endif
-
 // Game Phase ---------------------------------------------------------------------------
 void CPythonNetworkStream::GamePhase()
 {
@@ -197,13 +171,6 @@ void CPythonNetworkStream::GamePhase()
 
 	TPacketHeader header = 0;
 	bool ret = true;
-
-#ifdef __PERFORMANCE_CHECK__
-	DWORD timeBeginDispatch=timeGetTime();
-
-	static std::map<DWORD, PERF_PacketInfo> kMap_kPacketInfo;
-	kMap_kPacketInfo.clear();
-#endif
 
 	const DWORD MAX_RECV_COUNT = 4;
 	const DWORD SAFE_RECV_BUFSIZE = 8192;
@@ -217,10 +184,6 @@ void CPythonNetworkStream::GamePhase()
 
 		if (!CheckPacket(&header))
 			break;
-
-#ifdef __PERFORMANCE_CHECK__
-		DWORD timeBeginPacket=timeGetTime();
-#endif
 
 		switch (header)
 		{
@@ -585,40 +548,7 @@ void CPythonNetworkStream::GamePhase()
 				ret = RecvDefaultPacket(header);
 				break;
 		}
-#ifdef __PERFORMANCE_CHECK__
-		DWORD timeEndPacket=timeGetTime();
-
-		{
-			PERF_PacketInfo& rkPacketInfo=kMap_kPacketInfo[header];
-			rkPacketInfo.dwCount++;
-			rkPacketInfo.dwTime+=timeEndPacket-timeBeginPacket;			
-		}
-
-		{
-			PERF_PacketInfo& rkPacketInfo=gs_kPacketTimeAnalyzer.m_kMap_kPacketInfo[header];
-			rkPacketInfo.dwCount++;
-			rkPacketInfo.dwTime+=timeEndPacket-timeBeginPacket;			
-		}
-#endif
 	}
-
-#ifdef __PERFORMANCE_CHECK__
-	DWORD timeEndDispatch=timeGetTime();
-	
-	if (timeEndDispatch-timeBeginDispatch>2)
-	{
-		static FILE* fp=fopen("perf_dispatch_packet.txt", "w");		
-
-		fprintf(fp, "delay %d\n", timeEndDispatch-timeBeginDispatch);
-		for (std::map<DWORD, PERF_PacketInfo>::iterator i=kMap_kPacketInfo.begin(); i!=kMap_kPacketInfo.end(); ++i)
-		{
-			if (i->second.dwTime>0)
-				fprintf(fp, "header %d: count %d, time %d\n", i->first, i->second.dwCount, i->second.dwTime);
-		}
-		fputs("=====================================================\n", fp);
-		fflush(fp);
-	}
-#endif
 
 	if (!ret)
 		RecvErrorPacket(header);
@@ -2320,13 +2250,6 @@ bool CPythonNetworkStream::SendAttackPacket(UINT uMotAttack, DWORD dwVIDVictim)
 {
 	if (!__CanActMainInstance())
 		return true;
-
-#ifdef ATTACK_TIME_LOG
-	static DWORD prevTime = timeGetTime();
-	DWORD curTime = timeGetTime();
-	TraceError("TIME: %.4f(%.4f) ATTACK_PACKET: %d TARGET: %d", curTime/1000.0f, (curTime-prevTime)/1000.0f, uMotAttack, dwVIDVictim);
-	prevTime = curTime;
-#endif
 
 	TPacketCGAttack kPacketAtk;
 

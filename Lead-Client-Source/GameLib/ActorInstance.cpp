@@ -44,71 +44,14 @@ void CActorInstance::INSTANCEBASE_Transform()
 	UpdateAttribute();
 }
 
-/*
-void CActorInstance::TEMP_Update()
-{
-	//DWORD t1=ELTimer_GetMSec();
-	OnUpdate();
-	//DWORD t2=ELTimer_GetMSec();
-	UpdateBoundingSphere();
-	//DWORD t3=ELTimer_GetMSec();
-
-#ifdef __PERFORMANCE_CHECKER__
-	{
-		static FILE* fp=fopen("perf_actor_update.txt", "w");
-
-		if (t3-t1>3)
-		{
-			fprintf(fp, "AIU.Total %d (Time %f)\n", 
-				t3-t1, ELTimer_GetMSec()/1000.0f);
-			fprintf(fp, "AIU.UP %d\n", t2-t1);
-			fprintf(fp, "AIU.UBS %d\n", t3-t2);
-			fprintf(fp, "-------------------------------- \n");
-			fflush(fp);
-		}			
-		fflush(fp);
-	}
-#endif
-}
-*/
-
 void CActorInstance::OnUpdate()
 {
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t1=ELTimer_GetMSec();
-#endif
 	if (!IsParalysis())
 		CGraphicThingInstance::OnUpdate();
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t2=ELTimer_GetMSec();
-#endif
 
 	UpdateAttachingInstances();
 
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t3=ELTimer_GetMSec();
-#endif
-
 	__BlendAlpha_Update();
-
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t4=ELTimer_GetMSec();
-	{
-		static FILE* fp=fopen("perf_actor_update2.txt", "w");
-
-		if (t4-t1>3)
-		{
-			fprintf(fp, "AIU2.Total %d (Time %f)\n", 
-				t4-t1, ELTimer_GetMSec()/1000.0f);
-			fprintf(fp, "AIU2.GU %d\n", t2-t1);
-			fprintf(fp, "AIU2.UAI %d\n", t3-t2);
-			fprintf(fp, "AIU2.BAU %d\n", t4-t3);
-			fprintf(fp, "-------------------------------- \n");
-			fflush(fp);
-		}
-		fflush(fp);
-	}
-#endif
 }
 
 

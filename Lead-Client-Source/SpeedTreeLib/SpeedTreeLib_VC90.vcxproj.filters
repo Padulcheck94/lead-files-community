@@ -14,12 +14,6 @@
     <ClCompile Include="BoundaryShapeManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SpeedGrassRT.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SpeedGrassWrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SpeedTreeForest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -38,12 +32,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpeedGrassRT.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpeedGrassWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SpeedTreeConfig.h">
