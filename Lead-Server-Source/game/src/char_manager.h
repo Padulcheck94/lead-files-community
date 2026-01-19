@@ -1,8 +1,8 @@
 #ifndef __INC_METIN_II_GAME_CHARACTER_MANAGER_H__
 #define __INC_METIN_II_GAME_CHARACTER_MANAGER_H__
 
-#include "../../common/stl.h"
-#include "../../common/length.h"
+#include "common/stl.h"
+#include "common/length.h"
 
 #include "vid.h"
 
