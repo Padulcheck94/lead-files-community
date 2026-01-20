@@ -352,12 +352,7 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 	{
 		DeleteFile("perf_game_update.txt");
 	}
-
-	if (_access("newpatch.exe", 0)==0)
-	{		
-		system("patchupdater.exe");
-		return false;
-	}
+	ilInit();
 
 	if (!Setup(lpCmdLine))
 		return false;

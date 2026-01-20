@@ -124,51 +124,14 @@ bool CItemManager::LoadItemList(const char * c_szFileName)
 
 		CItemData * pItemData = MakeItemData(dwItemVNum);
 
-		extern BOOL USE_VIETNAM_CONVERT_WEAPON_VNUM;
-		if (USE_VIETNAM_CONVERT_WEAPON_VNUM)
+		if (4 == TokenVector.size())
 		{
-			extern DWORD Vietnam_ConvertWeaponVnum(DWORD vnum);
-			DWORD dwMildItemVnum = Vietnam_ConvertWeaponVnum(dwItemVNum);
-			if (dwMildItemVnum == dwItemVNum)
-			{
-				if (4 == TokenVector.size())
-				{
-					const std::string & c_rstrModelFileName = TokenVector[3];
-					pItemData->SetDefaultItemData(c_rstrIcon.c_str(), c_rstrModelFileName.c_str());
-				}
-				else
-				{
-					pItemData->SetDefaultItemData(c_rstrIcon.c_str());
-				}
-			}
-			else
-			{
-				DWORD dwMildBaseVnum = dwMildItemVnum / 10 * 10;
-				char szMildIconPath[MAX_PATH];				
-				sprintf(szMildIconPath, "icon/item/%.5d.tga", dwMildBaseVnum);
-				if (4 == TokenVector.size())
-				{
-					char szMildModelPath[MAX_PATH];
-					sprintf(szMildModelPath, "d:/ymir work/item/weapon/%.5d.gr2", dwMildBaseVnum);	
-					pItemData->SetDefaultItemData(szMildIconPath, szMildModelPath);
-				}
-				else
-				{
-					pItemData->SetDefaultItemData(szMildIconPath);
-				}
-			}
+			const std::string & c_rstrModelFileName = TokenVector[3];
+			pItemData->SetDefaultItemData(c_rstrIcon.c_str(), c_rstrModelFileName.c_str());
 		}
 		else
 		{
-			if (4 == TokenVector.size())
-			{
-				const std::string & c_rstrModelFileName = TokenVector[3];
-				pItemData->SetDefaultItemData(c_rstrIcon.c_str(), c_rstrModelFileName.c_str());
-			}
-			else
-			{
-				pItemData->SetDefaultItemData(c_rstrIcon.c_str());
-			}
+			pItemData->SetDefaultItemData(c_rstrIcon.c_str());
 		}
 	}
 
