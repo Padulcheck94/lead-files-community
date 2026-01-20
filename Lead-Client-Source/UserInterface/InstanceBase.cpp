@@ -758,7 +758,10 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 
 	__Create_SetName(c_rkCreateData);
 
-	m_dwLevel = c_rkCreateData.m_dwLevel;
+	if (GetInstanceType() == CActorInstance::TYPE_ENEMY)
+		m_dwLevel = CPythonNonPlayer::Instance().GetMobLevel(GetRace());
+	else
+		m_dwLevel = c_rkCreateData.m_dwLevel;
 	m_dwGuildID = c_rkCreateData.m_dwGuildID;
 	m_dwEmpireID = c_rkCreateData.m_dwEmpireID;
 

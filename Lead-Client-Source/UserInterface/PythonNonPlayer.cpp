@@ -142,6 +142,16 @@ const char*	CPythonNonPlayer::GetMonsterName(DWORD dwVnum)
 	return c_pTable->szLocaleName;
 }
 
+BYTE CPythonNonPlayer::GetMobLevel(DWORD dwVnum)
+{
+	const CPythonNonPlayer::TMobTable* c_pTable = GetTable(dwVnum);
+	if (!c_pTable)
+		return 0;
+
+
+	return c_pTable->bLevel;
+}
+
 DWORD CPythonNonPlayer::GetMonsterColor(DWORD dwVnum)
 {
 	const CPythonNonPlayer::TMobTable * c_pTable = GetTable(dwVnum);

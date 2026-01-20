@@ -133,6 +133,7 @@ class CPythonNonPlayer : public CSingleton<CPythonNonPlayer>
 		BYTE				GetEventTypeByVID(DWORD dwVID);
 		DWORD				GetMonsterColor(DWORD dwVnum);
 		const char*			GetMonsterName(DWORD dwVnum);
+		BYTE				GetMobLevel(DWORD dwVnum);
 
 		// Function for outer
 		void				GetMatchableMobList(int iLevel, int iInterval, TMobTableList * pMobTableList);
