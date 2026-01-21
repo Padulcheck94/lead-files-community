@@ -153,12 +153,6 @@ class DESC
 		void			SetNextSequence();
 
 		void			SendLoginSuccessPacket();
-		//void			SendServerStatePacket(int nIndex);
-
-
-
-		void			SetPanamaKey(DWORD dwKey)	{m_dwPanamaKey = dwKey;}
-		DWORD			GetPanamaKey() const		{ return m_dwPanamaKey; }
 
 		void			SetLoginKey(DWORD dwKey);
 		void			SetLoginKey(CLoginKey * pkKey);
@@ -227,7 +221,6 @@ class DESC
 
 		CLoginKey *		m_pkLoginKey;
 		DWORD			m_dwLoginKey;
-		DWORD			m_dwPanamaKey;
 
 		BYTE                    m_bCRCMagicCubeIdx;
 		DWORD                   m_dwProcCRC;
