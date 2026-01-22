@@ -171,8 +171,7 @@ HELP_SCREEN_CAPTURE	Screenshot speichern: Druck bzw. Print (Speicherort ist der 
 HELP_SHOW_ALL_NAME	Namen anzeigen: Alt
 HELP_SP	Manapunkte (MP)
 HELP_SYSTEM_BUTTON	Systemtasten
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Inventar
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Inventar
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. Inventar
 INVENTORY_TITLE	Inventar
 ITEM_MALL	Item-Shop
 LOAD_ERROR	Die Datendatei ist beschädigt. Bitte Client neu installieren. Drücke jetzt die Taste ESC.

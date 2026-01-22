@@ -171,8 +171,7 @@ HELP_SCREEN_CAPTURE	Save Screenshot: Print (will be saved in file "Metin2\screen
 HELP_SHOW_ALL_NAME	Display Names: Alt
 HELP_SP	Spell Points (SP)
 HELP_SYSTEM_BUTTON	System buttons
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Inventory
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Inventory
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. Inventory
 INVENTORY_TITLE	Inventory
 ITEM_MALL	Item Shop
 LOAD_ERROR	The File is damaged. Please install new. Press ESC now.

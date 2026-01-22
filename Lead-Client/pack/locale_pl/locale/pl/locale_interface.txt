@@ -175,8 +175,7 @@ HELP_SCREEN_CAPTURE	Zapisz Screenshota:  Print (Screen bêdzie zapisany w podkata
 HELP_SHOW_ALL_NAME	Poka¿ Nazwy: Alt
 HELP_SP	Punkty Energii (PE)
 HELP_SYSTEM_BUTTON	Przycisk Systemowy
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Ekwipunek
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Ekwipunek
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. Ekwipunek
 INVENTORY_TITLE	Ekwipunek
 ITEM_MALL	Sklep z Przedmiotami
 LOAD_ERROR	Plik jest uszkodzony. Proszê zainstalowaæ nowy. Wciœnij teraz ESC.

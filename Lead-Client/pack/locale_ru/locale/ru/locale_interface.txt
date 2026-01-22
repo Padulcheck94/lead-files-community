@@ -175,8 +175,7 @@ HELP_SCREEN_CAPTURE	Скриншот: клавиша Print Screen (скриншот будет сохранен в "M
 HELP_SHOW_ALL_NAME	Показать имена: А
 HELP_SP	Пункты маны (МП)
 HELP_SYSTEM_BUTTON	Системные клавиши
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Инвентарь
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Инвентарь
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. Инвентарь
 INVENTORY_TITLE	Инвентарь
 ITEM_MALL	Магазин предметов
 LOAD_ERROR	Файл данных повреждён. Попробуйте установить Клиент заново. Нажмите сейчас на ' ESC '.

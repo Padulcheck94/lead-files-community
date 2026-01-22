@@ -175,8 +175,7 @@ HELP_SCREEN_CAPTURE	Fare uno screenshot: Stamp o Print (l'immagine sarà salvata 
 HELP_SHOW_ALL_NAME	Visualizza nome: Alt
 HELP_SP	Punti Mana (PM)
 HELP_SYSTEM_BUTTON	Tasti di sistema
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1° Inventario
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2° Inventario
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}° Inventario
 INVENTORY_TITLE	Inventario
 ITEM_MALL	Item Shop
 LOAD_ERROR	Il file dati è rovinato. Reinstalla il Client. Clicca ora il tasto ESC.

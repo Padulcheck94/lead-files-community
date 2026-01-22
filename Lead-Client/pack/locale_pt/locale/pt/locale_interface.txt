@@ -175,8 +175,7 @@ HELP_SCREEN_CAPTURE	Gravar Print - Tecla 'Print Screen' para tirares uma Print. 
 HELP_SHOW_ALL_NAME	Mostrar Nomes: Alt
 HELP_SP	Mana (MN)
 HELP_SYSTEM_BUTTON	Botão de Sistema
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Inventário
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Inventário
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. Inventário
 INVENTORY_TITLE	Inventário
 ITEM_MALL	Item Shop
 LOAD_ERROR	O Ficheiro está com erros. Por favor instala de novo. Carrega agora no 'ESC'.

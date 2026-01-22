@@ -1,7 +1,8 @@
 import uiScriptLocale
 import item
+import player
 
-EQUIPMENT_START_INDEX = 90
+EQUIPMENT_START_INDEX = player.EQUIPMENT_SLOT_START
 
 window = {
 	"name" : "BeltInventoryWindow",

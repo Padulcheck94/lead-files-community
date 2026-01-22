@@ -171,8 +171,7 @@ HELP_SCREEN_CAPTURE	Képernyõkép mentése: Nyomtatás (a "Metin2\screenshot" könyvt
 HELP_SHOW_ALL_NAME	Nevek megmutatása: Alt
 HELP_SP	Mana pontok (MP)
 HELP_SYSTEM_BUTTON	Rendszer billentyûk
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. leltár
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. leltár
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. leltár
 INVENTORY_TITLE	Leltár
 ITEM_MALL	Tárgy piac
 LOAD_ERROR	Az adatfájl megsérült. Installáld újra a klienst. Nyomd meg az ESC gombot.

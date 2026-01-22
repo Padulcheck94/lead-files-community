@@ -296,30 +296,24 @@ bool CExchange::Check(int * piItemCount)
 
 bool CExchange::CheckSpace()
 {
-	static CGrid s_grid1(5, INVENTORY_MAX_NUM/5 / 2); // inven page 1
-	static CGrid s_grid2(5, INVENTORY_MAX_NUM/5 / 2); // inven page 2
+	static std::vector s_grids(INVENTORY_PAGE_COUNT, CGrid(INVENTORY_SLOT_WIDTH, INVENTORY_SLOT_HEIGHT));
 
-	s_grid1.Clear();
-	s_grid2.Clear();
+	for (auto& grid: s_grids)
+		grid.Clear();
 
 	LPCHARACTER	victim = GetCompany()->GetOwner();
 	LPITEM item;
-
 	int i;
 
-	for (i = 0; i < INVENTORY_MAX_NUM / 2; ++i)
+	for (i = 0; i < INVENTORY_MAX_NUM; ++i)
 	{
-		if (!(item = victim->GetInventoryItem(i)))
+		if (!((item = victim->GetInventoryItem(i))))
 			continue;
 
-		s_grid1.Put(i, 1, item->GetSize());
-	}
-	for (i = INVENTORY_MAX_NUM / 2; i < INVENTORY_MAX_NUM; ++i)
-	{
-		if (!(item = victim->GetInventoryItem(i)))
-			continue;
+		const int page = i / INVENTORY_SLOT_PER_PAGE; // 0..INVENTORY_PAGE_COUNT-1
+		const int localPos = i % INVENTORY_SLOT_PER_PAGE; // Slot within a single page
 
-		s_grid2.Put(i - INVENTORY_MAX_NUM / 2, 1, item->GetSize());
+		s_grids[page].Put(localPos, 1, item->GetSize());
 	}
 
 	// 아... 뭔가 개병신 같지만... 용혼석 인벤을 노멀 인벤 보고 따라 만든 내 잘못이다 ㅠㅠ
@@ -383,25 +377,18 @@ bool CExchange::CheckSpace()
 		}
 		else
 		{
-			int iPos = s_grid1.FindBlank(1, item->GetSize());
-
-			if (iPos >= 0)
+			for (CGrid& grid : s_grids)
 			{
-				s_grid1.Put(iPos, 1, item->GetSize());
-			}
-			else
-			{
-				iPos = s_grid2.FindBlank(1, item->GetSize());
+				int iPos = grid.FindBlank(1, item->GetSize());
 
 				if (iPos >= 0)
 				{
-					s_grid2.Put(iPos, 1, item->GetSize());
-				}
-				else
-				{
-					return false;
+					grid.Put(iPos, 1, item->GetSize());
+					return true;
 				}
 			}
+
+			return false;
 		}
 	}
 

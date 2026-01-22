@@ -175,8 +175,7 @@ HELP_SCREEN_CAPTURE	Gem Screenshot: Prt Scr(bliver gemt i "Metin2_DK\screenshot"
 HELP_SHOW_ALL_NAME	Vis navne: Alt
 HELP_SP	Manapoint (MP)
 HELP_SYSTEM_BUTTON	System knapper
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. inventar
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. inventar
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. inventar
 INVENTORY_TITLE	Inventar
 ITEM_MALL	Itemshop
 LOAD_ERROR	En data-fil er i stykker. Vær så venligt at geninstallere clienten. Tryk ESC.

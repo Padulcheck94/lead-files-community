@@ -175,8 +175,7 @@ HELP_SCREEN_CAPTURE	Guardar Captura de Pantalla: ImprPant (se guardará en la car
 HELP_SHOW_ALL_NAME	Mostrar Nombres: Alt
 HELP_SP	Puntos de hechizo (SP)
 HELP_SYSTEM_BUTTON	Botones de Sistema
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Inventario
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Inventario
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. Inventario
 INVENTORY_TITLE	Inventario
 ITEM_MALL	Tienda de objetos
 LOAD_ERROR	El archivo está dañado. Por favor, reinstálalo de nuevo. Presiona ESC ahora.

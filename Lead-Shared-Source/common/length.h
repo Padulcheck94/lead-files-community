@@ -17,7 +17,13 @@ enum EMisc
 	ACCOUNT_STATUS_MAX_LEN	= 8,
 	CHARACTER_NAME_MAX_LEN	= 24,
 	SHOP_SIGN_MAX_LEN		= 32,
-	INVENTORY_MAX_NUM		= 90,
+
+	INVENTORY_SLOT_WIDTH			= 5,
+	INVENTORY_SLOT_HEIGHT			= 9,
+	INVENTORY_PAGE_COUNT			= 5,
+	INVENTORY_SLOT_PER_PAGE			= INVENTORY_SLOT_WIDTH * INVENTORY_SLOT_HEIGHT,
+	INVENTORY_MAX_NUM				= INVENTORY_PAGE_COUNT * INVENTORY_SLOT_PER_PAGE,
+
 	ABILITY_MAX_NUM			= 50,
 	EMPIRE_MAX_NUM			= 4,
 	BANWORD_MAX_LEN			= 24,
@@ -83,24 +89,6 @@ enum EMisc
 	BELT_INVENTORY_SLOT_HEIGHT= 4,
 
 	BELT_INVENTORY_SLOT_COUNT = BELT_INVENTORY_SLOT_WIDTH * BELT_INVENTORY_SLOT_HEIGHT,
-
-
-/**
-	 **** 현재까지 할당 된 아이템 영역 정리 (DB상 Item Position) ****
-	+------------------------------------------------------+ 0
-	| 캐릭터 기본 인벤토리 (45칸 * 2페이지) 90칸           | 
-	+------------------------------------------------------+ 90 = INVENTORY_MAX_NUM(90)
-	| 캐릭터 장비 창 (착용중인 아이템) 32칸                |
-	+------------------------------------------------------+ 122 = INVENTORY_MAX_NUM(90) + WEAR_MAX_NUM(32)
-	| 용혼석 장비 창 (착용중인 용혼석) 12칸                | 
-	+------------------------------------------------------+ 134 = 122 + DS_SLOT_MAX(6) * DRAGON_SOUL_DECK_MAX_NUM(2)
-	| 용혼석 장비 창 예약 (아직 미사용) 18칸               | 
-	+------------------------------------------------------+ 152 = 134 + DS_SLOT_MAX(6) * DRAGON_SOUL_DECK_RESERVED_MAX_NUM(3)
-	| 벨트 인벤토리 (벨트 착용시에만 벨트 레벨에 따라 활성)|
-	+------------------------------------------------------+ 168 = 152 + BELT_INVENTORY_SLOT_COUNT(16) = INVENTORY_AND_EQUIP_CELL_MAX
-	| 미사용                                               |
-	+------------------------------------------------------+ ??
-*/
 };
 
 

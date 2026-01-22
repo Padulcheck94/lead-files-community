@@ -175,8 +175,7 @@ HELP_SCREEN_CAPTURE	Αποθήκευση στιγμιότυπου: PrtSc (τόπος αποθήκευσης: Φάκελος «
 HELP_SHOW_ALL_NAME	Εμφάνιση ονομάτων: Alt
 HELP_SP	SP
 HELP_SYSTEM_BUTTON	Κουμπιά Συστήματος
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Κατάλογος
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Κατάλογος
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. Κατάλογος
 INVENTORY_TITLE	Κατάλογος
 ITEM_MALL	Item Shop
 LOAD_ERROR	Το Αρχείο είναι καταστρεμμένο. Παρακαλούμε εγκατάστησε εκ νέου. Πάτα ESC.

@@ -171,8 +171,7 @@ HELP_SCREEN_CAPTURE	Enregistrer capture d'écran : Imprim Ecran (print scr) (enre
 HELP_SHOW_ALL_NAME	Afficher les noms : Alt
 HELP_SP	Points de mana (PM)
 HELP_SYSTEM_BUTTON	Touches systèmes
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1er inventaire
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2e inventaire
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. inventaire
 INVENTORY_TITLE	Inventaire
 ITEM_MALL	Magasin - Objets
 LOAD_ERROR	Le fichier est endommagé. Veuillez en installer un nouveau. Appuyez à présent sur Echapp

@@ -552,7 +552,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 						return true;
 
 					int j = 1;
-					BYTE bPage = bCell / (INVENTORY_MAX_NUM / 2);
+					BYTE bPage = bCell / (INVENTORY_MAX_NUM / INVENTORY_PAGE_COUNT);
 
 					do
 					{
@@ -561,7 +561,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 						if (p >= INVENTORY_MAX_NUM)
 							return false;
 
-						if (p / (INVENTORY_MAX_NUM / 2) != bPage)
+						if (p / (INVENTORY_MAX_NUM / INVENTORY_PAGE_COUNT) != bPage)
 							return false;
 
 						if (m_pointsInstant.bItemGrid[p])
@@ -582,7 +582,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 			else
 			{
 				int j = 1;
-				BYTE bPage = bCell / (INVENTORY_MAX_NUM / 2);
+				BYTE bPage = bCell / (INVENTORY_MAX_NUM / INVENTORY_PAGE_COUNT);
 
 				do
 				{
@@ -591,7 +591,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 					if (p >= INVENTORY_MAX_NUM)
 						return false;
 
-					if (p / (INVENTORY_MAX_NUM / 2) != bPage)
+					if (p / (INVENTORY_MAX_NUM / INVENTORY_PAGE_COUNT) != bPage)
 						return false;
 
 					if (m_pointsInstant.bItemGrid[p])

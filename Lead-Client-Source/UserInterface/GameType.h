@@ -39,12 +39,8 @@ const DWORD c_Name_Max_Length = 64;
 const DWORD c_FileName_Max_Length = 128;
 const DWORD c_Short_Name_Max_Length = 32;
 
-const DWORD c_Inventory_Page_Size = 5*9; // x*y
-const DWORD c_Inventory_Page_Count = 2;
-const DWORD c_ItemSlot_Count = c_Inventory_Page_Size * c_Inventory_Page_Count;
 const DWORD c_Equipment_Count = 12;
-
-const DWORD c_Equipment_Start = c_ItemSlot_Count;
+const DWORD c_Equipment_Start = INVENTORY_MAX_NUM;
 
 const DWORD c_Equipment_Body	= c_Equipment_Start + 0;
 const DWORD c_Equipment_Head	= c_Equipment_Start + 1;
@@ -80,12 +76,8 @@ const DWORD c_Equipment_Shield	= c_Equipment_Start + 10;
 	const DWORD c_Costume_Slot_End		= c_Costume_Slot_Start + c_Costume_Slot_Count;
 #endif
 
-
-// [주의] 숫자(32) 하드코딩 주의. 현재 서버에서 용혼석 슬롯은 32부터임. 
-// 서버 common/length.h 파일의 EWearPositions 열거형이 32까지 확장될 것을 염두하고(32 이상은 확장 하기 힘들게 되어있음.), 
-// 그 이후부터를 용혼석 장착 슬롯으로 사용.
 const DWORD c_Wear_Max = 32;
-const DWORD c_DragonSoul_Equip_Start = c_ItemSlot_Count + c_Wear_Max;
+const DWORD c_DragonSoul_Equip_Start = INVENTORY_MAX_NUM + c_Wear_Max;
 const DWORD c_DragonSoul_Equip_Slot_Max = 6;
 const DWORD c_DragonSoul_Equip_End = c_DragonSoul_Equip_Start + c_DragonSoul_Equip_Slot_Max * DRAGON_SOUL_DECK_MAX_NUM;
 

@@ -175,8 +175,7 @@ HELP_SCREEN_CAPTURE	Save Screenshot: Print (word dan bewaard in "Metin2\screensh
 HELP_SHOW_ALL_NAME	Display namen: Alt
 HELP_SP	Tover punten (TP)
 HELP_SYSTEM_BUTTON	Systeem knoppen
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Inventaris
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Inventaris
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. Inventaris
 INVENTORY_TITLE	Inventaris
 ITEM_MALL	Voorwerpen Winkel
 LOAD_ERROR	Het Bestand is bescahdigd. Installeer een nieuwe alstublieft. Druk ESC nu.

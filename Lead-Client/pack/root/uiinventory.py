@@ -19,10 +19,6 @@ import constInfo
 import ime
 import wndMgr
 
-ITEM_MALL_BUTTON_ENABLE = True
-
-
-
 ITEM_FLAG_APPLICABLE = 1 << 14
 
 class CostumeWindow(ui.ScriptWindow):
@@ -288,11 +284,7 @@ class InventoryWindow(ui.ScriptWindow):
 
 		try:
 			pyScrLoader = ui.PythonScriptLoader()
-
-			if ITEM_MALL_BUTTON_ENABLE:
-				pyScrLoader.LoadScriptFile(self, uiScriptLocale.LOCALE_UISCRIPT_PATH + "InventoryWindow.py")
-			else:
-				pyScrLoader.LoadScriptFile(self, "UIScript/InventoryWindow.py")
+			pyScrLoader.LoadScriptFile(self, "UIScript/InventoryWindow.py")
 		except:
 			import exception
 			exception.Abort("InventoryWindow.LoadWindow.LoadObject")
@@ -308,8 +300,9 @@ class InventoryWindow(ui.ScriptWindow):
 			self.costumeButton = self.GetChild2("CostumeButton")
 			
 			self.inventoryTab = []
-			self.inventoryTab.append(self.GetChild("Inventory_Tab_01"))
-			self.inventoryTab.append(self.GetChild("Inventory_Tab_02"))
+
+			for i in range(1, player.INVENTORY_PAGE_COUNT + 1):
+				self.inventoryTab.append(self.GetChild("Inventory_Tab_{:02d}".format(i)))
 
 			self.equipmentTab = []
 			self.equipmentTab.append(self.GetChild("Equipment_Tab_01"))
@@ -362,9 +355,9 @@ class InventoryWindow(ui.ScriptWindow):
 		## MoneySlot
 		self.wndMoneySlot.SetEvent(ui.__mem_func__(self.OpenPickMoneyDialog))
 
-		self.inventoryTab[0].SetEvent(lambda arg=0: self.SetInventoryPage(arg))
-		self.inventoryTab[1].SetEvent(lambda arg=1: self.SetInventoryPage(arg))
-		self.inventoryTab[0].Down()
+		for index, tab in enumerate(self.inventoryTab):
+			tab.SetEvent(lambda arg=index: self.SetInventoryPage(arg))
+			tab.Down()
 
 		self.equipmentTab[0].SetEvent(lambda arg=0: self.SetEquipmentPage(arg))
 		self.equipmentTab[1].SetEvent(lambda arg=1: self.SetEquipmentPage(arg))
@@ -388,8 +381,7 @@ class InventoryWindow(ui.ScriptWindow):
 			self.costumeButton.SetEvent(ui.__mem_func__(self.ClickCostumeButton))
 
 		self.wndCostume = None
-		
- 		#####
+		self.inventoryPageIndex = 0
 
 		## Refresh
 		self.SetInventoryPage(0)
@@ -419,6 +411,7 @@ class InventoryWindow(ui.ScriptWindow):
 		self.mallButton = None
 		self.DSSButton = None
 		self.interface = None
+		self.inventoryPageIndex = 0
 
 		if self.wndCostume:
 			self.wndCostume.Destroy()
@@ -458,8 +451,16 @@ class InventoryWindow(ui.ScriptWindow):
 
 	def SetInventoryPage(self, page):
 		self.inventoryPageIndex = page
-		self.inventoryTab[1-page].SetUp()
+
+		self.RefreshInventoryTabs()
 		self.RefreshBagSlotWindow()
+
+	def RefreshInventoryTabs(self):
+		self.inventoryTab[self.inventoryPageIndex].Down()
+
+		for i in range(player.INVENTORY_PAGE_COUNT):
+			if i != self.inventoryPageIndex:
+				self.inventoryTab[i].SetUp()
 
 	def SetEquipmentPage(self, page):
 		self.equipmentPageIndex = page

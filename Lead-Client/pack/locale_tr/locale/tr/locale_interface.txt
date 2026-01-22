@@ -175,8 +175,7 @@ HELP_SCREEN_CAPTURE	Ekran görüntüsünü kaydet: Yazdýr veya Print tuþu ile ("Metin
 HELP_SHOW_ALL_NAME	Ýsimleri göster: Alt tuþu ile
 HELP_SP	Zihin Puaný (SP)
 HELP_SYSTEM_BUTTON	Sistem Tuþlarý
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Envanter
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Envanter
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. Envanter
 INVENTORY_TITLE	Envanter
 ITEM_MALL	Nesne Market
 LOAD_ERROR	Dosya hasar görmüþ. Lütfen yenisini yükleyiniz. Þimdi ESC tuþuna basýnýz .

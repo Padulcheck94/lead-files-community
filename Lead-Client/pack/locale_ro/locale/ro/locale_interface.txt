@@ -175,8 +175,7 @@ HELP_SCREEN_CAPTURE	Pentru a salva screenshoturile: Print (se va salva in "Metin
 HELP_SHOW_ALL_NAME	Afiºeazã nume: ALT
 HELP_SP	Puncte de mana (PM)
 HELP_SYSTEM_BUTTON	Taste Sistem
-INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Inventar
-INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Inventar
+INVENTORY_PAGE_BUTTON_TOOLTIP	{}. Inventar
 INVENTORY_TITLE	Inventar
 ITEM_MALL	Magazin Obiecte (Itemuri)
 LOAD_ERROR	Fiºierul cu date este stricat. Instaleazã dinnou clientul. Apasã acum tasta ESC.

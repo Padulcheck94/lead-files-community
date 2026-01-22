@@ -2,10 +2,10 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 2.7 virtualenv at C:\Azura-Git\Azura-Client\Client\.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="de" />
-    <orderEntry type="module" module-name="ymir work" />
+    <orderEntry type="module" module-name="locale" />
     <orderEntry type="module" module-name="uiscript" />
+    <orderEntry type="module" module-name="ymir work" />
   </component>
 </module>
