@@ -27,7 +27,7 @@
 #endif
 
 #include <dshow.h>
-#include <qedit.h>
+#include <qedit/qedit.h>
 
 #include "Locale.h"
 

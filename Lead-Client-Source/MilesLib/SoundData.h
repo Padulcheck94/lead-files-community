@@ -1,7 +1,7 @@
 #ifndef __MILESLIB_CSOUNDDATA_H__
 #define __MILESLIB_CSOUNDDATA_H__
 
-#include <mss.h>
+#include <miles/mss.h>
 #include "../eterBase/MappedFile.h"
 
 class CSoundData

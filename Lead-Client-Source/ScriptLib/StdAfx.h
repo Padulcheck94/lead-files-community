@@ -6,10 +6,10 @@
 //#include <crtdbg.h>
 #ifdef _DEBUG
 	#undef _DEBUG
-	#include <Python27/python.h>
+	#include <python/python.h>
 	#define _DEBUG
 #else
-	#include <Python27/python.h>
+	#include <python/python.h>
 #endif
 
 #include "PythonUtils.h"

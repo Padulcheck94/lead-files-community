@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include <Python27/frameobject.h>
+#include <python/frameobject.h>
 #include "../eterPack/EterPackManager.h"
 
 #include "PythonLauncher.h"

@@ -32,7 +32,7 @@
 
 ///////////////////////////////////////////////////////////////////////  
 //	Include Files
-#include <SpeedTreeRT.h>
+#include <speedtree/SpeedTreeRT.h>
 #include "SpeedTreeWrapper.h"
 
 #include <vector>
