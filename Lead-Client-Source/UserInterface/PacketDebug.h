@@ -154,35 +154,71 @@ private:
                 continue;
             }
             
-            // Try numeric types
+            // Try float
             if (pos + 4 <= size)
             {
-                DWORD val = *(DWORD*)(data + pos);
-                if (IsReasonableDWORD(val))
+                float fval = *(float*)(data + pos);
+                if (IsReasonableFloat(fval))
                 {
-                    fprintf(m_pFile, "       [%03d] DWORD: %u (0x%08X)\n", pos, val, val);
+                    fprintf(m_pFile, "       [%03d] float: %.4f\n", pos, fval);
                     pos += 4;
                     fieldCount++;
                     continue;
                 }
             }
             
-            // Try WORD
+            // Try 32-bit types (DWORD/long/int)
+            if (pos + 4 <= size)
+            {
+                DWORD uval = *(DWORD*)(data + pos);
+                long sval = *(long*)(data + pos);
+                
+                // Check if it's a signed negative value
+                if (sval < 0 && sval > -100000000)
+                {
+                    fprintf(m_pFile, "       [%03d] long: %ld (0x%08X)\n", pos, sval, uval);
+                    pos += 4;
+                    fieldCount++;
+                    continue;
+                }
+                else if (IsReasonableDWORD(uval))
+                {
+                    fprintf(m_pFile, "       [%03d] DWORD: %u (0x%08X)\n", pos, uval, uval);
+                    pos += 4;
+                    fieldCount++;
+                    continue;
+                }
+            }
+            
+            // Try 16-bit types (WORD/short)
             if (pos + 2 <= size)
             {
-                WORD val = *(WORD*)(data + pos);
-                if (val > 0 && val < 0xFFF0)
+                WORD uval = *(WORD*)(data + pos);
+                short sval = *(short*)(data + pos);
+                
+                // Check if it's a signed negative value
+                if (sval < 0 && sval > -32000)
                 {
-                    fprintf(m_pFile, "       [%03d] WORD: %u (0x%04X)\n", pos, val, val);
+                    fprintf(m_pFile, "       [%03d] short: %d (0x%04X)\n", pos, sval, uval);
+                    pos += 2;
+                    fieldCount++;
+                    continue;
+                }
+                else if (uval > 0 && uval < 0xFFF0)
+                {
+                    fprintf(m_pFile, "       [%03d] WORD: %u (0x%04X)\n", pos, uval, uval);
                     pos += 2;
                     fieldCount++;
                     continue;
                 }
             }
             
-            // Single BYTE
+            // Single BYTE/BOOL
             BYTE val = data[pos];
-            fprintf(m_pFile, "       [%03d] BYTE: %u (0x%02X)\n", pos, val, val);
+            if (val == 0 || val == 1)
+                fprintf(m_pFile, "       [%03d] BYTE/bool: %u\n", pos, val);
+            else
+                fprintf(m_pFile, "       [%03d] BYTE: %u (0x%02X)\n", pos, val, val);
             pos++;
             fieldCount++;
         }
@@ -193,7 +229,10 @@ private:
     
     int DetectFixedString(const BYTE* data, int maxLen)
     {
-        static const int sizes[] = {13, 16, 24, 25, 32, 48, 64, 128};
+        // All common sizes from packet.h:
+        // 13, 16, 17 (PASSWD+1), 24, 25 (NAME+1), 31 (LOGIN+1), 32, 33 (filename+1), 
+        // 48, 64, 65 (msg+1), 128, 256 (szBuf+1)
+        static const int sizes[] = {13, 16, 17, 24, 25, 31, 32, 33, 48, 64, 65, 128, 256};
         for (int sz : sizes)
         {
             if (sz > maxLen) break;
@@ -212,6 +251,16 @@ private:
     }
     
     bool IsPrintable(BYTE c) { return c >= 32 && c < 127; }
+    
+    bool IsReasonableFloat(float val)
+    {
+        if (val != val) return false;
+        if (val > 1e10f || val < -1e10f) return false;
+        if (val == 0.0f) return false;
+        // Reasonable range for game values (angles, volumes, coordinates)
+        float absVal = val < 0 ? -val : val;
+        return (absVal >= 0.0001f && absVal <= 100000.0f);
+    }
     
     bool IsReasonableDWORD(DWORD val)
     {
