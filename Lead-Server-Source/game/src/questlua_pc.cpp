@@ -2042,6 +2042,14 @@ teleport_area:
 	
 	int pc_change_name(lua_State* L)
 	{
+		// Return value
+		//        0: New name set but user did not log out
+		//        1: No string passed from script
+		//        2: Failed check_name validation
+		//        3: Same name already in use
+		//        4: Success
+		//        5: Feature not supported
+
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
 		if ( ch->GetNewName().size() != 0 )
