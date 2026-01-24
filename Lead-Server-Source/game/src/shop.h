@@ -43,7 +43,7 @@ class CShop
 		// 게스트 추가/삭제
 		virtual bool	AddGuest(LPCHARACTER ch,DWORD owner_vid, bool bOtherEmpire);
 		void	RemoveGuest(LPCHARACTER ch);
-
+		void	RemoveAllGuests();
 		// 물건 구입
 		virtual int	Buy(LPCHARACTER ch, BYTE pos);
 

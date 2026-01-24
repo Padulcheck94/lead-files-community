@@ -37,7 +37,15 @@ CShopManager::~CShopManager()
 bool CShopManager::Initialize(TShopTable * table, int size)
 {
 	if (!m_map_pkShop.empty())
-		return false;
+	{
+		for (TShopMap::iterator it = m_map_pkShop.begin(); it != m_map_pkShop.end(); it++)
+		{
+			it->second->RemoveAllGuests();
+		}
+	}
+
+	m_map_pkShop.clear();
+	m_map_pkShopByNPCVnum.clear();
 
 	int i; 
 

@@ -245,7 +245,7 @@ CMobGroup * CMobManager::GetGroup(DWORD dwVnum)
 	return it->second;
 }
 
-bool CMobManager::LoadGroupGroup(const char * c_pszFileName)
+bool CMobManager::LoadGroupGroup(const char* c_pszFileName, bool isReloading)
 {
 	CTextFileLoader loader;
 
@@ -253,6 +253,9 @@ bool CMobManager::LoadGroupGroup(const char * c_pszFileName)
 		return false;
 
 	std::string stName;
+	std::map<DWORD, CMobGroupGroup*> tempLoader;
+	if (isReloading)
+		sys_log(0, "RELOADING group group: %s", c_pszFileName);
 
 	for (DWORD i = 0; i < loader.GetChildNodeCount(); ++i)
 	{
@@ -300,13 +303,27 @@ bool CMobManager::LoadGroupGroup(const char * c_pszFileName)
 
 		loader.SetParentNode();
 
-		m_map_pkMobGroupGroup.insert(std::make_pair((DWORD)iVnum, pkGroup));
+		if (isReloading)
+			tempLoader.insert(std::make_pair((DWORD)iVnum, pkGroup));
+		else
+			m_map_pkMobGroupGroup.insert(std::make_pair((DWORD)iVnum, pkGroup));
+	}
+
+	if (isReloading)
+	{
+		for (std::map<DWORD, CMobGroupGroup*>::iterator it = m_map_pkMobGroupGroup.begin(); it != m_map_pkMobGroupGroup.end(); it++)
+			M2_DELETE(it->second);
+		m_map_pkMobGroupGroup.clear();
+		for (std::map<DWORD, CMobGroupGroup*>::iterator it = tempLoader.begin(); it != tempLoader.end(); it++)
+		{
+			m_map_pkMobGroupGroup[it->first] = it->second;
+		}
 	}
 
 	return true;
 }
 
-bool CMobManager::LoadGroup(const char * c_pszFileName)
+bool CMobManager::LoadGroup(const char* c_pszFileName, bool isReloading)
 {
 	CTextFileLoader loader;
 
@@ -314,6 +331,9 @@ bool CMobManager::LoadGroup(const char * c_pszFileName)
 		return false;
 
 	std::string stName;
+	std::map<DWORD, CMobGroup*> tempLoader;
+	if (isReloading)
+		sys_log(0, "RELOADING groups: %s", c_pszFileName);
 
 	for (DWORD i = 0; i < loader.GetChildNodeCount(); ++i)
 	{
@@ -374,7 +394,22 @@ bool CMobManager::LoadGroup(const char * c_pszFileName)
 		}
 
 		loader.SetParentNode();
-		m_map_pkMobGroup.insert(std::map<DWORD, CMobGroup *>::value_type(iVnum, pkGroup));
+
+		if (isReloading)
+			tempLoader.insert(std::map<DWORD, CMobGroup*>::value_type(iVnum, pkGroup));
+		else
+			m_map_pkMobGroup.insert(std::map<DWORD, CMobGroup*>::value_type(iVnum, pkGroup));
+	}
+
+	if (isReloading)
+	{
+		for (std::map<DWORD, CMobGroup*>::iterator it = m_map_pkMobGroup.begin(); it != m_map_pkMobGroup.end(); it++)
+			M2_DELETE(it->second);
+		m_map_pkMobGroup.clear();
+		for (std::map<DWORD, CMobGroup*>::iterator it = tempLoader.begin(); it != tempLoader.end(); it++)
+		{
+			m_map_pkMobGroup[it->first] = it->second;
+		}
 	}
 
 	return true;

@@ -1562,7 +1562,11 @@ void CClientManager::QUERY_RELOAD_PROTO()
 				sizeof(WORD) + sizeof(TSkillTable) * m_vec_skillTable.size() +
 				sizeof(WORD) + sizeof(TBanwordTable) * m_vec_banwordTable.size() +
 				sizeof(WORD) + sizeof(TItemTable) * m_vec_itemTable.size() +
-				sizeof(WORD) + sizeof(TMobTable) * m_vec_mobTable.size());
+				sizeof(WORD) + sizeof(TMobTable) * m_vec_mobTable.size() +
+				sizeof(WORD) + sizeof(TShopTable) * m_iShopTableSize +
+				sizeof(WORD) + sizeof(TRefineTable)* m_iRefineTableSize +
+				sizeof(WORD) + sizeof(TItemAttrTable)*m_vec_itemAttrTable.size() +
+				sizeof(WORD) + sizeof(TItemAttrTable)*m_vec_itemRareTable.size());
 
 		tmp->EncodeWORD(m_vec_skillTable.size());
 		tmp->Encode(&m_vec_skillTable[0], sizeof(TSkillTable) * m_vec_skillTable.size());
@@ -1575,6 +1579,18 @@ void CClientManager::QUERY_RELOAD_PROTO()
 
 		tmp->EncodeWORD(m_vec_mobTable.size());
 		tmp->Encode(&m_vec_mobTable[0], sizeof(TMobTable) * m_vec_mobTable.size());
+
+		tmp->EncodeWORD(m_iShopTableSize);
+		tmp->Encode(m_pShopTable, sizeof(TShopTable) * m_iShopTableSize);
+
+		tmp->EncodeWORD(m_iRefineTableSize);
+		tmp->Encode(m_pRefineTable, sizeof(TRefineTable) * m_iRefineTableSize);
+
+		tmp->EncodeWORD(m_vec_itemAttrTable.size());
+		tmp->Encode(&m_vec_itemAttrTable[0], sizeof(TItemAttrTable) * m_vec_itemAttrTable.size());
+
+		tmp->EncodeWORD(m_vec_itemRareTable.size());
+		tmp->Encode(&m_vec_itemRareTable[0], sizeof(TItemAttrTable) * m_vec_itemRareTable.size());
 	}
 }
 

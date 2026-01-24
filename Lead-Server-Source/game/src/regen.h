@@ -83,7 +83,11 @@ EVENTINFO(dungeon_regen_event_info)
 	}
 };
 
-extern bool	regen_load(const char *filename, long lMapIndex, int base_x, int base_y); 
+extern bool	regen_load(const char *filename, long lMapIndex, int base_x, int base_y);
+extern void regen_free_map(long lMapIndex);
+extern void regen_reload(long lMapIndex);
+extern void regen_register_map(const char* szBaseName, long lMapIndex, int base_x, int base_y);
+extern bool is_valid_regen(LPREGEN currRegen);
 extern bool	regen_do(const char* filename, long lMapIndex, int base_x, int base_y, LPDUNGEON pDungeon, bool bOnce = true );
 extern bool	regen_load_in_file(const char* filename, long lMapIndex, int base_x, int base_y );
 extern void	regen_free();

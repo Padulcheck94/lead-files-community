@@ -117,7 +117,7 @@ bool ITEM_MANAGER::ReadCommonDropItemFile(const char * c_pszFileName)
 	return true;
 }
 
-bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
+bool ITEM_MANAGER::ReadSpecialDropItemFile(const char* c_pszFileName, bool isReloading)
 {
 	CTextFileLoader loader;
 
@@ -125,6 +125,11 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 		return false;
 
 	std::string stName;
+	std::map<DWORD, CSpecialAttrGroup*> tempSpecAttr;
+	std::map<DWORD, CSpecialItemGroup*> tempSpecItem;
+	std::map<DWORD, CSpecialItemGroup*> tempSpecItemQuest;
+	if (isReloading)
+		sys_log(0, "RELOADING SpecialDrop");
 
 	for (DWORD i = 0; i < loader.GetChildNodeCount(); ++i)
 	{
@@ -207,7 +212,11 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 				pkGroup->m_stEffectFileName = pTok->at(0);
 			}
 			loader.SetParentNode();
-			m_map_pkSpecialAttrGroup.insert(std::make_pair(iVnum, pkGroup));
+			
+			if (isReloading)
+				tempSpecAttr.insert(std::make_pair(iVnum, pkGroup));
+			else
+				m_map_pkSpecialAttrGroup.insert(std::make_pair(iVnum, pkGroup));
 		}
 		else
 		{
@@ -290,12 +299,40 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 			loader.SetParentNode();
 			if (CSpecialItemGroup::QUEST == type)
 			{
-				m_map_pkQuestItemGroup.insert(std::make_pair(iVnum, pkGroup));
+				if (isReloading)
+					tempSpecItemQuest.insert(std::make_pair(iVnum, pkGroup));
+				else
+					m_map_pkQuestItemGroup.insert(std::make_pair(iVnum, pkGroup));
 			}
 			else
 			{
-				m_map_pkSpecialItemGroup.insert(std::make_pair(iVnum, pkGroup));
+				if (isReloading)
+					tempSpecItem.insert(std::make_pair(iVnum, pkGroup));
+				else
+					m_map_pkSpecialItemGroup.insert(std::make_pair(iVnum, pkGroup));
 			}
+		}
+	}
+
+	if (isReloading)
+	{
+		m_map_pkQuestItemGroup.clear();
+		m_map_pkSpecialItemGroup.clear();
+		m_map_pkSpecialAttrGroup.clear();
+
+		for (std::map<DWORD, CSpecialAttrGroup*>::iterator it = tempSpecAttr.begin(); it != tempSpecAttr.end(); it++)
+		{
+			m_map_pkSpecialAttrGroup[it->first] = it->second;
+		}
+
+		for (std::map<DWORD, CSpecialItemGroup*>::iterator it = tempSpecItem.begin(); it != tempSpecItem.end(); it++)
+		{
+			m_map_pkSpecialItemGroup[it->first] = it->second;
+		}
+
+		for (std::map<DWORD, CSpecialItemGroup*>::iterator it = tempSpecItemQuest.begin(); it != tempSpecItemQuest.end(); it++)
+		{
+			m_map_pkQuestItemGroup[it->first] = it->second;
 		}
 	}
 
@@ -427,7 +464,7 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 	return true;
 }
 
-bool ITEM_MANAGER::ReadEtcDropItemFile(const char * c_pszFileName)
+bool ITEM_MANAGER::ReadEtcDropItemFile(const char* c_pszFileName, bool isReloading)
 {
 	FILE * fp = fopen(c_pszFileName, "r");
 
@@ -435,6 +472,12 @@ bool ITEM_MANAGER::ReadEtcDropItemFile(const char * c_pszFileName)
 	{
 		sys_err("Cannot open %s", c_pszFileName);
 		return false;
+	}
+
+	std::map<DWORD, DWORD> tempLoader;
+	if (isReloading)
+	{
+		sys_log(0, "RELOADING EtcDrop");
 	}
 
 	char buf[512];
@@ -472,20 +515,42 @@ bool ITEM_MANAGER::ReadEtcDropItemFile(const char * c_pszFileName)
 			return false;
 		}
 
-		m_map_dwEtcItemDropProb[dwItemVnum] = (DWORD) (fProb * 10000.0f);
+		if (isReloading)
+			tempLoader[dwItemVnum] = (DWORD)(fProb * 10000.0f);
+		else
+			m_map_dwEtcItemDropProb[dwItemVnum] = (DWORD)(fProb * 10000.0f);
 		sys_log(0, "ETC_DROP_ITEM: %s prob %f", szItemName, fProb);
 	}
 
 	fclose(fp);
+
+	if (isReloading)
+	{
+		m_map_dwEtcItemDropProb.clear();
+		for (std::map<DWORD, DWORD>::iterator it = tempLoader.begin(); it != tempLoader.end(); it++)
+		{
+			m_map_dwEtcItemDropProb[it->first] = it->second;
+		}
+	}
+
 	return true;
 }
 
-bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
+bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char* c_pszFileName, bool isReloading)
 {
 	CTextFileLoader loader;
 
 	if (!loader.Load(c_pszFileName))
 		return false;
+
+	std::map<DWORD, CMobItemGroup*> temMobItemGr;
+	std::map<DWORD, CDropItemGroup*> tempDropItemGr;
+	std::map<DWORD, CLevelItemGroup*> tempLevelItemGr;
+	std::map<DWORD, CBuyerThiefGlovesItemGroup*> tempThiefGlovesGr;
+	if (isReloading)
+	{
+		sys_log(0, "RELOADING MonsterDrop");
+	}
 
 	for (DWORD i = 0; i < loader.GetChildNodeCount(); ++i)
 	{
@@ -606,22 +671,42 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 
 				break;
 			}
-			m_map_pkMobItemGroup.insert(std::map<DWORD, CMobItemGroup*>::value_type(iMobVnum, pkGroup));
+			
+			if (isReloading)
+				temMobItemGr.insert(std::map<DWORD, CMobItemGroup*>::value_type(iMobVnum, pkGroup));
+			else
+				m_map_pkMobItemGroup.insert(std::map<DWORD, CMobItemGroup*>::value_type(iMobVnum, pkGroup));
 
 		}
 		else if (strType == "drop")
 		{
 			CDropItemGroup* pkGroup = nullptr;
 			bool bNew = true;
-			itertype(m_map_pkDropItemGroup) it = m_map_pkDropItemGroup.find (iMobVnum);
-			if (it == m_map_pkDropItemGroup.end())
+			if (isReloading)
 			{
-				pkGroup = M2_NEW CDropItemGroup(0, iMobVnum, stName);
+				itertype(tempDropItemGr) it = tempDropItemGr.find(iMobVnum);
+				if (it == tempDropItemGr.end())
+				{
+					pkGroup = M2_NEW CDropItemGroup(0, iMobVnum, stName);
+				}
+				else
+				{
+					bNew = false;
+					CDropItemGroup* pkGroup = it->second;
+				}
 			}
 			else
 			{
-				bNew = false;
-				CDropItemGroup* pkGroup = it->second;
+				itertype(m_map_pkDropItemGroup) it = m_map_pkDropItemGroup.find(iMobVnum);
+				if (it == m_map_pkDropItemGroup.end())
+				{
+					pkGroup = M2_NEW CDropItemGroup(0, iMobVnum, stName);
+				}
+				else
+				{
+					bNew = false;
+					CDropItemGroup* pkGroup = it->second;
+				}
 			}
 
 			for (int k = 1; k < 256; ++k)
@@ -671,8 +756,14 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 
 				break;
 			}
+
 			if (bNew)
-				m_map_pkDropItemGroup.insert(std::map<DWORD, CDropItemGroup*>::value_type(iMobVnum, pkGroup));
+			{
+				if (isReloading)
+					tempDropItemGr.insert(std::map<DWORD, CDropItemGroup*>::value_type(iMobVnum, pkGroup));
+				else
+					m_map_pkDropItemGroup.insert(std::map<DWORD, CDropItemGroup*>::value_type(iMobVnum, pkGroup));
+			}
 
 		}
 		else if ( strType == "limit" )
@@ -719,7 +810,10 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 				break;
 			}
 
-			m_map_pkLevelItemGroup.insert(std::map<DWORD, CLevelItemGroup*>::value_type(iMobVnum, pkLevelItemGroup));
+			if (isReloading)
+				tempLevelItemGr.insert(std::map<DWORD, CLevelItemGroup*>::value_type(iMobVnum, pkLevelItemGroup));
+			else
+				m_map_pkLevelItemGroup.insert(std::map<DWORD, CLevelItemGroup*>::value_type(iMobVnum, pkLevelItemGroup));
 		}
 		else if (strType == "thiefgloves")
 		{
@@ -771,7 +865,10 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 				break;
 			}
 
-			m_map_pkGloveItemGroup.insert(std::map<DWORD, CBuyerThiefGlovesItemGroup*>::value_type(iMobVnum, pkGroup));
+			if (isReloading)
+				tempThiefGlovesGr.insert(std::map<DWORD, CBuyerThiefGlovesItemGroup*>::value_type(iMobVnum, pkGroup));
+			else
+				m_map_pkGloveItemGroup.insert(std::map<DWORD, CBuyerThiefGlovesItemGroup*>::value_type(iMobVnum, pkGroup));
 		}
 		else
 		{
@@ -781,6 +878,42 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 		}
 
 		loader.SetParentNode();
+	}
+
+	if (isReloading)
+	{
+		for (std::map<DWORD, CBuyerThiefGlovesItemGroup*>::iterator it = m_map_pkGloveItemGroup.begin(); it != m_map_pkGloveItemGroup.end(); it++)
+			M2_DELETE(it->second);
+		m_map_pkGloveItemGroup.clear();
+		for (std::map<DWORD, CLevelItemGroup*>::iterator it = m_map_pkLevelItemGroup.begin(); it != m_map_pkLevelItemGroup.end(); it++)
+			M2_DELETE(it->second);
+		m_map_pkLevelItemGroup.clear();
+		for (std::map<DWORD, CDropItemGroup*>::iterator it = m_map_pkDropItemGroup.begin(); it != m_map_pkDropItemGroup.end(); it++)
+			M2_DELETE(it->second);
+		m_map_pkDropItemGroup.clear();
+		for (std::map<DWORD, CMobItemGroup*>::iterator it = m_map_pkMobItemGroup.begin(); it != m_map_pkMobItemGroup.end(); it++)
+			M2_DELETE(it->second);
+		m_map_pkMobItemGroup.clear();
+
+		for (std::map<DWORD, CBuyerThiefGlovesItemGroup*>::iterator it = tempThiefGlovesGr.begin(); it != tempThiefGlovesGr.end(); it++)
+		{
+			m_map_pkGloveItemGroup[it->first] = it->second;
+		}
+
+		for (std::map<DWORD, CLevelItemGroup*>::iterator it = tempLevelItemGr.begin(); it != tempLevelItemGr.end(); it++)
+		{
+			m_map_pkLevelItemGroup[it->first] = it->second;
+		}
+
+		for (std::map<DWORD, CDropItemGroup*>::iterator it = tempDropItemGr.begin(); it != tempDropItemGr.end(); it++)
+		{
+			m_map_pkDropItemGroup[it->first] = it->second;
+		}
+
+		for (std::map<DWORD, CMobItemGroup*>::iterator it = temMobItemGr.begin(); it != temMobItemGr.end(); it++)
+		{
+			m_map_pkMobItemGroup[it->first] = it->second;
+		}
 	}
 
 	return true;

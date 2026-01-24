@@ -726,6 +726,9 @@ int SECTREE_MANAGER::Build(const char * c_pszListFileName, const char* c_pszMapB
 			snprintf(szFilename, sizeof(szFilename), "%s/%s/server_attr", c_pszMapBasePath, szMapName);
 			LoadAttribute(pkMapSectree, szFilename, setting);
 
+			snprintf(szFilename, sizeof(szFilename), "%s/%s/", c_pszMapBasePath, szMapName);
+			regen_register_map(szFilename, setting.iIndex, setting.iBaseX, setting.iBaseY);
+
 			snprintf(szFilename, sizeof(szFilename), "%s/%s/regen.txt", c_pszMapBasePath, szMapName);
 			regen_load(szFilename, setting.iIndex, setting.iBaseX, setting.iBaseY);
 

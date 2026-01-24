@@ -11,6 +11,8 @@ CRefineManager::~CRefineManager()
 
 bool CRefineManager::Initialize(TRefineTable * table, int size)
 {
+	m_map_RefineRecipe.clear();
+
 	for (int i = 0; i < size; ++i, ++table)
 	{
 		sys_log(0, "REFINE %d prob %d cost %d", table->id, table->prob, table->cost);

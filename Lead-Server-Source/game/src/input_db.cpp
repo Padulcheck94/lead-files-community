@@ -1581,6 +1581,78 @@ void CInputDB::ReloadProto(const char * c_pData)
 		c_pData += wSize * sizeof(TMobTable);
 	}
 
+	/*
+	* SHOP
+	*/
+
+	wSize = decode_2bytes(c_pData);
+	c_pData += sizeof(WORD);
+	sys_log(0, "RELOAD: SHOP: %d", wSize);
+
+
+	if (wSize)
+	{
+		CShopManager::instance().Initialize((TShopTable*)c_pData, wSize);
+		c_pData += wSize * sizeof(TShopTable);
+	}
+
+	/*
+	* REFINE
+	*/
+	wSize = decode_2bytes(c_pData);
+	c_pData += 2;
+	sys_log(0, "RELOAD: REFINE: %d", wSize);
+
+	if (wSize)
+	{
+		CRefineManager::instance().Initialize((TRefineTable*)c_pData, wSize);
+		c_pData += wSize * sizeof(TRefineTable);
+	}
+
+	/*
+	* ATTR
+	*/
+	wSize = decode_2bytes(c_pData);
+	c_pData += 2;
+	sys_log(0, "RELOAD: ItemAtt: %d", wSize);
+
+	if (wSize)
+	{
+		TItemAttrTable* p = (TItemAttrTable*)c_pData;
+		g_map_itemAttr.clear();
+		for (int i = 0; i < wSize; ++i, ++p)
+		{
+			if (p->dwApplyIndex >= MAX_APPLY_NUM)
+				continue;
+
+			g_map_itemAttr[p->dwApplyIndex] = *p;
+			sys_log(0, "ITEM_ATTR[%d]: %s %u", p->dwApplyIndex, p->szApply, p->dwProb);
+		}
+		c_pData += wSize * sizeof(TItemAttrTable);
+	}
+
+	/*
+	* ATTR_RARE
+	*/
+	wSize = decode_2bytes(c_pData);
+	c_pData += 2;
+	sys_log(0, "RELOAD: ItemRareAtt: %d", wSize);
+
+	if (wSize)
+	{
+		TItemAttrTable* p = (TItemAttrTable*)c_pData;
+		g_map_itemRare.clear();
+		for (int i = 0; i < wSize; ++i, ++p)
+		{
+			if (p->dwApplyIndex >= MAX_APPLY_NUM)
+				continue;
+
+			g_map_itemRare[p->dwApplyIndex] = *p;
+			sys_log(0, "ITEM_RARE[%d]: %s %u", p->dwApplyIndex, p->szApply, p->dwProb);
+		}
+		c_pData += wSize * sizeof(TItemAttrTable);
+	}
+
 	CMotionManager::instance().Build();
 
 	CHARACTER_MANAGER::instance().for_each_pc(std::mem_fn(&CHARACTER::ComputePoints));

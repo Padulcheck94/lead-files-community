@@ -131,8 +131,8 @@ class CMobManager : public singleton<CMobManager>
 		bool		Initialize(TMobTable * table, int size);
 		void		Destroy();
 
-		bool		LoadGroup(const char * c_pszFileName);
-		bool		LoadGroupGroup(const char * c_pszFileName);
+		bool		LoadGroup(const char* c_pszFileName, bool isReloading = false);
+		bool		LoadGroupGroup(const char* c_pszFileName, bool isReloading = false);
 		CMobGroup *	GetGroup(DWORD dwVnum);
 		DWORD		GetGroupFromGroupGroup(DWORD dwVnum);
 

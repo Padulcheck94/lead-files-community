@@ -1035,3 +1035,20 @@ CharacterVectorInteractor::~CharacterVectorInteractor()
 		CHARACTER_MANAGER::instance().FlushPendingDestroy();
 }
 
+void CHARACTER_MANAGER::DestroyCharacterInMap(long lMapIndex)
+{
+	std::vector<LPCHARACTER> tempVec;
+	for (itertype(m_map_pkChrByVID) it = m_map_pkChrByVID.begin(); it != m_map_pkChrByVID.end(); it++)
+	{
+		LPCHARACTER pkChr = it->second;
+		if (pkChr && pkChr->GetMapIndex() == lMapIndex && pkChr->IsNPC() && !pkChr->IsPet() && pkChr->GetRider() == NULL)
+		{
+			tempVec.push_back(pkChr);
+		}
+	}
+	for (std::vector<LPCHARACTER>::iterator it = tempVec.begin(); it != tempVec.end(); it++)
+	{
+		DestroyCharacter(*it);
+	}
+}
+
