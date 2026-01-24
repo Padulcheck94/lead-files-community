@@ -978,6 +978,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 				char char_name[CHARACTER_NAME_MAX_LEN + 1];
 				strlcpy(char_name, c_pData, sizeof(char_name));
 				MessengerManager::instance().RemoveFromList(ch->GetName(), char_name);
+				MessengerManager::instance().RemoveFromList(char_name, ch->GetName());
 			}
 			return CHARACTER_NAME_MAX_LEN;
 
