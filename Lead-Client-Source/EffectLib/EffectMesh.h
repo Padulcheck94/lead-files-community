@@ -1,6 +1,6 @@
 #pragma once
 
-#include <d3dx8.h>
+#include <dx9/d3dx9.h>
 
 #include "../eterlib/GrpScreen.h"
 #include "../eterlib/Resource.h"

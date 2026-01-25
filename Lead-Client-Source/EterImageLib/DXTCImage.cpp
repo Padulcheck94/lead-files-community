@@ -2,6 +2,7 @@
 #include "StdAfx.h"
 
 #include <d3d.h>
+#include <ddraw.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>

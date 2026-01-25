@@ -126,54 +126,26 @@ static const char g_achSimpleVertexProgram[] =
 ///////////////////////////////////////////////////////////////////////  
 //	LoadBranchShader
 
-static DWORD LoadBranchShader(LPDIRECT3DDEVICE8 pDx)
+static LPDIRECT3DVERTEXDECLARATION9 LoadBranchShader(LPDIRECT3DDEVICE9 pDx)
 {
-	#ifndef WRAPPER_USE_GPU_WIND
-		return D3DFVF_SPEEDTREE_BRANCH_VERTEX;
-	#endif
-
 	// branch shader declaration
-    DWORD pBranchShaderDecl[] = 
-    {
-			D3DVSD_STREAM(0),
-			D3DVSD_REG(D3DVSDE_POSITION,        D3DVSDT_FLOAT3),
-		#ifdef WRAPPER_USE_DYNAMIC_LIGHTING
-			D3DVSD_REG(D3DVSDE_NORMAL,			D3DVSDT_FLOAT3),
-		#else
-			D3DVSD_REG(D3DVSDE_DIFFUSE,			D3DVSDT_D3DCOLOR),
-		#endif
-			D3DVSD_REG(D3DVSDE_TEXCOORD0,		D3DVSDT_FLOAT2),
-		#ifdef WRAPPER_RENDER_SELF_SHADOWS
-			D3DVSD_REG(D3DVSDE_TEXCOORD1,		D3DVSDT_FLOAT2),
-		#endif
-		#ifdef WRAPPER_USE_GPU_WIND
-			D3DVSD_REG(D3DVSDE_TEXCOORD2,		D3DVSDT_FLOAT2),
-		#endif
-			D3DVSD_END( )
-    };
+	D3DVERTEXELEMENT9 pBranchShaderDecl[] = {
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+		{ 0, 16, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
+		D3DDECL_END()
+	};
 
-    // assemble shader
-	DWORD dwShader;
-	LPD3DXBUFFER pCode, pError;
+	// assemble shader
+	LPDIRECT3DVERTEXDECLARATION9 dwShader = NULL;
 
-    if (D3DXAssembleShader(g_achSimpleVertexProgram, sizeof(g_achSimpleVertexProgram) - 1, 0, NULL, &pCode, &pError) == D3D_OK)
-	{
-		if (pDx->CreateVertexShader(pBranchShaderDecl, (DWORD*) pCode->GetBufferPointer( ), &dwShader, 0) != D3D_OK)
-		{
-			char szError[1024];
-			sprintf_s(szError, sizeof(szError), "Failed to create branch vertex shader.");
-			MessageBox(NULL, szError, "Vertex Shader Error", MB_ICONSTOP);
-		}
-	}
-	else
+	if (pDx->CreateVertexDeclaration(pBranchShaderDecl, &dwShader) != D3D_OK)
 	{
 		char szError[1024];
-		sprintf_s(szError, sizeof(szError), "Failed to assemble branch vertex shader.\nThe error reported is [ %s ].\n", (const char*)pError->GetBufferPointer());
+		sprintf_s(szError, "Failed to create branch vertex shader.");
 		MessageBox(NULL, szError, "Vertex Shader Error", MB_ICONSTOP);
 	}
-
-	if (pCode)
-    	pCode->Release();
 
 	return dwShader;
 }
@@ -272,61 +244,27 @@ static const char g_achLeafVertexProgram[] =
 ///////////////////////////////////////////////////////////////////////  
 //	LoadLeafShader
 
-static DWORD LoadLeafShader(LPDIRECT3DDEVICE8 pDx)
+static LPDIRECT3DVERTEXDECLARATION9 LoadLeafShader(LPDIRECT3DDEVICE9 pDx)
 {
-	DWORD dwShader = D3DFVF_SPEEDTREE_LEAF_VERTEX;
+	// leaf shader declaration
+	D3DVERTEXELEMENT9 pLeafShaderDecl[] = {
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+		{ 0, 16, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 },
+		D3DDECL_END()
+	};
 
-	#if defined WRAPPER_USE_GPU_LEAF_PLACEMENT || defined WRAPPER_USE_GPU_WIND
+	// assemble shader
+	LPDIRECT3DVERTEXDECLARATION9 dwShader = NULL;
 
-		// leaf shader declaration
-		DWORD pLeafShaderDecl[ ] = 
-		{
-				D3DVSD_STREAM(0),
-				D3DVSD_REG(D3DVSDE_POSITION,        D3DVSDT_FLOAT3),
-			#ifdef WRAPPER_USE_DYNAMIC_LIGHTING
-				D3DVSD_REG(D3DVSDE_NORMAL,			D3DVSDT_FLOAT3),
-			#else
-				D3DVSD_REG(D3DVSDE_DIFFUSE,			D3DVSDT_D3DCOLOR),
-			#endif
-				D3DVSD_REG(D3DVSDE_TEXCOORD0,		D3DVSDT_FLOAT2),
-				D3DVSD_REG(D3DVSDE_TEXCOORD2,		D3DVSDT_FLOAT4),
-				D3DVSD_END( )
-		};
+	if (pDx->CreateVertexDeclaration(pLeafShaderDecl, &dwShader) != D3D_OK)
+	{
+		char szError[1024];
+		sprintf_s(szError, "Failed to create leaf vertex shader.");
+		MessageBox(NULL, szError, "Vertex Shader Error", MB_ICONSTOP);
 
-		// assemble shader
-		LPD3DXBUFFER pCode, pError;
-
-		if (D3DXAssembleShader(g_achLeafVertexProgram, sizeof(g_achLeafVertexProgram) - 1, 0, NULL, &pCode, &pError) == D3D_OK)
-		{
-			if (pDx->CreateVertexShader(pLeafShaderDecl, (DWORD*) pCode->GetBufferPointer( ), &dwShader, 0) != D3D_OK)
-			{
-				Tracef("Failed to create leaf vertex shader.");
-				/*
-				char szError[1024];
-				sprintf(szError, "Failed to create leaf vertex shader.");
-				MessageBox(NULL, szError, "Vertex Shader Error", MB_ICONSTOP);
-				*/
-			}
-		}
-		else
-		{
-			Tracef("Failed to assemble leaf vertex shader. The error reported is [ %s ].\n", (const char*)pError->GetBufferPointer());
-			/*
-			char szError[1024];
-			sprintf(szError, "Failed to assemble leaf vertex shader. The error reported is [ %s ].\n", pError->GetBufferPointer( ));
-			MessageBox(NULL, szError, "Vertex Shader Error", MB_ICONSTOP);
-			*/
-		}
-
-		if (pCode)
-    		pCode->Release( );
-
-	#else
-
-		dwShader = D3DFVF_SPEEDTREE_LEAF_VERTEX;
-
-	#endif
+	}
 
 	return dwShader;
 }
-	

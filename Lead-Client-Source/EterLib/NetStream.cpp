@@ -1,7 +1,9 @@
 #include "StdAfx.h"
 #include "NetStream.h"
 #include "../eterBase/tea.h"
+#include "../UserInterface/PacketDebug.h"
 
+//#define _PACKETDUMP
 
 void CNetworkStream::SetSecurityMode(bool isSecurityMode, const char* c_szTeaKey)
 {
@@ -436,6 +438,9 @@ bool CNetworkStream::Recv(int size, char * pDestBuf)
 		return false;
 
 	m_recvBufOutputPos += size;
+	
+	PACKET_DEBUG_RECV(pDestBuf, size);
+	
 	return true;
 }
 
@@ -453,6 +458,8 @@ bool CNetworkStream::Send(int size, const char * pSrcBuf)
 
 	memcpy(m_sendBuf + m_sendBufInputPos, pSrcBuf, size);
 	m_sendBufInputPos += size;
+
+	PACKET_DEBUG_SEND(pSrcBuf, size);
 
 #ifdef _PACKETDUMP
 	if (*pSrcBuf != 0 )

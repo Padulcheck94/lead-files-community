@@ -4,14 +4,10 @@
 
 void CDibBar::Invalidate()
 {
-	RECT rect = { 0, 0, (LONG)m_dwWidth, (LONG)m_dwHeight };
+	const RECT rect = {0,0, static_cast<LONG>(m_dwWidth), static_cast<LONG>(m_dwHeight)};
 
-	std::vector<CBlockTexture *>::iterator itor = m_kVec_pkBlockTexture.begin();
-	for (; itor != m_kVec_pkBlockTexture.end(); ++itor)
-	{
-		CBlockTexture * pTexture = *itor;
+	for (CBlockTexture* pTexture : m_kVec_pkBlockTexture)
 		pTexture->InvalidateRect(rect);
-	}
 }
 
 void CDibBar::SetClipRect(const RECT & c_rRect)
@@ -73,18 +69,26 @@ void CDibBar::__DivideTextureSize(DWORD dwSize, DWORD dwMax, DWORD * pdwxStep, D
 	*pdwxRest = dwSize%dwMax;
 }
 
-CBlockTexture * CDibBar::__BuildTextureBlock(DWORD dwxPos, DWORD dwyPos, DWORD dwImageWidth, DWORD dwImageHeight, DWORD dwTextureWidth, DWORD dwTextureHeight)
+CBlockTexture* CDibBar::__BuildTextureBlock(
+	DWORD dwxPos, DWORD dwyPos,
+	DWORD dwImageWidth, DWORD dwImageHeight,
+	DWORD dwTextureWidth, DWORD dwTextureHeight)
 {
-	if (dwTextureWidth == 0 || dwTextureHeight == 0)
-		return NULL;
+	if (!dwTextureWidth || !dwTextureHeight)
+		return nullptr;
 
-	RECT posRect = { (LONG)dwxPos, (LONG)dwyPos, (LONG)(dwxPos + dwImageWidth), (LONG)(dwyPos + dwImageHeight) };
+	const RECT posRect = {
+		static_cast<LONG>(dwxPos),
+		static_cast<LONG>(dwyPos),
+		static_cast<LONG>(dwxPos + dwImageWidth),
+		static_cast<LONG>(dwyPos + dwImageHeight)
+	};
 
-	CBlockTexture * pBlockTexture = new CBlockTexture;
+	CBlockTexture* pBlockTexture = new CBlockTexture;
 	if (!pBlockTexture->Create(&m_dib, posRect, dwTextureWidth, dwTextureHeight))
 	{
 		delete pBlockTexture;
-		return NULL;
+		return nullptr;
 	}
 
 	return pBlockTexture;

@@ -619,7 +619,7 @@ bool CPythonApplication::Process()
 						}
 
 						// 일정 프레임 속도에 맞추어주는쪽에 눈에 편하다
-						// 아래에서 한번 하면 됬다.
+						// 아래에서 한번 하면 됬�?
 						//if (m_dwCurRenderTime<dwBufRenderTime)
 						//	Sleep(dwBufRenderTime-m_dwCurRenderTime);			
 
@@ -740,9 +740,9 @@ bool CPythonApplication::CreateDevice(int width, int height, int Windowed, int b
 		return false;
 
 	case CGraphicDevice::CREATE_NO_DIRECTX:
-		//PyErr_SetString(PyExc_RuntimeError, "DirectX 8.1 or greater required to run game");
+		//PyErr_SetString(PyExc_RuntimeError, "DirectX 9 or greater required to run game");
 		SET_EXCEPTION(CREATE_NO_DIRECTX);
-		TraceError("CreateDevice: DirectX 8.1 or greater required to run game");
+		TraceError("CreateDevice: DirectX 9 or greater required to run game");
 		return false;
 
 	case CGraphicDevice::CREATE_DEVICE:

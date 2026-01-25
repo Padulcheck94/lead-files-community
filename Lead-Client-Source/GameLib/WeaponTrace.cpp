@@ -290,14 +290,14 @@ void CWeaponTrace::Render()
 		return;
 
 
-	LPDIRECT3DTEXTURE8 lpTexture=NULL;
+	LPDIRECT3DTEXTURE9 lpTexture=NULL;
 
 	// Have to optimize
 	D3DXMATRIX matWorld;
 	D3DXMatrixIdentity(&matWorld);
 
 	STATEMANAGER.SaveTransform(D3DTS_WORLD, &matWorld);
-	STATEMANAGER.SaveVertexShader(D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1);
+	STATEMANAGER.SaveFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1);
 	STATEMANAGER.SaveRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	STATEMANAGER.SaveRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -346,7 +346,7 @@ void CWeaponTrace::Render()
 	STATEMANAGER.RestoreRenderState(D3DRS_DESTBLEND);
 
 	STATEMANAGER.RestoreTransform(D3DTS_WORLD);
-	STATEMANAGER.RestoreVertexShader();
+	STATEMANAGER.RestoreFVF();
 	STATEMANAGER.RestoreRenderState(D3DRS_CULLMODE);
 }
 

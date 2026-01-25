@@ -30,9 +30,9 @@
 #include "StdAfx.h"
 
 #include <stdio.h>
-#include <d3d8.h>
-#include <d3d8types.h>
-#include <d3dx8.h>
+#include <dx9/d3d9.h>
+#include <dx9/d3d9types.h>
+#include <dx9/d3dx9.h>
 
 #include "../eterBase/Timer.h"
 #include "../eterlib/StateManager.h"
@@ -80,7 +80,7 @@ bool CSpeedTreeForestDirectX8::InitVertexShaders(void)
 	return false;
 }
 
-bool CSpeedTreeForestDirectX8::SetRenderingDevice(LPDIRECT3DDEVICE8 lpDevice)
+bool CSpeedTreeForestDirectX8::SetRenderingDevice(LPDIRECT3DDEVICE9 lpDevice)
 {
 	m_pDx = lpDevice;
 
@@ -194,16 +194,16 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1,	D3DTA_TEXTURE);
 		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG2,	D3DTA_DIFFUSE);
 		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP,	D3DTOP_MODULATE);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_MINFILTER,	D3DTEXF_LINEAR);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_MAGFILTER,	D3DTEXF_LINEAR);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_MIPFILTER,	D3DTEXF_LINEAR);
+		STATEMANAGER.SetSamplerState(0, D3DSAMP_MINFILTER,	D3DTEXF_LINEAR);
+		STATEMANAGER.SetSamplerState(0, D3DSAMP_MAGFILTER,	D3DTEXF_LINEAR);
+		STATEMANAGER.SetSamplerState(0, D3DSAMP_MIPFILTER,	D3DTEXF_LINEAR);
 
 		STATEMANAGER.SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 		STATEMANAGER.SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_CURRENT);
 		STATEMANAGER.SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
-		STATEMANAGER.SetTextureStageState(1, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		STATEMANAGER.SetTextureStageState(1, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+		STATEMANAGER.SetSamplerState(1, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+		STATEMANAGER.SetSamplerState(1, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
 	}
 
 	STATEMANAGER.SaveRenderState(D3DRS_ALPHATESTENABLE, TRUE);
@@ -219,7 +219,7 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 	}
 
 	// choose fixed function pipeline or custom shader for fronds and branches
-	STATEMANAGER.SetVertexShader(m_dwBranchVertexShader);
+	STATEMANAGER.SetVertexDeclaration(m_dwBranchVertexShader);
 
 	// render branches
 	if (ulRenderBitVector & Forest_RenderBranches)
@@ -263,7 +263,7 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 	// render leaves
 	if (ulRenderBitVector & Forest_RenderLeaves)
 	{
-		STATEMANAGER.SetVertexShader(m_dwLeafVertexShader);
+		STATEMANAGER.SetVertexDeclaration(m_dwLeafVertexShader);
 
 		if (STATEMANAGER.GetRenderState(D3DRS_FOGENABLE))
 		{

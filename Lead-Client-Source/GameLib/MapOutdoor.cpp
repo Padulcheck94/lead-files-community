@@ -254,7 +254,7 @@ void CMapOutdoor::OnBeginEnvironment()
 		mc_pEnvironmentData->GetFogFarDistance()
 	);
 
-	const D3DLIGHT8& c_rkLight = mc_pEnvironmentData->DirLights[ENV_DIRLIGHT_CHARACTER];
+	const D3DLIGHT9& c_rkLight = mc_pEnvironmentData->DirLights[ENV_DIRLIGHT_CHARACTER];
 	rkForest.SetLight(
 		(const float *)&c_rkLight.Direction,
 		(const float *)&c_rkLight.Ambient, 
@@ -1071,8 +1071,8 @@ void CMapOutdoor::SaveAlphaFogOperation()
 	STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAOP,	D3DTOP_MODULATE);
 	STATEMANAGER.SetTextureStageState(1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 	STATEMANAGER.SetTextureStageState(1, D3DTSS_TEXCOORDINDEX, D3DTSS_TCI_CAMERASPACEPOSITION);
-	STATEMANAGER.SetTextureStageState(1, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-	STATEMANAGER.SetTextureStageState(1, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+	STATEMANAGER.SetSamplerState(1, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+	STATEMANAGER.SetSamplerState(1, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 
 	STATEMANAGER.SetTransform(D3DTS_TEXTURE1, &m_matAlphaFogTexture);
 	STATEMANAGER.SaveRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
