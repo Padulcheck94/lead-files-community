@@ -573,6 +573,7 @@ void CStateManager::GetSamplerState(DWORD dwStage, D3DSAMPLERSTATETYPE Type, DWO
 {
 	*pdwValue = m_CurrentState.m_SamplerStates[dwStage][Type];
 }
+
 // Vertex Shader
 void CStateManager::SaveVertexShader(LPDIRECT3DVERTEXSHADER9 dwShader)
 {
@@ -587,6 +588,9 @@ void CStateManager::RestoreVertexShader()
 
 void CStateManager::SetVertexShader(LPDIRECT3DVERTEXSHADER9 dwShader)
 {
+	if (m_CurrentState.m_dwVertexShader == dwShader)
+		return;
+
 	m_lpD3DDev->SetVertexShader(dwShader);
 	m_CurrentState.m_dwVertexShader = dwShader;
 }
@@ -599,18 +603,15 @@ void CStateManager::GetVertexShader(LPDIRECT3DVERTEXSHADER9 * pdwShader)
 // Vertex Processing
 void CStateManager::SaveVertexProcessing(BOOL IsON)
 {
-	if (m_CurrentState.m_bVertexProcessing == IsON)
-		return;
 	m_CopyState.m_bVertexProcessing = m_CurrentState.m_bVertexProcessing;
 	m_lpD3DDev->SetSoftwareVertexProcessing(IsON);
 	m_CurrentState.m_bVertexProcessing = IsON;
 }
 void CStateManager::RestoreVertexProcessing()
 {
-	if (m_CopyState.m_bVertexProcessing == m_CurrentState.m_bVertexProcessing)
-		return;
 	m_lpD3DDev->SetSoftwareVertexProcessing(m_CopyState.m_bVertexProcessing);
 }
+
 // Vertex Declaration
 void CStateManager::SaveVertexDeclaration(LPDIRECT3DVERTEXDECLARATION9 dwShader)
 {
@@ -630,6 +631,7 @@ void CStateManager::GetVertexDeclaration(LPDIRECT3DVERTEXDECLARATION9 * pdwShade
 {
 	*pdwShader = m_CurrentState.m_dwVertexDeclaration;
 }
+
 // FVF
 void CStateManager::SaveFVF(DWORD dwShader)
 {
