@@ -555,11 +555,7 @@ void CHARACTER::__StateIdle_NPC()
 				{
 					// 이곳입니다.
 					M2_DESTROY_CHARACTER(this);
-					int iNextSpawnDelay = 0;
-					if (LC_IsYMIR())
-						iNextSpawnDelay = 20 * 60;
-					else
-						iNextSpawnDelay = 50 * 60;
+					int iNextSpawnDelay = 50 * 60;
 
 					xmas::SpawnSanta(lNextMapIndex, iNextSpawnDelay);
 				}

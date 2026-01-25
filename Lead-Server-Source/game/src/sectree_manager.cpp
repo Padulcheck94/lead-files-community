@@ -77,68 +77,7 @@ LPSECTREE SECTREE_MAP::Find(DWORD x, DWORD y)
 
 void SECTREE_MAP::Build()
 {
-    // 클라이언트에게 반경 150m 캐릭터의 정보를 주기위해
-    // 3x3칸 -> 5x5 칸으로 주변sectree 확대(한국)
-    if (LC_IsYMIR() || LC_IsKorea())
-    {
-#define NEIGHBOR_LENGTH		5
-#define NUM_OF_NEIGHBORS	(NEIGHBOR_LENGTH * NEIGHBOR_LENGTH - 1)
-	int	width = NEIGHBOR_LENGTH / 2;
-	struct neighbor_coord_s
-	{
-		int x;
-		int y;
-	} neighbor_coord[NUM_OF_NEIGHBORS];
-
-	{
-	    int i = 0;
-	    for (int x = -width; x <= width; ++x)
-	    {
-		for (int y = -width; y <= width; ++y)
-		{
-		    if (x == 0 && y == 0)
-			continue;
-
-		    neighbor_coord[i].x = x * SECTREE_SIZE;
-		    neighbor_coord[i].y = y * SECTREE_SIZE;
-		    ++i;
-		}
-	    }
-	}
-
-	//
-	// 모든 sectree에 대해 주위 sectree들 리스트를 만든다.
-	//
-	MapType::iterator it = map_.begin();
-
-	while (it != map_.end())
-	{
-		LPSECTREE tree = it->second;
-
-		tree->m_neighbor_list.push_back(tree); // 자신을 넣는다.
-
-		sys_log(3, "%dx%d", tree->m_id.coord.x, tree->m_id.coord.y);
-
-		int x = tree->m_id.coord.x * SECTREE_SIZE;
-		int y = tree->m_id.coord.y * SECTREE_SIZE;
-
-		for (DWORD i = 0; i < NUM_OF_NEIGHBORS; ++i)
-		{
-			LPSECTREE tree2 = Find(x + neighbor_coord[i].x, y + neighbor_coord[i].y);
-
-			if (tree2)
-			{
-				sys_log(3, "   %d %dx%d", i, tree2->m_id.coord.x, tree2->m_id.coord.y);
-				tree->m_neighbor_list.push_back(tree2);
-			}
-		}
-
-		++it;
-	}
-    }
-    else
-    {
-	struct neighbor_coord_s
+   struct neighbor_coord_s
 	{
 		int x;
 		int y;
@@ -153,16 +92,13 @@ void SECTREE_MAP::Build()
 		{  SECTREE_SIZE,	 SECTREE_SIZE	},
 	};
 
-	//
-	// 모든 sectree에 대해 주위 sectree들 리스트를 만든다.
-	//
 	MapType::iterator it = map_.begin();
 
 	while (it != map_.end())
 	{
 		LPSECTREE tree = it->second;
 
-		tree->m_neighbor_list.push_back(tree); // 자신을 넣는다.
+		tree->m_neighbor_list.push_back(tree);
 
 		sys_log(3, "%dx%d", tree->m_id.coord.x, tree->m_id.coord.y);
 
@@ -182,7 +118,6 @@ void SECTREE_MAP::Build()
 
 		++it;
 	}
-    }
 }
 
 SECTREE_MANAGER::SECTREE_MANAGER()

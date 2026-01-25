@@ -411,10 +411,7 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 				return iExtraLen;
 			}
 
-			if (LC_IsCanada() == false)
-			{
-				CBanwordManager::instance().ConvertString(buf, buflen);
-			}
+			CBanwordManager::instance().ConvertString(buf, buflen);
 
 			if (g_bEmpireWhisper)
 				if (!ch->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_LANGUAGE))
@@ -495,11 +492,6 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 				tmpbuf.write(buf, buflen);
 
 				pkDesc->Packet(tmpbuf.read_peek(), tmpbuf.size());
-
-				if (LC_IsEurope() != true)
-				{
-					sys_log(0, "WHISPER: %s -> %s : %s", ch->GetName(), pinfo->szNameTo, buf);
-				}
 			}
 		}
 	}
@@ -698,10 +690,7 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 		LogManager::instance().ShoutLog(g_bChannel, ch->GetEmpire(), chatbuf);
 	}
 
-	if (LC_IsCanada() == false)
-	{
-		CBanwordManager::instance().ConvertString(buf, buflen);
-	}
+	CBanwordManager::instance().ConvertString(buf, buflen);
 
 	if (len < 0 || len >= (int) sizeof(chatbuf))
 		len = sizeof(chatbuf) - 1;
@@ -989,6 +978,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 				char char_name[CHARACTER_NAME_MAX_LEN + 1];
 				strlcpy(char_name, c_pData, sizeof(char_name));
 				MessengerManager::instance().RemoveFromList(ch->GetName(), char_name);
+				MessengerManager::instance().RemoveFromList(char_name, ch->GetName());
 			}
 			return CHARACTER_NAME_MAX_LEN;
 
@@ -1512,14 +1502,6 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 
 		if (((false == ch->IsRiding() && fDist > 25) || fDist > 40) && OXEVENT_MAP_INDEX != ch->GetMapIndex())
 		{
-			if( false == LC_IsEurope() )
-			{
-				const PIXEL_POSITION & warpPos = ch->GetWarpPosition();
-
-				if (warpPos.x == 0 && warpPos.y == 0)
-					LogManager::instance().HackLog("Teleport", ch); // 부정확할 수 있음
-			}
-
 			sys_log(0, "MOVE: %s trying to move too far (dist: %.1fm) Riding(%d)", ch->GetName(), fDist, ch->IsRiding());
 
 			ch->Show(ch->GetMapIndex(), ch->GetX(), ch->GetY(), ch->GetZ());
@@ -2407,8 +2389,8 @@ void CInputMain::AnswerMakeGuild(LPCHARACTER ch, const char* c_pData)
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Guild] [%s] guild has been created."), cp.name);
 
-		ch->PointChange(POINT_GOLD, -gGuildCreateFee);
-		DBManager::instance().SendMoneyLog(MONEY_LOG_GUILD, ch->GetPlayerID(), -gGuildCreateFee);
+		ch->PointChange(POINT_GOLD, -g_GuildCreateFee);
+		DBManager::instance().SendMoneyLog(MONEY_LOG_GUILD, ch->GetPlayerID(), -g_GuildCreateFee);
 
 		char Log[128];
 		snprintf(Log, sizeof(Log), "GUILD_NAME %s MASTER %s", cp.name, ch->GetName());
@@ -2568,15 +2550,6 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 				if (!ch->IsPC())
 					return SubPacketLen;
 
-				if (LC_IsCanada() == true)
-				{
-					if (newmember->GetQuestFlag("change_guild_master.be_other_member") > get_global_time())
-					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Guild> This character cannot join yet."));
-						return SubPacketLen;
-					}
-				}
-
 				pGuild->Invite(ch, newmember);
 			}
 			return SubPacketLen;
@@ -2686,7 +2659,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 			{
 				DWORD offer = *reinterpret_cast<const DWORD*>(c_pData);
 
-				if (pGuild->GetLevel() >= GUILD_MAX_LEVEL && LC_IsHongKong() == false)
+				if (pGuild->GetLevel() >= GUILD_MAX_LEVEL)
 				{
 					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Guild> The guild is already at the highest level."));
 				}
@@ -3020,31 +2993,6 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_CG_MOVE:
 			Move(ch, c_pData);
-
-			if (LC_IsEurope())
-			{
-				if (g_bCheckClientVersion)
-				{
-					int version = atoi(g_stClientVersion.c_str());
-					int date	= atoi(d->GetClientVersion());
-
-					//if (0 != g_stClientVersion.compare(d->GetClientVersion()))
-					if (version > date)
-					{
-						ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("You do not have the correct client version. Please install the normal patch."));
-						d->DelayedDisconnect(10);
-						LogManager::instance().HackLog("VERSION_CONFLICT", d->GetAccountTable().login, ch->GetName(), d->GetHostName());
-					}
-				}
-			}
-			else
-			{
-				if (!*d->GetClientVersion())
-				{   
-					sys_err("Version not recieved name %s", ch->GetName());
-					d->SetPhase(PHASE_CLOSE);
-				}
-			}
 			break;
 
 		case HEADER_CG_CHARACTER_POSITION:
@@ -3236,10 +3184,6 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_CG_REFINE:
 			Refine(ch, c_pData);
-			break;
-
-		case HEADER_CG_CLIENT_VERSION:
-			Version(ch, c_pData);
 			break;
 
 		case HEADER_CG_DRAGON_SOUL_REFINE:

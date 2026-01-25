@@ -197,8 +197,6 @@ ACMD(do_weeklyevent);
 
 ACMD(do_event_helper);
 
-ACMD(do_in_game_mall);
-
 ACMD(do_get_mob_count);
 
 ACMD(do_dice);
@@ -462,8 +460,6 @@ struct command_info cmd_info[] =
 
 	{ "eventhelper",		do_event_helper,		0,	POS_DEAD,	GM_HIGH_WIZARD	},
 
-	{ "in_game_mall",		do_in_game_mall,		0,	POS_DEAD,	GM_PLAYER	},
-
 	{ "get_mob_count",		do_get_mob_count,		0,	POS_DEAD,	GM_LOW_WIZARD	},
 
 	{ "dice",				do_dice,				0,	POS_DEAD,	GM_PLAYER		},
@@ -632,13 +628,10 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 	{
 		if (cmd_info[icmd].gm_level >= GM_LOW_WIZARD)
 		{
-			if (LC_IsEurope() == true || LC_IsCanada() == true || LC_IsSingapore() == true )
-			{
-				char buf[1024];
-				snprintf( buf, sizeof(buf), "%s", argument );
+			char buf[1024];
+			snprintf( buf, sizeof(buf), "%s", argument );
 
-				LogManager::instance().GMCommandLog(ch->GetPlayerID(), ch->GetName(), ch->GetDesc()->GetHostName(), g_bChannel, buf);
-			}
+			LogManager::instance().GMCommandLog(ch->GetPlayerID(), ch->GetName(), ch->GetDesc()->GetHostName(), g_bChannel, buf);
 		}
 	}
 }

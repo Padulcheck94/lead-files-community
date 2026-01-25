@@ -234,16 +234,8 @@ bool DESC::Setup(LPFDWATCH _fdw, socket_t _fd, const struct sockaddr_in & c_rSoc
 	m_pkPingEvent = event_create(ping_event, info, ping_event_second_cycle);
 
 #ifndef _IMPROVED_PACKET_ENCRYPTION_
-	if (LC_IsEurope())	
-	{
-		thecore_memcpy(m_adwEncryptionKey, "1234abcd5678efgh", sizeof(DWORD) * 4);
-		thecore_memcpy(m_adwDecryptionKey, "1234abcd5678efgh", sizeof(DWORD) * 4);
-	}
-	else
-	{
-		thecore_memcpy(m_adwEncryptionKey, "testtesttesttest", sizeof(DWORD) * 4);
-		thecore_memcpy(m_adwDecryptionKey, "testtesttesttest", sizeof(DWORD) * 4);
-	}
+	thecore_memcpy(m_adwEncryptionKey, "1234abcd5678efgh", sizeof(DWORD) * 4);
+	thecore_memcpy(m_adwDecryptionKey, "1234abcd5678efgh", sizeof(DWORD) * 4);
 #endif // _IMPROVED_PACKET_ENCRYPTION_
 
 	// Set Phase to handshake
@@ -986,7 +978,7 @@ void DESC::SetSecurityKey(const DWORD * c_pdwKey)
 {
 	const BYTE * c_pszKey = (const BYTE *) "JyTxtHljHJlVJHorRM301vf@4fvj10-v";
 
-	if (g_iUseLocale && !LC_IsKorea())
+	if (g_iUseLocale)
 		c_pszKey = GetKey_20050304Myevan() + 37;
 
 	thecore_memcpy(&m_adwDecryptionKey, c_pdwKey, 16);

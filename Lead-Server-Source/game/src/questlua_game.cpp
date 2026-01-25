@@ -15,8 +15,6 @@
 #define sys_err(fmt, ...) quest::CQuestManager::instance().QuestError(__FUNCTION__, __LINE__, fmt, __VA_ARGS__)
 #endif
 
-extern ACMD(do_in_game_mall);
-
 namespace quest
 {
 	int game_set_event_flag(lua_State* L)
@@ -170,17 +168,6 @@ namespace quest
 		return 0;
 	}
 
-	int game_web_mall(lua_State* L)
-	{
-		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
-
-		if ( ch != NULL )
-		{
-			do_in_game_mall(ch, const_cast<char*>(""), 0, 0);
-		}
-		return 0;
-	}
-	
 	void RegisterGameFunctionTable()
 	{
 		luaL_reg game_functions[] = 
@@ -194,7 +181,6 @@ namespace quest
 			{ "set_event_flag",				game_set_event_flag				},
 			{ "drop_item",					game_drop_item					},
 			{ "drop_item_with_ownership",	game_drop_item_with_ownership	},
-			{ "open_web_mall",				game_web_mall					},
 
 			{ NULL,					NULL				}
 		};

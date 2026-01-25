@@ -99,19 +99,13 @@ bool CHARACTER::UpdateAffect()
 		}
 		else
 		{
-			int iVal = 0;
+			int iVal = MIN(GetPoint(POINT_HP_RECOVERY), GetMaxHP() * 7 / 100);
 
-			if (LC_IsYMIR())
+			if (iVal > 0)
 			{
-				iVal = MIN(GetPoint(POINT_HP_RECOVERY), GetMaxHP() * 9 / 100);
+				PointChange(POINT_HP, iVal);
+				PointChange(POINT_HP_RECOVERY, -iVal);
 			}
-			else
-			{
-				iVal = MIN(GetPoint(POINT_HP_RECOVERY), GetMaxHP() * 7 / 100);
-			}
-
-			PointChange(POINT_HP, iVal);
-			PointChange(POINT_HP_RECOVERY, -iVal);
 		}
 	}
 

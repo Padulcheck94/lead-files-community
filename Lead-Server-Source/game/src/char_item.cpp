@@ -140,7 +140,7 @@ bool IS_SUMMONABLE_ZONE(int map_index)
 
 bool IS_BOTARYABLE_ZONE(int nMapIndex)
 {
-	if (LC_IsYMIR() == false && LC_IsKorea() == false) return true;
+	return true;
 
 	switch (nMapIndex)
 	{
@@ -156,7 +156,6 @@ bool IS_BOTARYABLE_ZONE(int nMapIndex)
 	return false;
 }
 
-// item socket 이 프로토타입과 같은지 체크 -- by mhh
 static bool FN_check_item_socket(LPITEM item)
 {
 	for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
@@ -1105,60 +1104,43 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	const char* szRefineType = "SCROLL";
 
-	if (pkItemScroll->GetValue(0) == HYUNIRON_CHN || 
-		pkItemScroll->GetValue(0) == YONGSIN_SCROLL || 
-		pkItemScroll->GetValue(0) == YAGONG_SCROLL) // 현철, 용신의 축복서, 야공의 비전서  처리
+	const int iScrollType = pkItemScroll->GetValue(0);
+
+	if (iScrollType == HYUNIRON_CHN || iScrollType == YONGSIN_SCROLL || iScrollType == YAGONG_SCROLL)
 	{
-		const char hyuniron_prob[9] = { 100, 75, 65, 55, 45, 40, 35, 25, 20 };
-		const char hyuniron_prob_euckr[9] = { 100, 75, 65, 55, 45, 40, 35, 30, 25 };
+		static const int aiDragonProb[] = { 100, 75, 65, 55, 45, 40, 35, 25, 20 };
+		static const int aiBlacksmithProb[] = { 100, 100, 90, 80, 70, 60, 50, 30, 20 };
 
-		const char yagong_prob[9] = { 100, 100, 90, 80, 70, 60, 50, 30, 20 };
-		const char yagong_prob_euckr[9] = { 100, 100, 90, 80, 70, 60, 50, 40, 30 };
+		const int iRefineIdx = MINMAX(0, item->GetRefineLevel(), 8);
 
-		if (pkItemScroll->GetValue(0) == YONGSIN_SCROLL)
+		if (iScrollType == YAGONG_SCROLL)
 		{
-			if (LC_IsYMIR() == true || LC_IsKorea() == true)
-				success_prob = hyuniron_prob_euckr[MINMAX(0, item->GetRefineLevel(), 8)];
-			else
-				success_prob = hyuniron_prob[MINMAX(0, item->GetRefineLevel(), 8)];
-		}
-		else if (pkItemScroll->GetValue(0) == YAGONG_SCROLL)
-		{
-			if (LC_IsYMIR() == true || LC_IsKorea() == true)
-				success_prob = yagong_prob_euckr[MINMAX(0, item->GetRefineLevel(), 8)];
-			else
-				success_prob = yagong_prob[MINMAX(0, item->GetRefineLevel(), 8)];
+			success_prob = aiBlacksmithProb[iRefineIdx];
+			szRefineType = "YAGONG_SCROLL";
 		}
 		else
 		{
-			sys_err("REFINE : Unknown refine scroll item. Value0: %d", pkItemScroll->GetValue(0));
+			success_prob = aiDragonProb[iRefineIdx];
+
+			if (iScrollType == HYUNIRON_CHN)
+			{
+				szRefineType = "HYUNIRON";
+				bDestroyWhenFail = true;
+			}
+			else
+			{
+				szRefineType = "GOD_SCROLL";
+			}
 		}
 
-		if (test_server) 
+		if (test_server)
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Only Test] Success_Prob %d, RefineLevel %d"), success_prob, item->GetRefineLevel());
 		}
-		if (pkItemScroll->GetValue(0) == HYUNIRON_CHN) // 현철은 아이템이 부서져야 한다.
-			bDestroyWhenFail = true;
-
-		// DETAIL_REFINE_LOG
-		if (pkItemScroll->GetValue(0) == HYUNIRON_CHN)
-		{
-			szRefineType = "HYUNIRON";
-		}
-		else if (pkItemScroll->GetValue(0) == YONGSIN_SCROLL)
-		{
-			szRefineType = "GOD_SCROLL";
-		}
-		else if (pkItemScroll->GetValue(0) == YAGONG_SCROLL)
-		{
-			szRefineType = "YAGONG_SCROLL";
-		}
-		// END_OF_DETAIL_REFINE_LOG
 	}
 
 	// DETAIL_REFINE_LOG
-	if (pkItemScroll->GetValue(0) == MUSIN_SCROLL) // 무신의 축복서는 100% 성공 (+4까지만)
+	if (pkItemScroll->GetValue(0) == MUSIN_SCROLL)
 	{
 		success_prob = 100;
 
@@ -1690,19 +1672,10 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 		sys_log(0, "USE_ITEM %s, Inven %d, Cell %d, ItemType %d, SubType %d", item->GetName(), bDestInven, wDestCell, item->GetType(), item->GetSubType());
 	}
 
-	if ( CArenaManager::instance().IsLimitedItem( GetMapIndex(), item->GetVnum() ) == true )
-	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot use this item in a duel."));
-		return false;
-	}
-
-	// 아이템 최초 사용 이후부터는 사용하지 않아도 시간이 차감되는 방식 처리. 
 	if (-1 != iLimitRealtimeStartFirstUseFlagIndex)
 	{
-		// 한 번이라도 사용한 아이템인지 여부는 Socket1을 보고 판단한다. (Socket1에 사용횟수 기록)
 		if (0 == item->GetSocket(1))
 		{
-			// 사용가능시간은 Default 값으로 Limit Value 값을 사용하되, Socket0에 값이 있으면 그 값을 사용하도록 한다. (단위는 초)
 			long duration = (0 != item->GetSocket(0)) ? item->GetSocket(0) : item->GetProto()->aLimits[iLimitRealtimeStartFirstUseFlagIndex].lValue;
 
 			if (0 == duration)
@@ -1847,22 +1820,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 								switch (item->GetVnum())
 								{
-									case 71049: // 비단보따리
-										if (LC_IsYMIR() == true || LC_IsKorea() == true)
-										{
-											if (IS_BOTARYABLE_ZONE(GetMapIndex()) == true)
-											{
-												UseSilkBotary();
-											}
-											else
-											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This is a region where you cannot open a personal store."));
-											}
-										}
-										else
-										{
-											UseSilkBotary();
-										}
+									case 71049:
+										UseSilkBotary();
 										break;
 								}
 							}
@@ -2020,16 +1979,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				std::vector <LPITEM> item_gets(NULL);
 				int count = 0;
 
-				if (dwBoxVnum == 50033 && LC_IsYMIR()) // 알수없는 상자
-				{
-					if (GetLevel() < 15)
-					{
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Cannot be used below level 15."));
-						return false;
-					}
-				}
-
-				if( (dwBoxVnum > 51500 && dwBoxVnum < 52000) || (dwBoxVnum >= 50255 && dwBoxVnum <= 50260) )	// 용혼원석들
+				if( (dwBoxVnum > 51500 && dwBoxVnum < 52000) || (dwBoxVnum >= 50255 && dwBoxVnum <= 50260) )
 				{
 					if( !(this->DragonSoul_IsQualified()) )
 					{
@@ -2138,10 +2088,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					ITEM_MANAGER::instance().RemoveItem(item);
 
 					int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
-
-					//한국 본섭의 경우에는 시간을 24시간 고정
-					if (LC_IsKorea())
-						iReadDelay = 86400;
 
 					SetSkillNextReadTime(dwVnum, get_global_time() + iReadDelay);
 				}
@@ -2533,104 +2479,71 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							case 30094:
 							case 30095:
 							case 30096:
-								// 복주머니
 								{
-									const int MAX_BAG_INFO = 26;
-									static struct LuckyBagInfo
+									static const struct LuckyBagInfo
 									{
 										DWORD count;
 										int prob;
 										DWORD vnum;
-									} b1[MAX_BAG_INFO] =
+									} s_kBagInfo[] =
 									{
-										{ 1000,	302,	1 },
-										{ 10,	150,	27002 },
-										{ 10,	75,	27003 },
-										{ 10,	100,	27005 },
-										{ 10,	50,	27006 },
-										{ 10,	80,	27001 },
-										{ 10,	50,	27002 },
-										{ 10,	80,	27004 },
-										{ 10,	50,	27005 },
-										{ 1,	10,	50300 },
-										{ 1,	6,	92 },
-										{ 1,	2,	132 },
-										{ 1,	6,	1052 },
-										{ 1,	2,	1092 },
-										{ 1,	6,	2082 },
-										{ 1,	2,	2122 },
-										{ 1,	6,	3082 },
-										{ 1,	2,	3122 },
-										{ 1,	6,	5052 },
-										{ 1,	2,	5082 },
-										{ 1,	6,	7082 },
-										{ 1,	2,	7122 },
-										{ 1,	1,	11282 },
-										{ 1,	1,	11482 },
-										{ 1,	1,	11682 },
-										{ 1,	1,	11882 },
+										{ 1000, 302,    1 },     // Gold
+										{ 10,   150,    27002 }, // Red Potion (M)
+										{ 10,   75,     27003 }, // Red Potion (L)
+										{ 10,   100,    27005 }, // Blue Potion (M)
+										{ 10,   50,     27006 }, // Blue Potion (L)
+										{ 10,   80,     27001 }, // Red Potion(S)
+										{ 10,   50,     27002 }, // Red Potion(M)
+										{ 10,   80,     27004 }, // Blue Potion(S)
+										{ 10,   50,     27005 }, // Blue Potion(M)
+										{ 1,    10,     50300 }, // Skill Book
+										{ 1,    6,      92 },  // Barbarian Sword+2 
+										{ 1,    2,      132 }, // Half Moon Sword+2
+										{ 1,    6,      1052 },
+										{ 1,    2,      1092 },
+										{ 1,    6,      2082 },
+										{ 1,    2,      2122 },
+										{ 1,    6,      3082 },
+										{ 1,    2,      3122 },
+										{ 1,    6,      5052 },
+										{ 1,    2,      5082 },
+										{ 1,    6,      7082 },
+										{ 1,    2,      7122 },
+										{ 1,    1,      11282 },
+										{ 1,    1,      11482 },
+										{ 1,    1,      11682 },
+										{ 1,    1,      11882 },
 									};
 
-									struct LuckyBagInfo b2[MAX_BAG_INFO] =
-									{
-										{ 1000,	302,	1 },
-										{ 10,	150,	27002 },
-										{ 10,	75,	27002 },
-										{ 10,	100,	27005 },
-										{ 10,	50,	27005 },
-										{ 10,	80,	27001 },
-										{ 10,	50,	27002 },
-										{ 10,	80,	27004 },
-										{ 10,	50,	27005 },
-										{ 1,	10,	50300 },
-										{ 1,	6,	92 },
-										{ 1,	2,	132 },
-										{ 1,	6,	1052 },
-										{ 1,	2,	1092 },
-										{ 1,	6,	2082 },
-										{ 1,	2,	2122 },
-										{ 1,	6,	3082 },
-										{ 1,	2,	3122 },
-										{ 1,	6,	5052 },
-										{ 1,	2,	5082 },
-										{ 1,	6,	7082 },
-										{ 1,	2,	7122 },
-										{ 1,	1,	11282 },
-										{ 1,	1,	11482 },
-										{ 1,	1,	11682 },
-										{ 1,	1,	11882 },
-									};
-	
-									LuckyBagInfo * bi = NULL;
-									if (LC_IsHongKong())
-										bi = b2;
-									else
-										bi = b1;
+									int iProb = number(1, 1000);
+									int iIndex = 0;
+									const int iTableSize = sizeof(s_kBagInfo) / sizeof(s_kBagInfo[0]);
 
-									int pct = number(1, 1000);
-
-									int i;
-									for (i=0;i<MAX_BAG_INFO;i++)
+									for (iIndex = 0; iIndex < iTableSize; ++iIndex)
 									{
-										if (pct <= bi[i].prob)
+										if (iProb <= s_kBagInfo[iIndex].prob)
 											break;
-										pct -= bi[i].prob;
+
+										iProb -= s_kBagInfo[iIndex].prob;
 									}
-									if (i>=MAX_BAG_INFO)
+
+									if (iIndex >= iTableSize)
 										return false;
 
-									if (bi[i].vnum == 50300)
+									const DWORD dwRewardVnum = s_kBagInfo[iIndex].vnum;
+									const DWORD dwRewardCount = s_kBagInfo[iIndex].count;
+
+									if (dwRewardVnum == 50300)
 									{
-										// 스킬수련서는 특수하게 준다.
 										GiveRandomSkillBook();
 									}
-									else if (bi[i].vnum == 1)
+									else if (dwRewardVnum == 1) 
 									{
 										PointChange(POINT_GOLD, 1000, true);
 									}
 									else
 									{
-										AutoGiveItem(bi[i].vnum, bi[i].count);
+										AutoGiveItem(dwRewardVnum, dwRewardCount);
 									}
 									ITEM_MANAGER::instance().RemoveItem(item);
 								}
@@ -2992,22 +2905,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								item->SetCount(item->GetCount() - 1);
 								break;
 
-							case 50200: // 보따리
-								if (LC_IsYMIR() == true || LC_IsKorea() == true)
-								{
-									if (IS_BOTARYABLE_ZONE(GetMapIndex()) == true)
-									{
-										__OpenPrivateShop();
-									}
-									else
-									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This is a region where you cannot open a personal store."));
-									}
-								}
-								else
-								{
-									__OpenPrivateShop();
-								}
+							case 50200:
+								__OpenPrivateShop();
 								break;
 
 							case fishing::FISH_MIND_PILL_VNUM:
@@ -3749,11 +3648,9 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 71051 : // 진재가
+							case 71051 :
 								{
-									// 유럽, 싱가폴, 베트남 진재가 사용금지
-									if (LC_IsEurope() || LC_IsSingapore() || LC_IsVietnam())
-										return false;
+									return false;
 
 									LPITEM item2;
 
@@ -3798,9 +3695,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							case 71052 : // 진재경
 								{
-									// 유럽, 싱가폴, 베트남 진재가 사용금지
-									if (LC_IsEurope() || LC_IsSingapore() || LC_IsVietnam())
-										return false;
+									return false;
 
 									LPITEM item2;
 
@@ -5309,11 +5204,6 @@ bool CHARACTER::DropItem(TItemPos Cell, BYTE bCount)
 
 	if (pkItemToDrop->AddToGround(GetMapIndex(), pxPos))
 	{
-		// 한국에는 아이템을 버리고 복구해달라는 진상유저들이 많아서
-		// 아이템을 바닥에 버릴 시 속성로그를 남긴다.
-		if (LC_IsYMIR())
-			item->AttrLog();
-
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The dropped item will vanish in 5 minutes."));
 		pkItemToDrop->StartDestroyEvent();
 
@@ -7027,30 +6917,23 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 		case 70107 :
 		case 71093 :
 			{
-				// 둔갑구 처리
+				const DWORD dwVnum = item->GetVnum();
+				const int iSkillLevel = GetSkillLevel(POLYMORPH_SKILL_ID);
+
 				sys_log(0, "USE_POLYMORPH_BALL PID(%d) vnum(%d)", GetPlayerID(), dwVnum);
 
-				// 레벨 제한 체크
-				int iPolymorphLevelLimit = MAX(0, 20 - GetLevel() * 3 / 10);
+				const int iPolymorphLevelLimit = MAX(0, 20 - GetLevel() * 3 / 10);
+
 				if (pMob->m_table.bLevel >= GetLevel() + iPolymorphLevelLimit)
 				{
 					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot transform into a monster who has a higher level than you."));
 					return false;
 				}
 
-				int iDuration = GetSkillLevel(POLYMORPH_SKILL_ID) == 0 ? 5 : (5 + (5 + GetSkillLevel(POLYMORPH_SKILL_ID)/40 * 25));
+				int iDuration = (iSkillLevel == 0) ? 5 : (10 + (iSkillLevel / 40) * 25);
 				iDuration *= 60;
 
-				DWORD dwBonus = 0;
-				
-				if (true == LC_IsYMIR() || true == LC_IsKorea())
-				{
-					dwBonus = GetSkillLevel(POLYMORPH_SKILL_ID) + 60;
-				}
-				else
-				{
-					dwBonus = (2 + GetSkillLevel(POLYMORPH_SKILL_ID)/40) * 100;
-				}
+				const DWORD dwBonus = (2 + (iSkillLevel / 40)) * 100;
 
 				AddAffect(AFFECT_POLYMORPH, POINT_POLYMORPH, dwVnum, AFF_POLYMORPH, iDuration, 0, true);
 				AddAffect(AFFECT_POLYMORPH, POINT_ATT_BONUS, dwBonus, AFF_POLYMORPH, iDuration, 0, false);
@@ -7061,11 +6944,6 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 
 		case 50322:
 			{
-				// 보류
-
-				// 둔갑서 처리
-				// 소켓0                소켓1           소켓2   
-				// 둔갑할 몬스터 번호   수련정도        둔갑서 레벨
 				sys_log(0, "USE_POLYMORPH_BOOK: %s(%u) vnum(%u)", GetName(), GetPlayerID(), dwVnum);
 
 				if (CPolymorphUtils::instance().PolymorphCharacter(this, item, pMob) == true)

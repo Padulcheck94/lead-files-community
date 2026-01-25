@@ -352,12 +352,6 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 		snprintf(buf, sizeof(buf), "%s %d %d %ld %d", 
 				inet_ntoa(ch->GetDesc()->GetAddr().sin_addr), ch->GetGold(), g_bChannel, ch->GetMapIndex(), ch->GetAlignment());
 		LogManager::instance().CharLog(ch, 0, "LOGIN", buf);
-
-		if (LC_IsYMIR() || LC_IsKorea())
-		{
-			LogManager::instance().LoginLog(true, 
-					ch->GetDesc()->GetAccountTable().id, ch->GetPlayerID(), ch->GetLevel(), ch->GetJob(), ch->GetRealPoint(POINT_PLAYTIME));
-		}
 	}
 
 	d->SetPhase(PHASE_LOADING);
@@ -944,6 +938,11 @@ EVENTFUNC(quest_login_event)
 	}
 	else if (d->IsPhase(PHASE_GAME))
 	{
+		if (!ch->IsLoadedAffect())
+		{
+			return PASSES_PER_SEC(1);
+		}
+
 		sys_log(0, "QUEST_LOAD: Login pc %d by event", ch->GetPlayerID());
 		quest::CQuestManager::instance().Login(ch->GetPlayerID());
 		return 0;
@@ -1007,19 +1006,11 @@ void CInputDB::QuestLoad(LPDESC d, const char * c_pData)
 		pkPC->SetLoaded();
 		pkPC->Build();
 
-		if (ch->GetDesc()->IsPhase(PHASE_GAME))
-		{
-			sys_log(0, "QUEST_LOAD: Login pc %d", pQuestTable[0].dwPID);
-			quest::CQuestManager::instance().Login(pQuestTable[0].dwPID);
-		}
-		else
-		{
-			quest_login_event_info* info = AllocEventInfo<quest_login_event_info>();
-			info->dwPID = ch->GetPlayerID();
+		quest_login_event_info* info = AllocEventInfo<quest_login_event_info>();
+		info->dwPID = ch->GetPlayerID();
 
-			event_create(quest_login_event, info, PASSES_PER_SEC(1));
-		}
-	}	
+		event_create(quest_login_event, info, PASSES_PER_SEC(1));
+	}
 }
 
 void CInputDB::SafeboxLoad(LPDESC d, const char * c_pData)
@@ -2215,14 +2206,11 @@ void CInputDB::GuildChangeMaster(TPacketChangeGuildMaster* p)
 
 void CInputDB::DetailLog(const TPacketNeedLoginLogInfo* info)
 {
-	if (true == LC_IsEurope() || true == LC_IsYMIR() || true == LC_IsKorea() )
-	{
-		LPCHARACTER pChar = CHARACTER_MANAGER::instance().FindByPID( info->dwPlayerID );
+	LPCHARACTER pChar = CHARACTER_MANAGER::instance().FindByPID( info->dwPlayerID );
 
-		if (NULL != pChar)
-		{
-			LogManager::instance().DetailLoginLog(true, pChar);
-		}
+	if (NULL != pChar)
+	{
+		LogManager::instance().DetailLoginLog(true, pChar);
 	}
 }
 

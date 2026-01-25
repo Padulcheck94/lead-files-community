@@ -387,14 +387,7 @@ int DetermineFish(LPCHARACTER ch)
 	int * p = std::lower_bound(g_prob_accumulate[prob_idx], g_prob_accumulate[prob_idx] + MAX_FISH, rv);
 	int fish_idx = p - g_prob_accumulate[prob_idx];
 
-	//if (!g_iUseLocale)
-	if ( LC_IsYMIR() )
-	{
-		if (fish_info[fish_idx].vnum >= 70040 && fish_info[fish_idx].vnum <= 70052)
-			return 0;
-	}
-
-	if (g_iUseLocale) // 중국에서는 금덩어리, 금열쇠, 은열쇠 나오지 않게 함
+	if (g_iUseLocale)
 	{
 		DWORD vnum = fish_info[fish_idx].vnum;
 
@@ -772,11 +765,6 @@ void UseFish(LPCHARACTER ch, LPITEM item)
 				break;
 
 			case USED_SHELLFISH:	// 1
-				if ( LC_IsCanada() == true )
-				{
-					if ( number(0, 2) != 2 ) return;
-				}
-
 				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("There is a Clam inside the Fish."));
 				ch->AutoGiveItem(SHELLFISH_VNUM);
 				break;

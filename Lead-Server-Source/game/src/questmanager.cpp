@@ -1332,7 +1332,7 @@ namespace quest
 				}
 			}
 		}
-		else if (name == "pre_event_hc" && true == LC_IsEurope())
+		else if (name == "pre_event_hc")
 		{
 			const DWORD EventNPC = 20090;
 

@@ -542,12 +542,9 @@ void CGuildManager::DeclareWar(DWORD guild_id1, DWORD guild_id2, BYTE bType)
 	if (g1->DeclareWar(guild_id2, bType, GUILD_WAR_SEND_DECLARE) &&
 		g2->DeclareWar(guild_id1, bType, GUILD_WAR_RECV_DECLARE))
 	{
-		if (false == LC_IsGermany())
-		{
-			char buf[256];
-			snprintf(buf, sizeof(buf), LC_TEXT("The guild %s has declared war on %s!"), TouchGuild(guild_id1)->GetName(), TouchGuild(guild_id2)->GetName());
-			SendNotice(buf);
-		}
+		char buf[256];
+		snprintf(buf, sizeof(buf), LC_TEXT("The guild %s has declared war on %s!"), TouchGuild(guild_id1)->GetName(), TouchGuild(guild_id2)->GetName());
+		SendNotice(buf);
 	}
 }
 

@@ -50,7 +50,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)../../liblua/include/;$(ProjectDir)../../libmysql/6.0.2/win32/;$(ProjectDir)../../libdevil/;$(SolutionDir)../Lead-Extern/include/;$(SolutionDir)../Lead-Shared-Source/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../Lead-Shared-Source/;$(SolutionDir)../Lead-Extern/include/;$(ProjectDir)../../liblua/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;__WIN32__;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -63,9 +63,9 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>mysqlclient.lib;ws2_32.lib;DevIL-1.7.8d.lib;DevILU-1.7.8d.lib;DevILUT-1.7.8d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mysqlclient.lib;ws2_32.lib;DevIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_d.exe</OutputFile>
-      <AdditionalLibraryDirectories>$(ProjectDir)../../libmysql/6.0.2/win32/lib;$(ProjectDir)../../libdevil/win32/lib;$(SolutionDir)../Lead-Extern/lib;$(ProjectDir)../../../Extern/openssl/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)../Lead-Extern/lib;$(ProjectDir)../../../Extern/openssl/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>

@@ -20,44 +20,15 @@ bool FN_IS_VALID_LOGIN_STRING(const char *str)
 	if (strlen(str) < 2)
 		return false;
 
-	for (tmp = str; *tmp; ++tmp)
+	for (const char* tmp = str; *tmp; ++tmp)
 	{
-		// 알파벳과 수자만 허용
-		if (isdigit(*tmp) || isalpha(*tmp))
+		// Allow Letters (A-Z, a-z) and Numbers (0-9)
+		if (isalnum((unsigned char)*tmp))
 			continue;
 
-		// 캐나다는 몇몇 특수문자 허용
-		if (LC_IsCanada())
-		{
-			switch (*tmp)
-			{
-				case ' ':
-				case '_':
-				case '-':
-				case '.':
-				case '!':
-				case '@':
-				case '#':
-				case '$':
-				case '%':
-				case '^':
-				case '&':
-				case '*':
-				case '(':
-				case ')':
-					continue;
-			}
-		}
-
-		if (LC_IsYMIR() == true || LC_IsKorea() == true)
-		{
-			switch (*tmp)
-			{
-				case '-' :
-				case '_' :
-					continue;
-			}
-		}
+		// We allow Underscore this is standard for usernames.
+		if (*tmp == '_')
+			continue;
 
 		return false;
 	}

@@ -288,14 +288,9 @@ void CInputP2P::XmasWarpSanta(const char * c_pData)
 
 	if (p->bChannel == g_bChannel && map_allow_find(p->lMapIndex))
 	{
-		int	iNextSpawnDelay = 60;
+		int	iNextSpawnDelay = 50 * 60;
 
-		if (LC_IsYMIR())
-			iNextSpawnDelay = 20 * 60;
-		else
-			iNextSpawnDelay = 50 * 60;
-
-		xmas::SpawnSanta(p->lMapIndex, iNextSpawnDelay); // 50분있다가 새로운 산타가 나타남 (한국은 20분)
+		xmas::SpawnSanta(p->lMapIndex, iNextSpawnDelay);
 
 		TPacketGGXmasWarpSantaReply pack_reply;
 		pack_reply.bHeader = HEADER_GG_XMAS_WARP_SANTA_REPLY;
@@ -441,10 +436,6 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_GG_RELOAD_CRC_LIST:
 			LoadValidCRCList();
-			break;
-
-		case HEADER_GG_CHECK_CLIENT_VERSION:
-			CheckClientVersion();
 			break;
 
 		case HEADER_GG_LOGIN_PING:

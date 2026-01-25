@@ -302,17 +302,7 @@ void CHARACTER::DeathPenalty(BYTE bTown)
 		REMOVE_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_DEATH_PENALTY);
 
 		// NO_DEATH_PENALTY_BUG_FIX 
-		if (LC_IsYMIR()) // 천마 버전에서는 언제나 용신의 가호 아이템을 체크한다.
-		{
-			if (FindAffect(AFFECT_NO_DEATH_PENALTY))
-			{
-				sys_log(0, "NO_DEATH_PENALTY_AFFECT(%s)", GetName());
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You did not lose any Experience because of the Blessing of the Dragon God."));
-				RemoveAffect(AFFECT_NO_DEATH_PENALTY);
-				return;
-			}
-		}
-		else if (!bTown) // 국제 버전에서는 제자리 부활시만 용신의 가호를 사용한다. (마을 복귀시는 경험치 패널티 없음)
+		if (!bTown)
 		{
 			if (FindAffect(AFFECT_NO_DEATH_PENALTY))
 			{
@@ -324,23 +314,7 @@ void CHARACTER::DeathPenalty(BYTE bTown)
 		}
 		// END_OF_NO_DEATH_PENALTY_BUG_FIX
 
-		int iLoss = ((GetNextExp() * aiExpLossPercents[MINMAX(1, GetLevel(), PLAYER_EXP_TABLE_MAX)]) / 100);
-
-		if (true == LC_IsYMIR())
-		{
-			if (PLAYER_EXP_TABLE_MAX < GetLevel())
-			{
-				iLoss = MIN(500000, iLoss);
-			}
-			else
-			{
-				iLoss = MIN(200000, iLoss);
-			}
-		}
-		else if (true == LC_IsEurope())
-		{
-			iLoss = MIN(800000, iLoss);
-		}
+		int iLoss = MIN(g_DeathExpLossCap, ((GetNextExp() * aiExpLossPercents[MINMAX(1, GetLevel(), PLAYER_EXP_TABLE_MAX)]) / 100));
 
 		if (bTown)
 		{
@@ -675,47 +649,45 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 	}
 	else
 	{
-		//
-		// 일반적인 방식의 돈 드롭
-		//
+		// YANG BOMB START
 		int iGold = number(GetMobTable().dwGoldMin, GetMobTable().dwGoldMax);
 		iGold = iGold * CHARACTER_MANAGER::instance().GetMobGoldAmountRate(pkAttacker) / 100;
 		iGold *= iGoldMultipler;
 
-		int iSplitCount;
+		if (iGold <= 0)
+			return;
 
-		if (iGold >= 3 && !LC_IsYMIR()) 
-			iSplitCount = number(1, 3);
-		else if (GetMobRank() >= MOB_RANK_BOSS)
+		iTotalGold += iGold;
+
+		if (isAutoLoot)
 		{
-			iSplitCount = number(3, 10);
-
-			if ((iGold / iSplitCount) == 0)
-				iSplitCount = 1;
+			pkAttacker->GiveGold(iGold);
+			return;
 		}
+
+		int iSplitCount = 1;
+
+		if (GetMobRank() >= MOB_RANK_BOSS)
+			iSplitCount = number(3, 10);
 		else
-			iSplitCount = 1;
+			iSplitCount = number(1, 3);
 
-		if (iGold != 0)
+		iSplitCount = MIN(iSplitCount, iGold);
+
+		const int iPileAmount = iGold / iSplitCount;
+
+		for (int i = 0; i < iSplitCount; ++i)
 		{
-			iTotalGold += iGold; // Total gold
-
-			for (int i = 0; i < iSplitCount; ++i)
+			if ((item = ITEM_MANAGER::instance().CreateItem(1, iPileAmount)))
 			{
-				if (isAutoLoot)
-				{
-					pkAttacker->GiveGold(iGold / iSplitCount);
-				}
-				else if ((item = ITEM_MANAGER::instance().CreateItem(1, iGold / iSplitCount)))
-				{
-					pos.x = GetX() + (number(-7, 7) * 20);
-					pos.y = GetY() + (number(-7, 7) * 20);
+				pos.x = GetX() + (number(-7, 7) * 20);
+				pos.y = GetY() + (number(-7, 7) * 20);
 
-					item->AddToGround(GetMapIndex(), pos);
-					item->StartDestroyEvent();
-				}
+				item->AddToGround(GetMapIndex(), pos);
+				item->StartDestroyEvent();
 			}
 		}
+		// YANG BOMB END
 	}
 
 	DBManager::instance().SendMoneyLog(MONEY_LOG_MONSTER, GetRaceNum(), iTotalGold);
@@ -976,15 +948,11 @@ TItemDropPenalty aItemDropPenalty_kor[9] =
 
 void CHARACTER::ItemDropPenalty(LPCHARACTER pkKiller)
 {
-	// 개인상점을 연 상태에서는 아이템을 드롭하지 않는다.
 	if (GetMyShop())
 		return;
 
-	if (false == LC_IsYMIR())
-	{
-		if (GetLevel() < 50)
-			return;
-	}
+	if (GetLevel() < 50)
+		return;
 	
 	if (CBattleArena::instance().IsBattleArenaMap(GetMapIndex()) == true)
 	{
@@ -2048,39 +2016,15 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		long lMapIndex = GetMapIndex();
 		int iMapEmpire = SECTREE_MANAGER::instance().GetEmpireFromMapIndex(lMapIndex);
 
-		if (LC_IsYMIR() == true)
-		{
-			if (iEmpire && iMapEmpire && iEmpire != iMapEmpire)
-			{
-				dam += (dam * 30) / 100;
-			}
-		}
-
 		if (pAttacker->IsPC())
 		{
 			iEmpire = pAttacker->GetEmpire();
 			lMapIndex = pAttacker->GetMapIndex();
 			iMapEmpire = SECTREE_MANAGER::instance().GetEmpireFromMapIndex(lMapIndex);
 
-			// 다른 제국 사람인 경우 데미지 10% 감소
 			if (iEmpire && iMapEmpire && iEmpire != iMapEmpire)
 			{
-				int percent = 10;
-				
-				if (184 <= lMapIndex && lMapIndex <= 189)
-				{
-					if (LC_IsYMIR() == true)
-						percent = 7;
-					else
-						percent = 9;
-				}
-				else
-				{
-					if (LC_IsYMIR() == true)
-						percent = 8;
-					else
-						percent = 9;
-				}
+				int percent = 9;
 
 				dam = dam * percent / 10;
 			}
@@ -2140,10 +2084,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		}
 	}
 
-	// ------------------------
-	// 독일 프리미엄 모드 
-	// -----------------------
-	if (LC_IsGermany() && pAttacker && pAttacker->IsPC())
+	if (pAttacker && pAttacker->IsPC())
 	{
 		int iDmgPct = CHARACTER_MANAGER::instance().GetUserDamageRate(pAttacker);
 		dam = dam * iDmgPct / 100;
@@ -2339,40 +2280,18 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 		}
 	}
 
-	// 아이템 몰 판매 경험치 보너스
-	if (LC_IsHongKong() || LC_IsEurope() || LC_IsCanada())
+
+	if (to->GetPremiumRemainSeconds(PREMIUM_EXP) > 0)
 	{
-		// 아이템 몰: 경험치 결제
-		if (to->GetPremiumRemainSeconds(PREMIUM_EXP) > 0)
-		{
-			iExp += (iExp * 50 / 100);
-		}
-
-		if (to->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_EXP) == true)
-		{
-			iExp += (iExp * 50 / 100);
-		}
-
-		// 결혼 보너스
-		iExp += iExp * to->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_EXP_BONUS) / 100;
-	}
-	else
-	{
-		// 아이템 몰: 경험치 결제
-		if (to->GetPremiumRemainSeconds(PREMIUM_EXP) > 0)
-		{
-			iExp += (iExp * 20 / 100);
-		}
-
-		if (to->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_EXP) == true)
-		{
-			iExp += (iExp * 20 / 100);
-		}
-
-		// 결혼 보너스
-		iExp += iExp * to->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_EXP_BONUS) / 100;
+		iExp += (iExp * 50 / 100);
 	}
 
+	if (to->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_EXP) == true)
+	{
+		iExp += (iExp * 50 / 100);
+	}
+
+	iExp += (iExp * to->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_EXP_BONUS) / 100);
 	iExp += (iExp * to->GetPoint(POINT_RAMADAN_CANDY_BONUS_EXP)/100);
 	iExp += (iExp * to->GetPoint(POINT_MALL_EXPBONUS)/100);
 	iExp += (iExp * to->GetPoint(POINT_EXP)/100);
@@ -2441,10 +2360,7 @@ namespace NPartyExpDistribute
 		{
 			if (DISTANCE_APPROX(ch->GetX() - x, ch->GetY() - y) <= PARTY_DEFAULT_RANGE)
 			{
-				if (LC_IsYMIR())
-					total += ch->GetLevel();
-				else
-					total += party_exp_distribute_table[ch->GetLevel()];
+				total += party_exp_distribute_table[ch->GetLevel()];
 
 				++member_count;
 			}
@@ -2476,10 +2392,7 @@ namespace NPartyExpDistribute
 				switch (m_iMode)
 				{
 					case PARTY_EXP_DISTRIBUTION_NON_PARITY:
-						if (LC_IsYMIR())
-							iExp2 = (DWORD) ((_iExp * ch->GetLevel()) / total);
-						else
-							iExp2 = (DWORD) (_iExp * (float) party_exp_distribute_table[ch->GetLevel()] / total);
+						iExp2 = (DWORD) (_iExp * (float) party_exp_distribute_table[ch->GetLevel()] / total);
 						break;
 
 					case PARTY_EXP_DISTRIBUTION_PARITY:
@@ -3245,7 +3158,7 @@ void CHARACTER::UpdateKillerMode()
 	if (!IsKillerMode())
 		return;
 
-	int iKillerSeconds = ! LC_IsYMIR() ? 30 : 60;
+	int iKillerSeconds = 30;
 
 	if (thecore_pulse() - m_iKillerModePulse >= PASSES_PER_SEC(iKillerSeconds))
 		SetKillerMode(false);

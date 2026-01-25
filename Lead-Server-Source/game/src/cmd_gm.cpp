@@ -3260,15 +3260,7 @@ ACMD(do_duel)
 
 	if (!str_to_number(minute, szMinute))
 	{
-		// 캐나다는 기본 10분.
-		if (LC_IsCanada() == true)
-		{
-			minute = 10;
-		}
-		else
-		{
-			minute = 5;
-		}
+		minute = 5;
 	}
 	if (minute < 5)
 		minute = 5;

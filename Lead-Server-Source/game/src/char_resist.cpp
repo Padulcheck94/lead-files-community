@@ -18,10 +18,7 @@ int GetPoisonDamageRate(LPCHARACTER ch)
 
 	if (ch->IsPC())
 	{
-		if (LC_IsYMIR())
-			iRate = 40;
-		else
-			iRate = 50;
+		iRate = 50;
 	}
 	else
 		iRate = poison_damage_rate[ch->GetMobRank()];

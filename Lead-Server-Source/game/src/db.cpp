@@ -358,19 +358,18 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						str_to_number(aiPremiumTimes[PREMIUM_MARRIAGE_FAST], row[col++]);
 						str_to_number(aiPremiumTimes[PREMIUM_GOLD], row[col++]);
 
-						if (LC_IsEurope() || test_server)
-						{
-							long retValue = 0;
-							str_to_number(retValue, row[col]);
 
-							time_t create_time = retValue;
-							struct tm * tm1;
-							tm1 = localtime(&create_time);
-							strftime(szCreateDate, 255, "%Y%m%d", tm1);
+						long retValue = 0;
+						str_to_number(retValue, row[col]);
 
-							sys_log(0, "Create_Time %d %s", retValue, szCreateDate);
-							sys_log(0, "Block Time %d ", strncmp(szCreateDate, g_stBlockDate.c_str(), 8));
-						}
+						time_t create_time = retValue;
+						struct tm * tm1;
+						tm1 = localtime(&create_time);
+						strftime(szCreateDate, 255, "%Y%m%d", tm1);
+
+						sys_log(0, "Create_Time %d %s", retValue, szCreateDate);
+						sys_log(0, "Block Time %d ", strncmp(szCreateDate, g_stBlockDate.c_str(), 8));
+
 					}
 
 					int nPasswordDiff = strcmp(szEncrytPassword, szPassword);
@@ -401,21 +400,17 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					}
 					else
 					{
-						if (LC_IsEurope())
+						if (strncmp(szCreateDate, g_stBlockDate.c_str(), 8) >= 0)
 						{
-							//stBlockData >= 0 == 占쏙옙짜占쏙옙 BlockDate 占쏙옙占쏙옙 占싱뤄옙 
-							if (strncmp(szCreateDate, g_stBlockDate.c_str(), 8) >= 0)
-							{
-								LoginFailure(d, "BLKLOGIN");
-								sys_log(0, "   BLKLOGIN");
-								M2_DELETE(pinfo);
-								break;
-							}
-
-							char szQuery[1024];
-							snprintf(szQuery, sizeof(szQuery), "UPDATE account SET last_play=NOW() WHERE id=%u", dwID);
-							std::unique_ptr<SQLMsg> msg( DBManager::instance().DirectQuery(szQuery) );
+							LoginFailure(d, "BLKLOGIN");
+							sys_log(0, "   BLKLOGIN");
+							M2_DELETE(pinfo);
+							break;
 						}
+
+						char szQuery[1024];
+						snprintf(szQuery, sizeof(szQuery), "UPDATE account SET last_play=NOW() WHERE id=%u", dwID);
+						std::unique_ptr<SQLMsg> msg( DBManager::instance().DirectQuery(szQuery) );
 
 						TAccountTable & r = d->GetAccountTable();
 

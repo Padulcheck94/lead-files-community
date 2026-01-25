@@ -10,7 +10,8 @@ import constInfo
 import musicInfo
 import stringCommander
 
-
+from ui import EnablePaste
+EnablePaste(True)
 
 #bind_me(locals().values())
 

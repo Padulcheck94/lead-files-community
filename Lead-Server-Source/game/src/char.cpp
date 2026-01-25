@@ -594,13 +594,10 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	if (m_stShopSign.length() == 0)
 		return;
 
-	if (LC_IsCanada() == false)
+	if (CBanwordManager::instance().CheckString(m_stShopSign.c_str(), m_stShopSign.length()))
 	{
-		if (CBanwordManager::instance().CheckString(m_stShopSign.c_str(), m_stShopSign.length()))
-		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can't give your shop an invalid name."));	
-			return;
-		}
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can't give your shop an invalid name."));	
+		return;
 	}
 
 	// MYSHOP_PRICE_LIST
@@ -854,7 +851,7 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 		addPacket.dwMountVnum = GetMountVnum();
 		addPacket.bEmpire = m_bEmpire;
 
-		if (IsPC() == true && (LC_IsEurope() == true || LC_IsCanada() == true || LC_IsSingapore() == true))
+		if (IsPC() == true)
 		{
 			addPacket.dwLevel = GetLevel();
 		}
@@ -1294,12 +1291,6 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 		inet_ntoa(GetDesc()->GetAddr().sin_addr), GetGold(), g_bChannel, GetMapIndex(), GetAlignment());
 
 	LogManager::instance().CharLog(this, 0, "LOGOUT", buf);
-
-	if (LC_IsYMIR() || LC_IsKorea())
-	{
-		long playTime = GetRealPoint(POINT_PLAYTIME) - m_dwLoginPlayTime;
-		LogManager::instance().LoginLog(false, GetDesc()->GetAccountTable().id, GetPlayerID(), GetLevel(), GetJob(), playTime);
-	}
 
 	if (m_pWarMap)
 		SetWarMap(NULL);
@@ -2119,17 +2110,8 @@ void CHARACTER::ComputeBattlePoints()
 		iArmor += GetPoint(POINT_DEF_GRADE_BONUS);
 		iArmor += GetPoint(POINT_PARTY_DEFENDER_BONUS);
 
-		// INTERNATIONAL_VERSION
-		if (LC_IsYMIR())
-		{
-			PointChange(POINT_DEF_GRADE, iShowDef + iArmor);
-		}
-		else
-		{
-			PointChange(POINT_DEF_GRADE, iDef + iArmor);
-			PointChange(POINT_CLIENT_DEF_GRADE, (iShowDef + iArmor) - GetPoint(POINT_DEF_GRADE));
-		}
-		// END_OF_INTERNATIONAL_VERSION
+		PointChange(POINT_DEF_GRADE, iDef + iArmor);
+		PointChange(POINT_CLIENT_DEF_GRADE, (iShowDef + iArmor) - GetPoint(POINT_DEF_GRADE));
 
 		PointChange(POINT_MAGIC_ATT_GRADE, GetLevel() * 2 + GetPoint(POINT_IQ) * 2 + GetPoint(POINT_MAGIC_ATT_GRADE_BONUS));
 		PointChange(POINT_MAGIC_DEF_GRADE, GetLevel() + (GetPoint(POINT_IQ) * 3 + GetPoint(POINT_HT)) / 3 + iArmor / 2 + GetPoint(POINT_MAGIC_DEF_GRADE_BONUS));
@@ -4247,7 +4229,7 @@ bool CHARACTER::RequestToParty(LPCHARACTER leader)
 			return false;
 
 		case PERR_LVBOUNDARY:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Party> You can only invite parties within -%d to +%d levels."), gPartyGapLevel, gPartyGapLevel); 
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Party> You can only invite parties within -%d to +%d levels."), g_PartyGapLevel, g_PartyGapLevel); 
 			return false;
 
 		case PERR_LOWLEVEL:
@@ -4587,7 +4569,7 @@ CHARACTER::PartyJoinErrCode CHARACTER::IsPartyJoinableCondition(const LPCHARACTE
 
 static bool __party_can_join_by_level(LPCHARACTER leader, LPCHARACTER quest)
 {
-	return (abs(leader->GetLevel() - quest->GetLevel()) <= gPartyGapLevel);
+	return (abs(leader->GetLevel() - quest->GetLevel()) <= g_PartyGapLevel);
 }
 
 CHARACTER::PartyJoinErrCode CHARACTER::IsPartyJoinableMutableCondition(const LPCHARACTER pchLeader, const LPCHARACTER pchGuest)
@@ -6762,18 +6744,6 @@ EVENTFUNC(check_speedhack_event)
 	{
 		// write hack log
 		LogManager::instance().SpeedHackLog(ch->GetPlayerID(), ch->GetX(), ch->GetY(), ch->m_speed_hack_count);
-
-		if (false == LC_IsEurope())
-		{
-			// close connection
-			LPDESC desc = ch->GetDesc();
-
-			if (desc)
-			{
-				DESC_MANAGER::instance().DestroyDesc(desc);
-				return 0;
-			}
-		}
 	}
 
 	ch->m_speed_hack_count = 0;

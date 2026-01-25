@@ -1101,38 +1101,3 @@ bool CArena::RegisterObserverPtr(LPCHARACTER pChar)
 	return true;
 }
 
-bool CArenaManager::IsLimitedItem( long lMapIndex, DWORD dwVnum )
-{
-	if ( IsArenaMap( lMapIndex ) == true )
-	{
-		if ( LC_IsCanada() == true )
-		{
-			switch ( dwVnum )
-			{
-				case 50020:
-				case 50021:
-				case 50022:
-				case 50801:
-				case 50802:
-				case 50813:
-				case 50814:
-				case 50817:
-				case 50818:
-				case 50819:
-				case 50820:
-				case 50821:
-				case 50822:
-				case 50823:
-				case 50824:
-				case 50825:
-				case 50826:
-				case 71044:
-				case 71055:
-					return true;
-			}
-		}
-	}
-
-	return false;
-}
-

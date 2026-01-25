@@ -5,8 +5,6 @@
 #include "char_manager.h"
 #include "arena.h"
 
-extern bool LC_IsCanada();
-
 namespace quest
 {
 	int arena_start_duel(lua_State * L)
@@ -39,21 +37,11 @@ namespace quest
 			lua_pushnumber(L, 2);
 			return 1;
 		}
-		if (LC_IsCanada() == true)
+
+		if ( CArenaManager::instance().StartDuel(ch, ch2, nSetPoint) == false )
 		{
-			if ( CArenaManager::instance().StartDuel(ch, ch2, nSetPoint, 10) == false )
-			{
-				lua_pushnumber(L, 3);
-				return 1;
-			}
-		}
-		else
-		{
-			if ( CArenaManager::instance().StartDuel(ch, ch2, nSetPoint) == false )
-			{
-				lua_pushnumber(L, 3);
-				return 1;
-			}
+			lua_pushnumber(L, 3);
+			return 1;
 		}
 
 		lua_pushnumber(L, 1);

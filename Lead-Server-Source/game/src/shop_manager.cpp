@@ -315,17 +315,9 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 	//세금 계산
 	DWORD dwTax = 0;
 	int iVal = 3;
-	
-	if (LC_IsYMIR() ||  LC_IsKorea())
-	{
-		dwTax = dwPrice * iVal / 100;
-		dwPrice -= dwTax;
-	}
-	else
-	{
-		dwTax = dwPrice * iVal/100;
-		dwPrice -= dwTax;
-	}
+
+	dwTax = dwPrice * iVal/100;
+	dwPrice -= dwTax;
 
 	if (test_server)
 		sys_log(0, "Sell Item price id %d %s itemid %d", ch->GetPlayerID(), ch->GetName(), item->GetID());
@@ -349,11 +341,6 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 
 	if (bCount == item->GetCount())
 	{
-		// 한국에는 아이템을 버리고 복구해달라는 진상유저들이 많아서
-		// 상점 판매시 속성로그를 남긴다.
-		if (LC_IsYMIR())
-			item->AttrLog();
-
 		ITEM_MANAGER::instance().RemoveItem(item, "SELL");
 	}
 	else

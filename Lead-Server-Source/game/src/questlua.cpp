@@ -512,7 +512,6 @@ namespace quest
 			}
 		}
 
-		if (LC_IsEurope())
 		{
 			char translateFileName[256];
 			snprintf(translateFileName, sizeof(translateFileName), "%s/translate.lua", LocaleService_GetBasePath().c_str());
@@ -528,15 +527,7 @@ namespace quest
 
 		{
 			char questLocaleFileName[256];
-			if (LC_IsEurope())
-			{
-				snprintf(questLocaleFileName, sizeof(questLocaleFileName), "%s/locale.lua", g_stQuestDir.c_str());
-			}
-			else
-			{
-				snprintf(questLocaleFileName, sizeof(questLocaleFileName), "%s/locale_%s.lua", g_stQuestDir.c_str(), g_stLocale.c_str());
-			}
-
+			snprintf(questLocaleFileName, sizeof(questLocaleFileName), "%s/locale.lua", g_stQuestDir.c_str());
 			int questLocaleLoadingResult = lua_dofile(L, questLocaleFileName);
 			sys_log(0, "LoadQuestLocale(%s), returns %d", questLocaleFileName, questLocaleLoadingResult);
 			if (questLocaleLoadingResult != 0)

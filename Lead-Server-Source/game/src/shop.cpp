@@ -292,44 +292,21 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 
 	ch->PointChange(POINT_GOLD, -dwPrice, false);
 
-	//세금 계산
 	DWORD dwTax = 0;
-	int iVal = 0;
+	int iVal = quest::CQuestManager::instance().GetEventFlag("personal_shop");
 
-	if (LC_IsYMIR() ||  LC_IsKorea())
+	if (0 < iVal)
 	{
-		if (0 < (iVal = quest::CQuestManager::instance().GetEventFlag("trade_tax")))
-		{
-			if (iVal > 100)
-				iVal = 100;
+		if (iVal > 100)
+			iVal = 100;
 
-			dwTax = dwPrice * iVal / 100;
-			dwPrice = dwPrice - dwTax;
-		}
-		else
-		{
-			iVal = 3;
-			dwTax = dwPrice * iVal / 100;
-			dwPrice = dwPrice - dwTax;			
-		}
+		dwTax = dwPrice * iVal / 100;
+		dwPrice = dwPrice - dwTax;
 	}
 	else
 	{
-		iVal = quest::CQuestManager::instance().GetEventFlag("personal_shop");
-
-		if (0 < iVal)
-		{
-			if (iVal > 100)
-				iVal = 100;
-
-			dwTax = dwPrice * iVal / 100;
-			dwPrice = dwPrice - dwTax;
-		}
-		else
-		{
-			iVal = 0;
-			dwTax = 0;
-		}
+		iVal = 0;
+		dwTax = 0;
 	}
 
 	if (m_pkPC)

@@ -317,7 +317,6 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 		strTrainSkill = os.str();
 	}
 
-	// 여기서 확률을 계산합니다.
 	BYTE bLastLevel = GetSkillLevel(dwSkillVnum);
 
 	int idx = MIN(9, GetSkillLevel(dwSkillVnum) - 30);
@@ -331,28 +330,6 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 	int iMaxReadCount = aiGrandMasterSkillBookMaxCount[idx];
 
 	int iBookCount = aiGrandMasterSkillBookCountForLevelUp[idx];
-
-	if ( LC_IsYMIR() == true || LC_IsKorea() == true )
-	{
-		const int aiGrandMasterSkillBookCountForLevelUp_euckr[10] =
-		{
-			3, 3, 4, 5, 6, 7, 8, 9, 10, 15, 
-		};
-
-		const int aiGrandMasterSkillBookMinCount_euckr[10] = 
-		{
-			1, 1, 1, 2, 2, 2, 3, 3, 4, 5
-		};
-
-		const int aiGrandMasterSkillBookMaxCount_euckr[10] = 
-		{
-			5, 7, 9, 11, 13, 15, 18, 23, 25, 30
-		};
-
-		iMinReadCount = aiGrandMasterSkillBookMinCount_euckr[idx];
-		iMaxReadCount = aiGrandMasterSkillBookMaxCount_euckr[idx];
-		iBookCount = aiGrandMasterSkillBookCountForLevelUp_euckr[idx];
-	}
 
 	if (FindAffect(AFFECT_SKILL_BOOK_BONUS))
 	{
@@ -401,18 +378,6 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 }
 // END_OF_ADD_GRANDMASTER_SKILL
 
-static bool FN_should_check_exp(LPCHARACTER ch)
-{
-	if (LC_IsCanada())
-		return ch->GetLevel() < gPlayerMaxLevel;
-
-	if (!LC_IsYMIR())
-		return true;
-
-	return false;
-}
-
-
 bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 {
 	const CSkillProto* pkSk = CSkillManager::instance().Get(dwSkillVnum);
@@ -426,20 +391,12 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 		return false;
 	}
 
-	DWORD need_exp = 0;
-
-	if (FN_should_check_exp(this))
+	if (GetExp() < (DWORD)g_SkillBookExp)
 	{
-		need_exp = 20000;
-
-		if ( GetExp() < need_exp )
-		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot read this due to your lack of experience."));
-			return false;
-		}
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot read this due to your lack of experience."));
+		return false;
 	}
 
-	// bType이 0이면 처음부터 책으로 수련 가능
 	if (pkSk->dwType != 0)
 	{
 		if (GetSkillMasterType(dwSkillVnum) != SKILL_MASTER)
@@ -470,141 +427,47 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 		}
 	}
 
-	// 여기서 확률을 계산합니다.
-	BYTE bLastLevel = GetSkillLevel(dwSkillVnum);
+	PointChange(POINT_EXP, -g_SkillBookExp);
+	
+	bool bSuccess = false;
 
-	if (bProb != 0)
+	if (bProb == 0)
 	{
-		// SKILL_BOOK_BONUS
+		int idx = MIN(9, GetSkillLevel(dwSkillVnum) - 20);
+		int iBookCount = aiSkillBookCountForLevelUp[idx];
+
+		if (FindAffect(AFFECT_SKILL_BOOK_BONUS))
+		{
+			if (iBookCount & 1)
+				iBookCount = iBookCount / 2 + 1;
+			else
+				iBookCount = iBookCount / 2;
+
+			RemoveAffect(AFFECT_SKILL_BOOK_BONUS);
+		}
+
+		if (number(1, iBookCount) == 2)
+			bSuccess = true;
+	}
+	else
+	{
 		if (FindAffect(AFFECT_SKILL_BOOK_BONUS))
 		{
 			bProb += bProb / 2;
 			RemoveAffect(AFFECT_SKILL_BOOK_BONUS);
 		}
-		// END_OF_SKILL_BOOK_BONUS
 
-		sys_log(0, "LearnSkillByBook Pct %u prob %d", dwSkillVnum, bProb);
+		if (test_server) sys_log(0, "LearnSkillByBook Pct %u prob %d", dwSkillVnum, bProb);
 
 		if (number(1, 100) <= bProb)
-		{
-			if (test_server)
-				sys_log(0, "LearnSkillByBook %u SUCC", dwSkillVnum);
-
-			SkillLevelUp(dwSkillVnum, SKILL_UP_BY_BOOK);
-		}
-		else
-		{
-			if (test_server)
-				sys_log(0, "LearnSkillByBook %u FAIL", dwSkillVnum);
-		}
-	}
-	else
-	{
-		int idx = MIN(9, GetSkillLevel(dwSkillVnum) - 20);
-
-		sys_log(0, "LearnSkillByBook %s table idx %d value %d", GetName(), idx, aiSkillBookCountForLevelUp[idx]);
-
-		if (!LC_IsYMIR()) 
-		{
-			int need_bookcount = GetSkillLevel(dwSkillVnum) - 20;
-
-			PointChange(POINT_EXP, -need_exp);
-
-			quest::CQuestManager& q = quest::CQuestManager::instance();
-			quest::PC* pPC = q.GetPC(GetPlayerID());
-
-			if (pPC)
-			{
-				char flag[128+1];
-				memset(flag, 0, sizeof(flag));
-				snprintf(flag, sizeof(flag), "traning_master_skill.%u.read_count", dwSkillVnum);
-
-				int read_count = pPC->GetFlag(flag);
-				int percent = 65;
-
-				if (FindAffect(AFFECT_SKILL_BOOK_BONUS))
-				{
-					percent = 0;
-					RemoveAffect(AFFECT_SKILL_BOOK_BONUS);
-				}
-
-				if (number(1, 100) > percent)
-				{
-					// 책읽기에 성공
-					if (read_count >= need_bookcount)
-					{
-						SkillLevelUp(dwSkillVnum, SKILL_UP_BY_BOOK);
-						pPC->SetFlag(flag, 0);
-
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have successfully finished your training with the Book."));
-						LogManager::instance().CharLog(this, dwSkillVnum, "READ_SUCCESS", "");
-						return true;
-					}
-					else
-					{
-						pPC->SetFlag(flag, read_count + 1);
-
-						switch (number(1, 3))
-						{
-							case 1:
-								ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("I'm making progress, but I still haven't understood everything."));
-								break;
-											
-							case 2:
-								ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("These instructions are difficult to understand. I have to carry on studying."));
-								break;
-
-							case 3:
-							default:
-								ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("I understand this chapter. But I've got to carry on working hard."));
-								break;
-						}
-
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have to read %d more skill books to improve this skill."), need_bookcount - read_count);
-						return true;
-					}
-				}
-			}
-			else
-			{
-				// 사용자의 퀘스트 정보 로드 실패
-			}
-		}
-		// INTERNATIONAL_VERSION
-		else
-		{
-			int iBookCount = 99;
-
-			if (LC_IsYMIR() == true)
-			{
-				const int aiSkillBookCountForLevelUp_euckr[10] =
-				{
-					2, 2, 3, 3, 3, 3, 3, 3, 4, 5
-				};
-
-				iBookCount = aiSkillBookCountForLevelUp_euckr[idx];
-			}
-			else
-				iBookCount = aiSkillBookCountForLevelUp[idx];
-
-			if (FindAffect(AFFECT_SKILL_BOOK_BONUS))
-			{
-				if (iBookCount & 1) // iBookCount % 2
-					iBookCount = iBookCount / 2 + 1;
-				else
-					iBookCount = iBookCount / 2;
-
-				RemoveAffect(AFFECT_SKILL_BOOK_BONUS);
-			}
-
-			if (number(1, iBookCount) == 2)
-				SkillLevelUp(dwSkillVnum, SKILL_UP_BY_BOOK);
-		}
-		// END_OF_INTERNATIONAL_VERSION
+			bSuccess = true;
 	}
 
-	if (bLastLevel != GetSkillLevel(dwSkillVnum))
+	if (bSuccess)
 	{
+		SkillLevelUp(dwSkillVnum, SKILL_UP_BY_BOOK);
+		if (test_server) sys_log(0, "LearnSkillByBook %u SUCC", dwSkillVnum);
+
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("My body is full of energy!"));
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("The training seems to be working already..."));
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have successfully finished your training with the Book."));
@@ -612,6 +475,8 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 	}
 	else
 	{
+		if (test_server) sys_log(0, "LearnSkillByBook %u FAIL", dwSkillVnum);
+
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("That did not work. Damn!"));
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Training has failed. Please try again later."));
 		LogManager::instance().CharLog(this, dwSkillVnum, "READ_FAIL", "");
@@ -1193,37 +1058,13 @@ struct FuncSplashDamage
 		if (m_pkSk->dwVnum == SKILL_AMSEOP)
 		{
 			float fDelta = GetDegreeDelta(m_pkChr->GetRotation(), pkChrVictim->GetRotation());
-			float adjust;
+			float adjust = (fDelta < 35.0f) ? 1.5f : 1.0f;
 
-			if (fDelta < 35.0f)
-			{
-				adjust = 1.5f;
+			if (bUnderEunhyung)
+				adjust += 0.5f;
 
-				if (bUnderEunhyung)
-					adjust += 0.5f;
-
-				if (m_pkChr->GetWear(WEAR_WEAPON) && m_pkChr->GetWear(WEAR_WEAPON)->GetSubType() == WEAPON_DAGGER)
-				{
-					//if (!g_iUseLocale)
-					if ( LC_IsYMIR() )
-						adjust += 1.0f;
-					else
-						adjust += 0.5f;
-				}
-			}
-			else
-			{
-				adjust = 1.0f;
-
-				if ( !LC_IsYMIR() )
-				{
-					if (bUnderEunhyung)
-						adjust += 0.5f;
-
-					if (m_pkChr->GetWear(WEAR_WEAPON) && m_pkChr->GetWear(WEAR_WEAPON)->GetSubType() == WEAPON_DAGGER)
-						adjust += 0.5f;
-				}
-			}
+			if (m_pkChr->GetWear(WEAR_WEAPON) && m_pkChr->GetWear(WEAR_WEAPON)->GetSubType() == WEAPON_DAGGER)
+				adjust += 0.5f;
 
 			iAmount = (int) (iAmount * adjust);
 		}
@@ -1233,11 +1074,7 @@ struct FuncSplashDamage
 
 			if (m_pkChr->GetWear(WEAR_WEAPON) && m_pkChr->GetWear(WEAR_WEAPON)->GetSubType() == WEAPON_DAGGER)
 			{
-				//if (!g_iUseLocale)
-				if ( LC_IsYMIR() )
-					adjust = 1.4f;
-				else
-					adjust = 1.35f;
+				adjust = 1.35f;
 			}
 
 			iAmount = (int) (iAmount * adjust);
@@ -1488,11 +1325,7 @@ struct FuncSplashDamage
 
 				if (m_pkChr->IsPC() && m_pkChr->m_SkillUseInfo[m_pkSk->dwVnum].GetMainTargetVID() == (DWORD) pkChrVictim->GetVID())
 				{
-					//if (!g_iUseLocale)
-					if (LC_IsYMIR())
-						SkillAttackAffect(pkChrVictim, 1000, IMMUNE_STUN, m_pkSk->dwVnum, POINT_NONE, 0, AFF_STUN, 3, m_pkSk->szName);
-					else
-						SkillAttackAffect(pkChrVictim, 1000, IMMUNE_STUN, m_pkSk->dwVnum, POINT_NONE, 0, AFF_STUN, 4, m_pkSk->szName);
+					SkillAttackAffect(pkChrVictim, 1000, IMMUNE_STUN, m_pkSk->dwVnum, POINT_NONE, 0, AFF_STUN, 4, m_pkSk->szName);
 				}
 				else
 				{
@@ -2300,17 +2133,8 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 				DWORD affact_flag = pkSk->dwAffectFlag;
 
 				// ADD_GRANDMASTER_SKILL
-				//if (g_iUseLocale)
-				if ( !LC_IsYMIR() )
-				{
-					if ((pkSk->dwVnum == SKILL_CHUNKEON && GetUsedSkillMasterType(pkSk->dwVnum) < SKILL_GRAND_MASTER))
-						affact_flag = AFF_CHEONGEUN_WITH_FALL;
-				}
-				else 
-				{
-					if ((pkSk->dwVnum == SKILL_CHUNKEON && GetUsedSkillMasterType(pkSk->dwVnum) < SKILL_MASTER))
-						affact_flag = AFF_CHEONGEUN_WITH_FALL;
-				}
+				if ((pkSk->dwVnum == SKILL_CHUNKEON && GetUsedSkillMasterType(pkSk->dwVnum) < SKILL_GRAND_MASTER))
+					affact_flag = AFF_CHEONGEUN_WITH_FALL;
 				// END_OF_ADD_GRANDMASTER_SKILL
 
 				pkVictim->AddAffect(pkSk->dwVnum,

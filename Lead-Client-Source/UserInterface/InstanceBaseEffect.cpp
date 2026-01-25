@@ -657,7 +657,7 @@ void CInstanceBase::UpdateTextTailLevel(DWORD level)
 	static D3DXCOLOR s_kLevelColor = D3DXCOLOR(152.0f/255.0f, 255.0f/255.0f, 51.0f/255.0f, 1.0f);
 
 	char szText[256];
-	sprintf(szText, "Lv %d", level);
+	sprintf(szText, "Lv. %d ", level);
 	CPythonTextTail::Instance().AttachLevel(GetVirtualID(), szText, s_kLevelColor);
 }
 

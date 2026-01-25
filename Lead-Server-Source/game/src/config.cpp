@@ -37,7 +37,7 @@ int			test_server = 0;
 bool		guild_mark_server = true;
 BYTE		guild_mark_min_level = 3;
 bool		no_wander = false;
-int		g_iUserLimit = 32768;
+int			g_iUserLimit = 32768;
 
 char		g_szPublicIP[16] = "0";
 char		g_szInternalIP[16] = "0";
@@ -48,10 +48,7 @@ int			g_iBusyUserCount = 650;
 bool		g_bEmpireWhisper = true;
 BYTE		g_bAuthServer = false;
 
-bool		g_bCheckClientVersion = true;
-string	g_stClientVersion = "1215955205";
-
-string	g_stAuthMasterIP;
+string		g_stAuthMasterIP;
 WORD		g_wAuthMasterPort = 0;
 
 static std::set<DWORD> s_set_dwFileCRC;
@@ -82,7 +79,6 @@ int VIEW_RANGE = 5000;
 int VIEW_BONUS_RANGE = 500;
 
 int g_server_id = 0;
-string g_strWebMallURL = "www.metin2.de";
 
 unsigned int g_uiSpamBlockDuration = 60 * 15; // 기본 15분
 unsigned int g_uiSpamBlockScore = 100; // 기본 100점
@@ -94,13 +90,15 @@ int			g_iSpamBlockMaxLevel = 10;
 
 void		LoadStateUserCount();
 void		LoadValidCRCList();
-bool		LoadClientVersion();
 bool            g_protectNormalPlayer   = false;        // 범법자가 "평화모드" 인 일반유저를 공격하지 못함
 
 int gPlayerMaxLevel = 99;
-BYTE gPartyGapLevel = 30;
-
-int gGuildCreateFee = 200000;
+// NEW CONFIG VARIABLES
+BYTE g_PartyGapLevel = 30;
+int g_GuildCreateFee = 200000;
+int g_DeathExpLossCap = 800000;
+int g_SkillBookExp = 20000;
+// NEW CONFIG VARIABLES
 
 bool g_BlockCharCreation = false;
 
@@ -891,11 +889,6 @@ void config_init(const string& st_localeServiceName)
 			str_to_number(g_server_id, value_string);
 		}
 
-		TOKEN("mall_url")
-		{
-			g_strWebMallURL = value_string;
-		}
-
 		TOKEN("bind_ip")
 		{
 			strlcpy(g_szPublicIP, value_string, sizeof(g_szPublicIP));
@@ -954,20 +947,38 @@ void config_init(const string& st_localeServiceName)
 
 		TOKEN("party_gap_level")
 		{
-			str_to_number(gPartyGapLevel, value_string);
+			str_to_number(g_PartyGapLevel, value_string);
 
-			gPartyGapLevel = MINMAX(1, gPartyGapLevel, PLAYER_MAX_LEVEL_CONST);
+			g_PartyGapLevel = MINMAX(1, g_PartyGapLevel, PLAYER_MAX_LEVEL_CONST);
 
-			fprintf(stderr, "PARTY_GAP_LEVEL: %d\n", gPartyGapLevel);
+			fprintf(stderr, "PARTY_GAP_LEVEL: %d\n", g_PartyGapLevel);
 		}
 
 		TOKEN("guild_create_fee")
 		{
-			str_to_number(gGuildCreateFee, value_string);
+			str_to_number(g_GuildCreateFee, value_string);
 
-			gGuildCreateFee = MINMAX(1, gGuildCreateFee, GOLD_MAX);
+			g_GuildCreateFee = MINMAX(1, g_GuildCreateFee, GOLD_MAX);
 
-			fprintf(stderr, "GUILD_CREATE_FEE: %d\n", gGuildCreateFee);
+			fprintf(stderr, "GUILD_CREATE_FEE: %d\n", g_GuildCreateFee);
+		}
+
+		TOKEN("death_exp_loss_cap")
+		{
+			str_to_number(g_DeathExpLossCap, value_string);
+			
+			g_DeathExpLossCap = MAX(0, g_DeathExpLossCap);
+
+			fprintf(stderr, "DEATH_EXP_LOSS_CAP: %d\n", g_DeathExpLossCap);
+		}
+
+		TOKEN("skill_book_exp")
+		{
+			str_to_number(g_SkillBookExp, value_string);
+
+			g_SkillBookExp = MAX(0, g_SkillBookExp);
+
+			fprintf(stderr, "SKILL_BOOK_EXP: %d\n", g_SkillBookExp);
 		}
 
 		TOKEN("block_char_creation")
@@ -1096,60 +1107,6 @@ void LoadValidCRCList()
 	}
 }
 
-bool LoadClientVersion()
-{
-	FILE * fp = fopen("VERSION", "r");
-
-	if (!fp)
-		return false;
-
-	char buf[256];
-	fgets(buf, 256, fp);
-
-	char * p = strchr(buf, '\n');
-	if (p) *p = '\0';
-
-	fprintf(stderr, "VERSION: \"%s\"\n", buf);
-
-	g_stClientVersion = buf;
-	fclose(fp);
-	return true;
-}
-
-void CheckClientVersion()
-{
-	if (LC_IsEurope())
-	{
-		g_bCheckClientVersion = true;
-	}
-	else
-	{
-		g_bCheckClientVersion = false;
-	}
-
-	const DESC_MANAGER::DESC_SET & set = DESC_MANAGER::instance().GetClientSet();
-	DESC_MANAGER::DESC_SET::const_iterator it = set.begin();
-
-	while (it != set.end())
-	{
-		LPDESC d = *(it++);
-
-		if (!d->GetCharacter())
-			continue;
-
-
-		int version = atoi(g_stClientVersion.c_str());
-		int date	= atoi(d->GetClientVersion() );
-
-		//if (0 != g_stClientVersion.compare(d->GetClientVersion()) )
-		if (version > date)
-		{
-			d->GetCharacter()->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("You do not have the correct client version. Please install the normal patch."));
-			d->DelayedDisconnect(10);
-		}
-	}
-}
-
 void LoadStateUserCount()
 {
 	FILE * fp = fopen("state_user_count", "r");
@@ -1157,8 +1114,7 @@ void LoadStateUserCount()
 	if (!fp)
 		return;
 
-	if (!LC_IsHongKong())
-		fscanf(fp, " %d %d ", &g_iFullUserCount, &g_iBusyUserCount);
+	fscanf(fp, " %d %d ", &g_iFullUserCount, &g_iBusyUserCount);
 
 	fclose(fp);
 }

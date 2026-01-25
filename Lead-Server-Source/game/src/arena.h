@@ -131,8 +131,6 @@ class CArenaManager : public singleton<CArenaManager>
 
 		bool IsArenaMap(DWORD dwMapIndex);
 		MEMBER_IDENTITY IsMember(DWORD dwMapIndex, DWORD PID);
-
-		bool IsLimitedItem( long lMapIndex, DWORD dwVnum );
 };
 
 #endif /*__CLASS_ARENA_MANAGER__*/

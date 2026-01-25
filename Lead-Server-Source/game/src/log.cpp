@@ -220,23 +220,15 @@ void LogManager::ShoutLog(BYTE bChannel, BYTE bEmpire, const char * pszText)
 
 void LogManager::LevelLog(LPCHARACTER pChar, unsigned int level, unsigned int playhour)
 {
-	if (true == LC_IsEurope())
-	{
-		DWORD aid = 0;
+	DWORD aid = 0;
 
-		if (NULL != pChar->GetDesc())
-		{
-			aid = pChar->GetDesc()->GetAccountTable().id;
-		}
-
-		Query("REPLACE INTO levellog%s (name, level, time, account_id, pid, playtime) VALUES('%s', %u, NOW(), %u, %u, %d)",
-				get_table_postfix(), pChar->GetName(), level, aid, pChar->GetPlayerID(), playhour);
-	}
-	else
+	if (NULL != pChar->GetDesc())
 	{
-		Query("REPLACE INTO levellog%s (name, level, time, playtime) VALUES('%s', %u, NOW(), %d)",
-				get_table_postfix(), pChar->GetName(), level, playhour);
+		aid = pChar->GetDesc()->GetAccountTable().id;
 	}
+
+	Query("REPLACE INTO levellog%s (name, level, time, account_id, pid, playtime) VALUES('%s', %u, NOW(), %u, %u, %d)",
+			get_table_postfix(), pChar->GetName(), level, aid, pChar->GetPlayerID(), playhour);
 }
 
 void LogManager::BootLog(const char * c_pszHostName, BYTE bChannel)
@@ -276,14 +268,13 @@ void LogManager::DetailLoginLog(bool isLogin, LPCHARACTER ch)
 
 	if (true == isLogin)
 	{
-		Query("INSERT INTO loginlog2(type, is_gm, login_time, channel, account_id, pid, ip, client_version) "
+		Query("INSERT INTO loginlog2(type, is_gm, login_time, channel, account_id, pid, ip) "
 				"VALUES('INVALID', %s, NOW(), %d, %u, %u, inet_aton('%s'), '%s')",
 				ch->IsGM() == true ? "'Y'" : "'N'",
 				g_bChannel,
 				ch->GetDesc()->GetAccountTable().id,
 				ch->GetPlayerID(),
-				ch->GetDesc()->GetHostName(),
-				ch->GetDesc()->GetClientVersion());
+				ch->GetDesc()->GetHostName());
 	}
 	else
 	{

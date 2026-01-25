@@ -35,7 +35,7 @@
 //	Include files
 
 #include "SpeedTreeMaterial.h"
-#include <SpeedTreeRT.h>
+#include <speedtree/SpeedTreeRT.h>
 
 #include <d3d8.h>
 #include <d3d8types.h>

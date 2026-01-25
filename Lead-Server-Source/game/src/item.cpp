@@ -1074,11 +1074,8 @@ void CItem::SetOwnership(LPCHARACTER ch, int iSec)
 	if (m_pkOwnershipEvent)
 		return;
 
-	if (true == LC_IsEurope())
-	{
-		if (iSec <= 10)
-			iSec = 30;
-	}
+	if (iSec <= 10)
+		iSec = 30;
 
 	m_dwOwnershipPID = ch->GetPlayerID();
 

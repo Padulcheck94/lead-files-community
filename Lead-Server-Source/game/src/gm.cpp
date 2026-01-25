@@ -55,63 +55,55 @@ void gm_new_host_insert( const char * host )
 	sys_log( 0, "InsertGMHost(ip:%s)", host );
 }
 
-BYTE gm_new_get_level( const char * name, const char * host, const char* account)
+BYTE gm_new_get_level(const char* name, const char* host, const char* account)
 {
-	if ( test_server ) return GM_IMPLEMENTOR;
+	if (test_server) return GM_IMPLEMENTOR;
 
 	std::map<std::string, tGM >::iterator it = g_map_GM.find(name);
 
 	if (g_map_GM.end() == it)
 		return GM_PLAYER;
 
-	// GERMAN_GM_NOT_CHECK_HOST
-	// 독일 버전은 호스트 체크를 하지 않는다.
-	if ( LC_IsEurope() && !LC_IsTaiwan() || LC_IsSingapore() )
+	// Check Account Name Validity
+	if (account)
 	{
-	    if (account)
-	    {
-		if ( strcmp ( it->second.Info.m_szAccount, account  ) != 0 )
+		if (strcmp(it->second.Info.m_szAccount, account) != 0)
 		{
-		    sys_log(0, "GM_NEW_GET_LEVEL : BAD ACCOUNT [ACCOUNT:%s/%s", it->second.Info.m_szAccount, account);
-		    return GM_PLAYER;
+			sys_log(0, "GM_NEW_GET_LEVEL : BAD ACCOUNT [ACCOUNT:%s/%s]", it->second.Info.m_szAccount, account);
+			return GM_PLAYER;
 		}
-	    }
-	    sys_log(0, "GM_NEW_GET_LEVEL : FIND ACCOUNT");
-	    return it->second.Info.m_Authority;
 	}
-	// END_OF_GERMAN_GM_NOT_CHECK_HOST
-	else
-	{
 
-		// Do not check for host name if contact ip is 'ALL' or empty
-	    if (host &&
-			strlen(it->second.Info.m_szContactIP) > 0 &&
-			strcmp(it->second.Info.m_szContactIP, "ALL") != 0)
-	    {
-			if (it->second.pset_Host)
+	// Do not check for host name if contact ip is 'ALL' or empty
+	if (host &&
+		strlen(it->second.Info.m_szContactIP) > 0 &&
+		strcmp(it->second.Info.m_szContactIP, "ALL") != 0)
+	{
+		if (it->second.pset_Host)
+		{
+			// Check against list of allowed IPs
+			if (it->second.pset_Host->end() == it->second.pset_Host->find(host))
 			{
-			    if (it->second.pset_Host->end() == it->second.pset_Host->find(host) )
-			    {
-					sys_log(0, "GM_NEW_GET_LEVEL : BAD HOST IN HOST_LIST");
-					return GM_PLAYER;
-			    }
+				sys_log(0, "GM_NEW_GET_LEVEL : BAD HOST IN HOST_LIST");
+				return GM_PLAYER;
 			}
-			else
+		}
+		else
+		{
+			// Check against single allowed IP
+			if (strcmp(it->second.Info.m_szContactIP, host) != 0)
 			{
-			    if ( strcmp ( it->second.Info.m_szContactIP, host  ) != 0 )
-			    {
-					sys_log(0, "GM_NEW_GET_LEVEL : BAD HOST IN GMLIST");
-					return GM_PLAYER;
-			    }
+				sys_log(0, "GM_NEW_GET_LEVEL : BAD HOST IN GMLIST");
+				return GM_PLAYER;
 			}
-	    }
-	    sys_log(0, "GM_NEW_GET_LEVEL : FIND HOST");
-	    
-	    return it->second.Info.m_Authority;
+		}
 	}
-	return GM_PLAYER;
+
+	sys_log(0, "GM_NEW_GET_LEVEL : SUCCESS");
+
+	return it->second.Info.m_Authority;
 }
-	
+
 //END_ADMIN_MANAGER
 BYTE gm_get_level(const char * name, const char * host, const char* account)
 {

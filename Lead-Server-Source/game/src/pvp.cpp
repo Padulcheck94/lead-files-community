@@ -431,12 +431,9 @@ bool CPVPManager::CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 
 	if (pkChr->GetEmpire() != pkVictim->GetEmpire())
 	{
-		if ( LC_IsYMIR() == true || LC_IsKorea() == true )
+		if ( pkChr->GetPKMode() == PK_MODE_PROTECT || pkVictim->GetPKMode() == PK_MODE_PROTECT )
 		{
-			if ( pkChr->GetPKMode() == PK_MODE_PROTECT || pkVictim->GetPKMode() == PK_MODE_PROTECT )
-			{
-				return false;
-			}
+			return false;
 		}
 
 		return true;

@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <memory.h>
 
-#include <libjpeg-9f/jpeglib.h>
-#include <libjpeg-9f/jpegLibLink.h>
+#include <libjpeg/jpeglib.h>
+#include <libjpeg/jpegLibLink.h>
 
 #define OUTBUFFER_SIZE 0x8000
 

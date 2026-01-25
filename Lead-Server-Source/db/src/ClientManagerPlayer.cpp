@@ -307,7 +307,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 			snprintf(szQuery, sizeof(szQuery),
 					"SELECT dwPID,bType,bApplyOn,lApplyValue,dwFlag,lDuration,lSPCost FROM affect%s WHERE dwPID=%d",
 					GetTablePostfix(), pTab->id);
-			CDBManager::instance().ReturnQuery(szQuery, QID_AFFECT, peer->GetHandle(), new ClientHandleInfo(dwHandle));
+			CDBManager::instance().ReturnQuery(szQuery, QID_AFFECT, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id));
 		}
 		/////////////////////////////////////////////
 		// 2) 아이템이 DBCache 에 없음 : DB 에서 가져옴 
@@ -578,40 +578,22 @@ void CClientManager::RESULT_COMPOSITE_PLAYER(CPeer * peer, SQLMsg * pMsg, DWORD 
 
 		case QID_AFFECT:
 			sys_log(0, "QID_AFFECT %u", info->dwHandle);
+
+			// fix: if there are no affects, make an empty one to send the packet
+			if (!mysql_num_rows(pSQLResult))
+			{
+				TPacketAffectElement pAffElem{};
+				DWORD dwCount = 0;
+
+				peer->EncodeHeader(HEADER_DG_AFFECT_LOAD, info->dwHandle, sizeof(DWORD) + sizeof(DWORD) + sizeof(TPacketAffectElement) * dwCount);
+				peer->Encode(&info->player_id, sizeof(DWORD));
+				peer->Encode(&dwCount, sizeof(DWORD));
+				peer->Encode(&pAffElem, sizeof(TPacketAffectElement) * dwCount);
+				break;
+			}
+
 			RESULT_AFFECT_LOAD(peer, pSQLResult, info->dwHandle);
 			break;
-			/*
-			   case QID_PLAYER_ITEM_QUEST_AFFECT:
-			   sys_log(0, "QID_PLAYER_ITEM_QUEST_AFFECT %u", info->dwHandle);
-			   RESULT_PLAYER_LOAD(peer, pSQLResult, info->dwHandle);
-
-			   if (!pMsg->Next())
-			   {
-			   sys_err("RESULT_COMPOSITE_PLAYER: QID_PLAYER_ITEM_QUEST_AFFECT: ITEM FAILED");
-			   return;
-			   }
-
-			   case QID_ITEM_QUEST_AFFECT:
-			   sys_log(0, "QID_ITEM_QUEST_AFFECT %u", info->dwHandle);
-			   RESULT_ITEM_LOAD(peer, pSQLResult, info->dwHandle, info->player_id);
-
-			   if (!pMsg->Next())
-			   {
-			   sys_err("RESULT_COMPOSITE_PLAYER: QID_PLAYER_ITEM_QUEST_AFFECT: QUEST FAILED");
-			   return;
-			   }
-
-			   case QID_QUEST_AFFECT:
-			   sys_log(0, "QID_QUEST_AFFECT %u", info->dwHandle);
-			   RESULT_QUEST_LOAD(peer, pSQLResult, info->dwHandle);
-
-			   if (!pMsg->Next())
-			   sys_err("RESULT_COMPOSITE_PLAYER: QID_PLAYER_ITEM_QUEST_AFFECT: AFFECT FAILED");
-			   else
-			   RESULT_AFFECT_LOAD(peer, pSQLResult, info->dwHandle);
-
-			   break;
-			   */
 	}
 	
 }

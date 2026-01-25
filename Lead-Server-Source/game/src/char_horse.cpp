@@ -36,13 +36,6 @@ bool CHARACTER::StartRiding()
 		return false;
 	}
 
-	if (LC_IsCanada() == true)
-	{
-		if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
-			return false;
-	}
-
-
 	DWORD dwMountVnum = m_chHorse ? m_chHorse->GetRaceNum() : GetMyHorseVnum();
 
 	if (false == CHorseRider::StartRiding())

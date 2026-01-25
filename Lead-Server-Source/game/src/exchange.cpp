@@ -253,12 +253,9 @@ bool CExchange::AddGold(long gold)
 		return false;
 	}
 
-	if ( LC_IsCanada() == true || LC_IsEurope() == true )
+	if ( m_lGold > 0 )
 	{
-		if ( m_lGold > 0 )
-		{
-			return false;
-		}
+		return false;
 	}
 
 	Accept(false);

@@ -492,19 +492,6 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 		std::string stName("");
 
 		loader.GetCurrentNodeName(&stName);
-
-		if (strncmp (stName.c_str(), "kr_", 3) == 0)
-		{
-			if (LC_IsYMIR())
-			{
-				stName.assign(stName, 3, stName.size() - 3);
-			}
-			else
-			{
-				continue;
-			}
-		}
-
 		loader.SetChildNode(i);
 
 		int iMobVnum = 0;

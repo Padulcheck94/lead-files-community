@@ -394,36 +394,22 @@ void CInputLogin::CharacterCreate(LPDESC d, const char * data)
 		return;
 	}
 
-	// 사용할 수 없는 이름이거나, 잘못된 평상복이면 생설 실패
 	if (!check_name(pinfo->name) || pinfo->shape > 1)
 	{
-		if (LC_IsCanada() == true)
-		{
-			TPacketGCCreateFailure pack;
-			pack.header = HEADER_GC_CHARACTER_CREATE_FAILURE;
-			pack.bType = 1;
-
-			d->Packet(&pack, sizeof(pack));
-			return;
-		}
-
 		d->Packet(&packFailure, sizeof(packFailure));
 		return;
 	}
 
-	if (LC_IsEurope() == true)
+	const TAccountTable& c_rAccountTable = d->GetAccountTable();
+
+	if (0 == strcmp(c_rAccountTable.login, pinfo->name))
 	{
-		const TAccountTable & c_rAccountTable = d->GetAccountTable();
+		TPacketGCCreateFailure pack;
+		pack.header = HEADER_GC_CHARACTER_CREATE_FAILURE;
+		pack.bType = 1;
 
-		if (0 == strcmp(c_rAccountTable.login, pinfo->name))
-		{
-			TPacketGCCreateFailure pack;
-			pack.header = HEADER_GC_CHARACTER_CREATE_FAILURE;
-			pack.bType = 1;
-
-			d->Packet(&pack, sizeof(pack));
-			return;
-		}
+		d->Packet(&pack, sizeof(pack));
+		return;
 	}
 
 	memset(&player_create_packet, 0, sizeof(TPlayerCreatePacket));
@@ -434,8 +420,6 @@ void CInputLogin::CharacterCreate(LPDESC d, const char * data)
 		d->Packet(&packFailure, sizeof(packFailure));
 		return;
 	}
-
-	const TAccountTable & c_rAccountTable = d->GetAccountTable();
 
 	trim_and_lower(c_rAccountTable.login, player_create_packet.login, sizeof(player_create_packet.login));
 	strlcpy(player_create_packet.passwd, c_rAccountTable.passwd, sizeof(player_create_packet.passwd));
@@ -586,52 +570,8 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		sys_log(0, "PREMIUM: %s type %d %dmin", ch->GetName(), i, remain);
 	}
 
-	if (LC_IsEurope())
-	{
-		if (g_bCheckClientVersion)
-		{
-			int version = atoi(g_stClientVersion.c_str());
-			int date = atoi(d->GetClientVersion());
-
-			sys_log(0, "VERSION CHECK %d %d %s %s", version, date, g_stClientVersion.c_str(), d->GetClientVersion());
-
-			if (!d->GetClientVersion())
-			{
-				d->DelayedDisconnect(10);
-			}
-			else
-			{
-				//if (0 != g_stClientVersion.compare(d->GetClientVersion()))
-				if (version > date)
-				{
-					ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("You do not have the correct client version. Please install the normal patch."));
-					d->DelayedDisconnect(10);
-					LogManager::instance().HackLog("VERSION_CONFLICT", ch);
-
-					sys_log(0, "VERSION : WRONG VERSION USER : account:%s name:%s hostName:%s server_version:%s client_version:%s",
-							d->GetAccountTable().login,
-							ch->GetName(),
-							d->GetHostName(),
-							g_stClientVersion.c_str(),
-							d->GetClientVersion());
-				}
-			}
-		}
-		else
-		{
-			sys_log(0, "VERSION : NO CHECK");
-		}
-	}
-	else
-	{
-		sys_log(0, "VERSION : NO LOGIN");
-	}
-
-	if (LC_IsEurope() == true)
-	{
-		if (ch->IsGM() == true)
-			ch->ChatPacket(CHAT_TYPE_COMMAND, "ConsoleEnable");
-	}
+	if (ch->IsGM() == true)
+		ch->ChatPacket(CHAT_TYPE_COMMAND, "ConsoleEnable");
 
 	if (ch->GetMapIndex() >= 10000)
 	{
@@ -1008,15 +948,6 @@ int CInputLogin::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_CG_CHANGE_NAME:
 			ChangeName(d, c_pData);
 			break;
-
-		case HEADER_CG_CLIENT_VERSION:
-			Version(d->GetCharacter(), c_pData);
-			break;
-
-		case HEADER_CG_CLIENT_VERSION2:
-			Version(d->GetCharacter(), c_pData);
-			break;
-
 		default:
 			sys_err("login phase does not handle this packet! header %d", bHeader);
 			//d->SetPhase(PHASE_CLOSE);

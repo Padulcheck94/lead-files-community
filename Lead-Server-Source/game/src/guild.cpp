@@ -1467,14 +1467,8 @@ void CGuild::UpdateSkill(BYTE skill_point, BYTE* skill_levels)
 
 static DWORD __guild_levelup_exp(int level)
 {
-	if (LC_IsYMIR())
-	{
-		return guild_exp_table[level];
-	}
-	else
-	{
-		return guild_exp_table2[level];
-	}
+
+	return guild_exp_table[level];
 }
 
 void CGuild::GuildPointChange(BYTE type, int amount, bool save)
@@ -1772,19 +1766,6 @@ int CGuild::GetMaxMemberCount()
 	if ( m_iMemberCountBonus < 0 || m_iMemberCountBonus > 18 )
 		m_iMemberCountBonus = 0;
 	// END_GUILD_IS_FULL_BUG_FIX
-
-	if ( LC_IsHongKong() == true )
-	{
-		quest::PC* pPC = quest::CQuestManager::instance().GetPC(GetMasterPID());
-
-		if ( pPC != NULL )
-		{
-			if ( pPC->GetFlag("guild.is_unlimit_member") == 1 )
-			{
-				return INT_MAX;
-			}
-		}
-	}
 
 	return 32 + 2 * (m_data.level-1) + m_iMemberCountBonus;
 }

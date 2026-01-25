@@ -67,10 +67,6 @@ extern bool	IsValidFileCRC(DWORD dwCRC);
 extern std::string	g_stAuthMasterIP;
 extern WORD		g_wAuthMasterPort;
 
-extern std::string	g_stClientVersion;
-extern bool		g_bCheckClientVersion;
-extern void		CheckClientVersion();
-
 extern std::string	g_stQuestDir;
 //extern std::string	g_stQuestObjectDir;
 extern std::set<std::string> g_setQuestObjectDir;
@@ -85,7 +81,6 @@ extern int 	SPEEDHACK_LIMIT_BONUS;
 extern int g_iSyncHackLimitCount;
 
 extern int g_server_id;
-extern std::string g_strWebMallURL;
 
 extern int VIEW_RANGE;
 extern int VIEW_BONUS_RANGE;
@@ -96,9 +91,13 @@ extern bool g_protectNormalPlayer;      // 범법자가 "평화모드" 인 일반유저를 공�
 extern DWORD g_GoldDropTimeLimitValue;
 
 extern int gPlayerMaxLevel;
-extern BYTE gPartyGapLevel;
 
-extern int gGuildCreateFee;
+// NEW CONFIGURATION VARIABLES
+extern BYTE g_PartyGapLevel;
+extern int g_GuildCreateFee;
+extern int g_DeathExpLossCap;
+extern int g_SkillBookExp;
+// NEW CONFIGURATION VARIABLES
 
 extern bool g_BlockCharCreation;
 

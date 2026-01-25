@@ -210,22 +210,14 @@ float CalcAttackRating(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, bool bIgnor
 	int iARSrc;
 	int iERSrc;
 
-	if (LC_IsYMIR()) // Ãµ¸¶
-	{
-		iARSrc = MIN(90, pkAttacker->GetPolymorphPoint(POINT_DX));
-		iERSrc = MIN(90, pkVictim->GetPolymorphPoint(POINT_DX));
-	}
-	else 
-	{
-		int attacker_dx = pkAttacker->GetPolymorphPoint(POINT_DX);
-		int attacker_lv = pkAttacker->GetLevel();
+	int attacker_dx = pkAttacker->GetPolymorphPoint(POINT_DX);
+	int attacker_lv = pkAttacker->GetLevel();
 
-		int victim_dx = pkVictim->GetPolymorphPoint(POINT_DX);
-		int victim_lv = pkAttacker->GetLevel();
+	int victim_dx = pkVictim->GetPolymorphPoint(POINT_DX);
+	int victim_lv = pkAttacker->GetLevel();
 
-		iARSrc = MIN(90, (attacker_dx * 4	+ attacker_lv * 2) / 6);
-		iERSrc = MIN(90, (victim_dx	  * 4	+ victim_lv   * 2) / 6);
-	}
+	iARSrc = MIN(90, (attacker_dx * 4	+ attacker_lv * 2) / 6);
+	iERSrc = MIN(90, (victim_dx	  * 4	+ victim_lv   * 2) / 6);
 
 	float fAR = ((float) iARSrc + 210.0f) / 300.0f; // fAR = 0.7 ~ 1.0
 

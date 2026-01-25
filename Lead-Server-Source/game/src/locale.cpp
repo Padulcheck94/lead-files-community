@@ -20,7 +20,7 @@ void locale_add(const char **strings)
 
 const char * locale_find(const char *string)
 {
-	if (0 == g_iUseLocale || LC_IsKorea() || LC_IsWE_Korea())
+	if (0 == g_iUseLocale)
 	{
 		return (string);
 	}
