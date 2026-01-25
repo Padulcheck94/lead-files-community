@@ -587,8 +587,8 @@ void CStateManager::RestoreVertexShader()
 
 void CStateManager::SetVertexShader(LPDIRECT3DVERTEXSHADER9 dwShader)
 {
-	//if (m_CurrentState.m_dwVertexShader == dwShader)
-	//	return;
+	if (m_CurrentState.m_dwVertexShader == dwShader)
+		return;
 
 	m_lpD3DDev->SetVertexShader(dwShader);
 	m_CurrentState.m_dwVertexShader = dwShader;
