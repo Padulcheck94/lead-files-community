@@ -377,9 +377,6 @@ BOOL D3D_CDeviceInfo::Build(IDirect3D9& rkD3D, UINT iD3DAdapterInfo, UINT iDevTy
 						rkModeInfo.m_eD3DFmtPixel=c_rkD3DDM.Format;
 						rkModeInfo.m_dwD3DBehavior=adwD3DBehavior[iFmt];
 						rkModeInfo.m_eD3DFmtDepthStencil=aeD3DFmtDepthStencil[iFmt];
-						
-						if( m_eD3DDevType == D3DDEVTYPE_HAL )
-							isHALSampleCompatible = TRUE;
 					}
 				}
 			}
