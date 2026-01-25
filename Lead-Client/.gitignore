@@ -5,6 +5,7 @@ pack/*.eix
 # Log files
 log.txt
 syserr.txt
+debug_packet.log
 
 # Generated build files
 *.exe
