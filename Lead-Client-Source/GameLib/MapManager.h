@@ -43,6 +43,7 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		bool					UpdateMap(float fx, float fy, float fz);
 		void					UpdateAroundAmbience(float fx, float fy, float fz);
 		float					GetHeight(float fx, float fy);
+		float					GetCacheHeight(float fx, float fy);
 		float					GetTerrainHeight(float fx, float fy);
 		bool					GetWaterHeight(int iX, int iY, long * plWaterHeight);
 		
