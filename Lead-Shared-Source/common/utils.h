@@ -108,4 +108,17 @@ inline bool str_to_number (long double& out, const char *in)
 #endif
 
 
+struct DeleteMapValues
+{
+	template <typename T>
+	void operator()(T& mapContainer)
+	{
+		for (typename T::iterator it = mapContainer.begin(); it != mapContainer.end(); ++it)
+		{
+			M2_DELETE(it->second);
+		}
+		mapContainer.clear();
+	}
+};
+
 /*----- atoi function -----*/

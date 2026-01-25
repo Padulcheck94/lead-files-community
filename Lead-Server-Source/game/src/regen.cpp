@@ -9,6 +9,16 @@
 LPREGEN	regen_list = NULL;
 LPREGEN_EXCEPTION regen_exception_list = NULL;
 
+typedef struct SMapDataContainer
+{
+	char szBaseName[256];
+	int base_x;
+	int base_y;
+}TMapDataContainer;
+
+typedef std::map<DWORD, TMapDataContainer*> mbMapDataCType;
+mbMapDataCType mbMapDataContainer;
+
 enum ERegenModes
 {
 	MODE_TYPE = 0,
@@ -597,6 +607,9 @@ EVENTFUNC(regen_event)
 
 	LPREGEN	regen = info->regen;
 
+	if (!is_valid_regen(regen))
+		return 0;
+
 	if (regen->time == 0)
 		regen->event = NULL;
 
@@ -763,5 +776,66 @@ void regen_reset(int x, int y)
 		else
 			event_reset_time(regen->event, 1);
 	}
+}
+
+bool is_valid_regen(LPREGEN currRegen)
+{
+	LPREGEN		regen;
+
+	for (regen = regen_list; regen; regen = regen->next)
+	{
+		if (regen == currRegen)
+			return true;
+	}
+	return false;
+}
+
+void regen_free_map(long lMapIndex)
+{
+	LPREGEN		regen, prev, next, next_regen;
+
+	for (regen = regen_list; regen; regen = next_regen)
+	{
+		next_regen = regen->next;
+		if (regen->lMapIndex != lMapIndex)
+			continue;
+		event_cancel(&regen->event);
+		REMOVE_FROM_TW_LIST(regen, regen_list, prev, next);
+		M2_DELETE(regen);
+	}
+}
+
+void regen_reload(long lMapIndex)
+{
+	if (mbMapDataContainer.find(lMapIndex) == mbMapDataContainer.end())
+		return;
+
+	char szFilename[256];
+
+	snprintf(szFilename, sizeof(szFilename), "%sregen.txt", mbMapDataContainer[lMapIndex]->szBaseName);
+	regen_load(szFilename, lMapIndex, mbMapDataContainer[lMapIndex]->base_x, mbMapDataContainer[lMapIndex]->base_y);
+
+	snprintf(szFilename, sizeof(szFilename), "%snpc.txt", mbMapDataContainer[lMapIndex]->szBaseName);
+	regen_load(szFilename, lMapIndex, mbMapDataContainer[lMapIndex]->base_x, mbMapDataContainer[lMapIndex]->base_y);
+
+	snprintf(szFilename, sizeof(szFilename), "%sboss.txt", mbMapDataContainer[lMapIndex]->szBaseName);
+	regen_load(szFilename, lMapIndex, mbMapDataContainer[lMapIndex]->base_x, mbMapDataContainer[lMapIndex]->base_y);
+
+	snprintf(szFilename, sizeof(szFilename), "%sstone.txt", mbMapDataContainer[lMapIndex]->szBaseName);
+	regen_load(szFilename, lMapIndex, mbMapDataContainer[lMapIndex]->base_x, mbMapDataContainer[lMapIndex]->base_y);
+}
+
+void regen_register_map(const char* szBaseName, long lMapIndex, int base_x, int base_y)
+{
+	TMapDataContainer* container = new TMapDataContainer;
+	memset(container->szBaseName, 0, sizeof(container->szBaseName));
+#ifdef __FreeBSD__
+	strlcpy(container->szBaseName, szBaseName, sizeof(container->szBaseName) - 1);
+#else
+	strncpy(container->szBaseName, szBaseName, sizeof(container->szBaseName) - 1);
+#endif
+	container->base_x = base_x;
+	container->base_y = base_y;
+	mbMapDataContainer[lMapIndex] = container;
 }
 

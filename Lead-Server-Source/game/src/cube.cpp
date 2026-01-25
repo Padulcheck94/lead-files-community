@@ -16,6 +16,8 @@
 #include "locale_service.h"
 #include "item.h"
 #include "item_manager.h"
+#include "desc.h"
+#include "desc_manager.h"
 
 #include <sstream>
 
@@ -346,6 +348,20 @@ void Cube_close (LPCHARACTER ch)
 	dev_log(LOG_DEB0, "<CUBE> close (%s)", ch->GetName());
 }
 
+static void Cube_Reload()
+{
+	cube_info_map.clear();
+	cube_result_info_map_by_npc.clear();
+	Cube_InformationInitialize();
+	for (DESC_MANAGER::DESC_SET::const_iterator it = DESC_MANAGER::instance().GetClientSet().begin(); it != DESC_MANAGER::instance().GetClientSet().end(); ++it) {
+		LPCHARACTER ch = (*it)->GetCharacter();
+		if (ch) {
+			Cube_close(ch);
+			ch->ChatPacket(CHAT_TYPE_COMMAND, "cube reload");
+		}
+	}
+}
+
 void Cube_init()
 {
 	CUBE_DATA * p_cube = NULL;
@@ -366,6 +382,9 @@ void Cube_init()
 
 	if (false == Cube_load(file_name))
 		sys_err("Cube_Init failed");
+
+	if (s_isInitializedCubeMaterialInformation)
+		Cube_Reload();
 }
 
 bool Cube_load (const char *file)

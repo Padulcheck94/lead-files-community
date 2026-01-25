@@ -6725,7 +6725,7 @@ bool CHARACTER::GiveItemFromSpecialItemGroup(DWORD dwGroupNum, std::vector<DWORD
 	std::vector <int> idxes;
 	int n = pGroup->GetMultiIndex(idxes);
 
-	bool bSuccess;
+	bool bSuccess = false;
 
 	for (int i = 0; i < n; i++)
 	{

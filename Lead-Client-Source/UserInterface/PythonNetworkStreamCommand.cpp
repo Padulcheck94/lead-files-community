@@ -214,6 +214,10 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 		{
 			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Close", Py_BuildValue("()"));
 		}
+		else if ("reload" == TokenVector[1])
+		{
+			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Reload_Cube", Py_BuildValue("()"));
+		}
 		else if ("info" == TokenVector[1])
 		{
 			if (5 != TokenVector.size())

@@ -27,4 +27,3 @@ typedef struct SDropItem
 	char	szItemName[ITEM_NAME_MAX_LEN + 1];
 	int		iCount;
 } TDropItem;
-

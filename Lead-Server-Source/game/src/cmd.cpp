@@ -223,10 +223,13 @@ ACMD (do_dragon_soul);
 ACMD (do_ds_list);
 ACMD (do_clear_affect);
 
+ACMD(do_free_regen);
+
 struct command_info cmd_info[] =
 {
 	{ "!RESERVED!",	NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	},
 	{ "who",		do_who,			0,			POS_DEAD,	GM_IMPLEMENTOR	},
+	{ "free_regens",	do_free_regen,		0,			POS_DEAD,	GM_IMPLEMENTOR	},
 	{ "war",		do_war,			0,			POS_DEAD,	GM_PLAYER	},
 	{ "warp",		do_warp,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 	{ "user",		do_user,		0,			POS_DEAD,	GM_HIGH_WIZARD	},

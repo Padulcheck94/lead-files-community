@@ -853,14 +853,20 @@ ACMD(do_purge)
 
 	FuncPurge func(ch);
 
-	if (*arg1 && !strcmp(arg1, "all"))
-		func.m_bAll = true;
-
-	LPSECTREE sectree = ch->GetSectree();
-	if (sectree) // #431
-		sectree->ForEachAround(func);
+	if (*arg1 && !strcmp(arg1, "map"))
+	{
+		CHARACTER_MANAGER::instance().DestroyCharacterInMap(ch->GetMapIndex());
+	}
 	else
-		sys_err("PURGE_ERROR.NULL_SECTREE(mapIndex=%d, pos=(%d, %d)", ch->GetMapIndex(), ch->GetX(), ch->GetY());
+	{
+		if (*arg1 && !strcmp(arg1, "all"))
+			func.m_bAll = true;
+		LPSECTREE sectree = ch->GetSectree();
+		if (sectree) // #431
+			sectree->ForEachAround(func);
+		else
+			sys_err("PURGE_ERROR.NULL_SECTREE(mapIndex=%d, pos=(%d, %d)", ch->GetMapIndex(), ch->GetX(), ch->GetY());
+	}
 }
 
 ACMD(do_item_purge)
@@ -2011,8 +2017,86 @@ ACMD(do_reload)
 				break;
 				//END_RELOAD_ADMIN
 			case 'c':	// cube
-				// 로컬 프로세스만 갱산한다.
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Reloading crafting infomation."));
 				Cube_init ();
+				break;
+			default:
+				const int FILE_NAME_LEN = 256;
+				if (strstr(arg1, "drop"))
+				{
+					char szETCDropItemFileName[FILE_NAME_LEN];
+					char szMOBDropItemFileName[FILE_NAME_LEN];
+					char szSpecialItemGroupFileName[FILE_NAME_LEN];
+					char szCommonDropItemFileName[FILE_NAME_LEN];
+					char szDropItemGroupFileName[FILE_NAME_LEN];
+
+					snprintf(szETCDropItemFileName, sizeof(szETCDropItemFileName),
+						"%s/etc_drop_item.txt", LocaleService_GetBasePath().c_str());
+					snprintf(szMOBDropItemFileName, sizeof(szMOBDropItemFileName),
+						"%s/mob_drop_item.txt", LocaleService_GetBasePath().c_str());
+					snprintf(szSpecialItemGroupFileName, sizeof(szSpecialItemGroupFileName),
+						"%s/special_item_group.txt", LocaleService_GetBasePath().c_str());
+					snprintf(szCommonDropItemFileName, sizeof(szCommonDropItemFileName),
+						"%s/common_drop_item.txt", LocaleService_GetBasePath().c_str());
+					snprintf(szDropItemGroupFileName, sizeof(szDropItemGroupFileName),
+						"%s/drop_item_group.txt", LocaleService_GetBasePath().c_str());
+
+					ch->ChatPacket(CHAT_TYPE_INFO, "Reloading: ETCDropItem: %s", szETCDropItemFileName);
+					if (!ITEM_MANAGER::instance().ReadEtcDropItemFile(szETCDropItemFileName))
+						ch->ChatPacket(CHAT_TYPE_INFO, "failed to reload ETCDropItem: %s", szETCDropItemFileName);
+					else
+						ch->ChatPacket(CHAT_TYPE_INFO, "reload success: ETCDropItem: %s", szETCDropItemFileName);
+
+					ch->ChatPacket(CHAT_TYPE_INFO, "Reloading: SpecialItemGroup: %s", szSpecialItemGroupFileName);
+					if (!ITEM_MANAGER::instance().ReadSpecialDropItemFile(szSpecialItemGroupFileName))
+						ch->ChatPacket(CHAT_TYPE_INFO, "failed to reload SpecialItemGroup: %s", szSpecialItemGroupFileName);
+					else
+						ch->ChatPacket(CHAT_TYPE_INFO, "reload success: SpecialItemGroup: %s", szSpecialItemGroupFileName);
+
+					ch->ChatPacket(CHAT_TYPE_INFO, "Reloading: MOBDropItemFile: %s", szMOBDropItemFileName);
+					if (!ITEM_MANAGER::instance().ReadMonsterDropItemGroup(szMOBDropItemFileName))
+						ch->ChatPacket(CHAT_TYPE_INFO, "failed to reload MOBDropItemFile: %s", szMOBDropItemFileName);
+					else
+						ch->ChatPacket(CHAT_TYPE_INFO, "reload success: MOBDropItemFile: %s", szMOBDropItemFileName);
+
+					ch->ChatPacket(CHAT_TYPE_INFO, "Reloading: CommonDropItem: %s", szCommonDropItemFileName);
+					if (!ITEM_MANAGER::instance().ReadCommonDropItemFile(szCommonDropItemFileName))
+						ch->ChatPacket(CHAT_TYPE_INFO, "failed to reload CommonDropItem: %s", szCommonDropItemFileName);
+					else
+						ch->ChatPacket(CHAT_TYPE_INFO, "reload success: CommonDropItem: %s", szCommonDropItemFileName);
+					
+					ch->ChatPacket(CHAT_TYPE_INFO, "Reloading: DropItemGroup: %s", szDropItemGroupFileName);
+					if (!ITEM_MANAGER::instance().ReadDropItemGroup(szDropItemGroupFileName))
+						ch->ChatPacket(CHAT_TYPE_INFO, "failed to reload DropItemGroup: %s", szDropItemGroupFileName);
+					else
+						ch->ChatPacket(CHAT_TYPE_INFO, "reload success: DropItemGroup: %s", szDropItemGroupFileName);
+				}
+				else if (strstr(arg1, "group"))
+				{
+					char szGroupFileName[FILE_NAME_LEN];
+					char szGroupGroupFileName[FILE_NAME_LEN];
+
+					snprintf(szGroupFileName, sizeof(szGroupGroupFileName),
+						"%s/group.txt", LocaleService_GetBasePath().c_str());
+					snprintf(szGroupGroupFileName, sizeof(szGroupGroupFileName),
+						"%s/group_group.txt", LocaleService_GetBasePath().c_str());
+
+					ch->ChatPacket(CHAT_TYPE_INFO, "Reloading: mob groups: %s", szGroupFileName);
+					if (!CMobManager::instance().LoadGroup(szGroupFileName))
+						ch->ChatPacket(CHAT_TYPE_INFO, "failed to reload mob groups: %s", szGroupFileName);
+
+					ch->ChatPacket(CHAT_TYPE_INFO, "Reloading: mob group group: %s", szGroupGroupFileName);
+					if (!CMobManager::instance().LoadGroupGroup(szGroupGroupFileName))
+						ch->ChatPacket(CHAT_TYPE_INFO, "failed to reload mob group group: %s", szGroupGroupFileName);
+				}
+				else if (strstr(arg1, "regen"))
+				{
+					SendNoticeMap("Reloading regens!", ch->GetMapIndex(), false);
+					regen_free_map(ch->GetMapIndex());
+					CHARACTER_MANAGER::instance().DestroyCharacterInMap(ch->GetMapIndex());
+					regen_reload(ch->GetMapIndex());
+					SendNoticeMap("Regens reloaded!", ch->GetMapIndex(), false);
+				}
 				break;
 		}
 	}
@@ -4112,3 +4196,11 @@ ACMD (do_ds_list)
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("cell : %d, name : %s, id : %d"), item->GetCell(), item->GetName(), item->GetID());
 	}
 }
+
+ACMD(do_free_regen)
+{
+	ch->ChatPacket(CHAT_TYPE_INFO, "freeing regens on mapindex %ld", ch->GetMapIndex());
+	regen_free_map(ch->GetMapIndex());
+	ch->ChatPacket(CHAT_TYPE_INFO, "the regens now FREEEE! :)");
+}
+

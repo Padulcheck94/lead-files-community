@@ -541,3 +541,30 @@ bool CShop::IsSellingItem(DWORD itemID)
 	return isSelling;
 
 }
+
+void CShop::RemoveAllGuests()
+{
+	if (m_map_guest.empty())
+		return;
+	for (GuestMapType::iterator it = m_map_guest.begin(); it != m_map_guest.end(); it++)
+	{
+		LPCHARACTER ch = it->first;
+		if (ch)
+		{
+			if (ch->GetDesc() && ch->GetShop() == this)
+			{
+				ch->SetShop(NULL);
+
+				TPacketGCShop pack;
+
+				pack.header = HEADER_GC_SHOP;
+				pack.subheader = SHOP_SUBHEADER_GC_END;
+				pack.size = sizeof(TPacketGCShop);
+
+				ch->GetDesc()->Packet(&pack, sizeof(pack));
+			}
+		}
+	}
+	m_map_guest.clear();
+}
+

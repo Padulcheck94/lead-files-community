@@ -378,10 +378,10 @@ class ITEM_MANAGER : public singleton<ITEM_MANAGER>
 		bool			CreateDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::vector<LPITEM> & vec_item);
 
 		bool			ReadCommonDropItemFile(const char * c_pszFileName);
-		bool			ReadEtcDropItemFile(const char * c_pszFileName);
+		bool			ReadEtcDropItemFile(const char* c_pszFileName);
 		bool			ReadDropItemGroup(const char * c_pszFileName);
-		bool			ReadMonsterDropItemGroup(const char * c_pszFileName);
-		bool			ReadSpecialDropItemFile(const char * c_pszFileName);
+		bool			ReadMonsterDropItemGroup(const char* c_pszFileName);
+		bool			ReadSpecialDropItemFile(const char* c_pszFileName);
 		
 		// convert name -> vnum special_item_group.txt
 		bool			ConvSpecialDropItemFile();
