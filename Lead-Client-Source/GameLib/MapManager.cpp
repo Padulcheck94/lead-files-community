@@ -191,6 +191,15 @@ float CMapManager::GetHeight(float fx, float fy)
 	return rkMap.GetHeight(fx, fy);
 }
 
+float CMapManager::GetCacheHeight(float fx, float fy)
+{
+	if (!m_pkMap)
+		return 0.0f;
+
+	CMapOutdoor& rkMap = GetMapOutdoorRef();
+	return rkMap.GetCacheHeight(fx, fy);
+}
+
 float CMapManager::GetTerrainHeight(float fx, float fy)
 {
 	if (!m_pkMap)

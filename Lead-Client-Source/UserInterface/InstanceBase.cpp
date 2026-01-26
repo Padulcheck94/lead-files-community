@@ -430,7 +430,7 @@ DWORD CInstanceBase::__GetShadowMapColor(float x, float y)
 float CInstanceBase::__GetBackgroundHeight(float x, float y)
 {
 	CPythonBackground& rkBG=CPythonBackground::Instance();
-	return rkBG.GetHeight(x, y);
+	return rkBG.GetCacheHeight(x, y);
 }
 
 #ifdef __MOVIE_MODE__
