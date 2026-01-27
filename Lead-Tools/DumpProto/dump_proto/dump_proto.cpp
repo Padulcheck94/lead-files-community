@@ -269,8 +269,8 @@ bool Set_Proto_Mob_Table(TMobTable *mobTable, cCsvTable &csvTable, std::map<int,
 	mobTable->bRegenCycle          = atoi(csvTable.AsStringByIndex(col++));
 	mobTable->bRegenPercent        = atoi(csvTable.AsStringByIndex(col++));
 
-	col++;	//gold min
-	col++;	//gold max
+	mobTable->dwGoldMin				= atoi(csvTable.AsStringByIndex(col++));
+	mobTable->dwGoldMax				= atoi(csvTable.AsStringByIndex(col++));
 	mobTable->dwExp                = atoi(csvTable.AsStringByIndex(col++));
 	mobTable->wDef                 = atoi(csvTable.AsStringByIndex(col++));
 	mobTable->sAttackSpeed         = atoi(csvTable.AsStringByIndex(col++));

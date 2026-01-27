@@ -1,19 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dump_proto", "dump_proto\dump_proto.vcproj", "{DBCC99BC-1D68-4271-AC99-62EBBE37890F}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11408.102 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dump_proto", "dump_proto\dump_proto.vcxproj", "{DBCC99BC-1D68-4271-AC99-62EBBE37890F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lzo", "lzo\lzo.vcproj", "{3AE0E6E6-B750-4769-9A6E-0D47012F1B40}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lzo", "lzo\lzo.vcxproj", "{3AE0E6E6-B750-4769-9A6E-0D47012F1B40}"
 EndProject
 Global
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 3
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = dump_proto\\dump_proto.vcproj
-		SccLocalPath1 = dump_proto
-		SccProjectUniqueName2 = lzo\\lzo.vcproj
-		SccLocalPath2 = lzo
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
@@ -30,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {198E3E19-872E-4D4F-B6B6-0C7F5546D718}
 	EndGlobalSection
 EndGlobal

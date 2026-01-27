@@ -52,36 +52,29 @@ static string* StringSplit(string strOrigin, string strTok)
 
 int get_Item_Type_Value(string inputString)
 {
-	string arType[] = {"ITEM_NONE", "ITEM_WEAPON",
-		"ITEM_ARMOR", "ITEM_USE", 
+	string arType[] = { "ITEM_NONE", "ITEM_WEAPON",
+		"ITEM_ARMOR", "ITEM_USE",
 		"ITEM_AUTOUSE", "ITEM_MATERIAL",
-		"ITEM_SPECIAL", "ITEM_TOOL", 
-		"ITEM_LOTTERY", "ITEM_ELK",					//10개
+		"ITEM_SPECIAL", "ITEM_TOOL",
+		"ITEM_UNUSED_1", "ITEM_ELK",					//10개
 
-		"ITEM_METIN", "ITEM_CONTAINER", 
-		"ITEM_FISH", "ITEM_ROD", 
+		"ITEM_METIN", "ITEM_CONTAINER",
+		"ITEM_FISH", "ITEM_ROD",
 		"ITEM_RESOURCE", "ITEM_CAMPFIRE",
-		"ITEM_UNIQUE", "ITEM_SKILLBOOK", 
+		"ITEM_UNIQUE", "ITEM_SKILLBOOK",
 		"ITEM_QUEST", "ITEM_POLYMORPH",				//20개
 
 		"ITEM_TREASURE_BOX", "ITEM_TREASURE_KEY",
-		"ITEM_SKILLFORGET", "ITEM_GIFTBOX", 
-		"ITEM_PICK", "ITEM_HAIR", 
-		"ITEM_TOTEM", "ITEM_BLEND", 
+		"ITEM_SKILLFORGET", "ITEM_GIFTBOX",
+		"ITEM_PICK", "ITEM_HAIR",
+		"ITEM_TOTEM", "ITEM_BLEND",
 		"ITEM_COSTUME", "ITEM_DS",					//30개
-	
->>>> ORIGINAL //metin2/dev/Srcs/Tools/DumpProto/dump_proto/ItemCSVReader.cpp#10
-		"ITEM_SPECIAL_DS",	"ITEM_EXTRACT",
-		"ITEM_SECONDARY_COIN",						//33개
-==== THEIRS //metin2/dev/Srcs/Tools/DumpProto/dump_proto/ItemCSVReader.cpp#11
+
 		"ITEM_SPECIAL_DS",	"ITEM_EXTRACT",
 		"ITEM_SECONDARY_COIN",						//33개
 
 		"ITEM_RING",
 		"ITEM_BELT",								//35개 (EItemTypes 값으로 치면 34)
-==== YOURS //Hyo/metin2/mainline/Srcs/Tools/DumpProto/dump_proto/ItemCSVReader.cpp
-		"ITEM_SPECIAL_DS",	"ITEM_EXTRACT"			//32개
-<<<<
 	};
 
 	
@@ -104,33 +97,31 @@ int get_Item_Type_Value(string inputString)
 int get_Item_SubType_Value(int type_value, string inputString) 
 {
 	string arSub1[] = { "WEAPON_SWORD", "WEAPON_DAGGER", "WEAPON_BOW", "WEAPON_TWO_HANDED",
-				"WEAPON_BELL", "WEAPON_FAN", "WEAPON_ARROW", "WEAPON_MOUNT_SPEAR"};
+				"WEAPON_BELL", "WEAPON_FAN", "WEAPON_ARROW", "WEAPON_MOUNT_SPEAR" };
 	string arSub2[] = { "ARMOR_BODY", "ARMOR_HEAD", "ARMOR_SHIELD", "ARMOR_WRIST", "ARMOR_FOOTS",
-				"ARMOR_NECK", "ARMOR_EAR", "ARMOR_NUM_TYPES"};
+				"ARMOR_NECK", "ARMOR_EAR", "ARMOR_NUM_TYPES" };
 	string arSub3[] = { "USE_POTION", "USE_TALISMAN", "USE_TUNING", "USE_MOVE", "USE_TREASURE_BOX", "USE_MONEYBAG", "USE_BAIT",
 				"USE_ABILITY_UP", "USE_AFFECT", "USE_CREATE_STONE", "USE_SPECIAL", "USE_POTION_NODELAY", "USE_CLEAR",
 				"USE_INVISIBILITY", "USE_DETACHMENT", "USE_BUCKET", "USE_POTION_CONTINUE", "USE_CLEAN_SOCKET",
 				"USE_CHANGE_ATTRIBUTE", "USE_ADD_ATTRIBUTE", "USE_ADD_ACCESSORY_SOCKET", "USE_PUT_INTO_ACCESSORY_SOCKET",
-				"USE_ADD_ATTRIBUTE2", "USE_RECIPE", "USE_CHANGE_ATTRIBUTE2", "USE_BIND", "USE_UNBIND", "USE_TIME_CHARGE_PER", "USE_TIME_CHARGE_FIX", "USE_PUT_INTO_BELT_SOCKET", "USE_PUT_INTO_RING_SOCKET"};
-	string arSub4[] = { "AUTOUSE_POTION", "AUTOUSE_ABILITY_UP", "AUTOUSE_BOMB", "AUTOUSE_GOLD", "AUTOUSE_MONEYBAG", "AUTOUSE_TREASURE_BOX"};
-	string arSub5[] = { "MATERIAL_LEATHER", "MATERIAL_BLOOD", "MATERIAL_ROOT", "MATERIAL_NEEDLE", "MATERIAL_JEWEL", 
-		"MATERIAL_DS_REFINE_NORMAL", "MATERIAL_DS_REFINE_BLESSED", "MATERIAL_DS_REFINE_HOLLY"};
-	string arSub6[] = { "SPECIAL_MAP", "SPECIAL_KEY", "SPECIAL_DOC", "SPECIAL_SPIRIT"};
+				"USE_ADD_ATTRIBUTE2", "USE_RECIPE", "USE_CHANGE_ATTRIBUTE2", "USE_BIND", "USE_UNBIND", "USE_TIME_CHARGE_PER", "USE_TIME_CHARGE_FIX", "USE_PUT_INTO_BELT_SOCKET", "USE_PUT_INTO_RING_SOCKET" };
+	string arSub4[] = { "AUTOUSE_POTION", "AUTOUSE_ABILITY_UP", "AUTOUSE_BOMB", "AUTOUSE_GOLD", "AUTOUSE_MONEYBAG", "AUTOUSE_TREASURE_BOX" };
+	string arSub5[] = { "MATERIAL_LEATHER", "MATERIAL_BLOOD", "MATERIAL_ROOT", "MATERIAL_NEEDLE", "MATERIAL_JEWEL",
+		"MATERIAL_DS_REFINE_NORMAL", "MATERIAL_DS_REFINE_BLESSED", "MATERIAL_DS_REFINE_HOLLY" };
+	string arSub6[] = { "SPECIAL_MAP", "SPECIAL_KEY", "SPECIAL_DOC", "SPECIAL_SPIRIT" };
 	string arSub7[] = { "TOOL_FISHING_ROD" };
-	string arSub8[] = { "LOTTERY_TICKET", "LOTTERY_INSTANT" };
 	string arSub10[] = { "METIN_NORMAL", "METIN_GOLD" };
-	string arSub12[] = { "FISH_ALIVE", "FISH_DEAD"};
+	string arSub12[] = { "FISH_ALIVE", "FISH_DEAD" };
 	string arSub14[] = { "RESOURCE_FISHBONE", "RESOURCE_WATERSTONEPIECE", "RESOURCE_WATERSTONE", "RESOURCE_BLOOD_PEARL",
 						"RESOURCE_BLUE_PEARL", "RESOURCE_WHITE_PEARL", "RESOURCE_BUCKET", "RESOURCE_CRYSTAL", "RESOURCE_GEM",
 						"RESOURCE_STONE", "RESOURCE_METIN", "RESOURCE_ORE" };
 	string arSub16[] = { "UNIQUE_NONE", "UNIQUE_BOOK", "UNIQUE_SPECIAL_RIDE", "UNIQUE_3", "UNIQUE_4", "UNIQUE_5",
-					"UNIQUE_6", "UNIQUE_7", "UNIQUE_8", "UNIQUE_9", "USE_SPECIAL"};
+					"UNIQUE_6", "UNIQUE_7", "UNIQUE_8", "UNIQUE_9", "USE_SPECIAL" };
 	string arSub28[] = { "COSTUME_BODY", "COSTUME_HAIR" };
 	string arSub29[] = { "DS_SLOT1", "DS_SLOT2", "DS_SLOT3", "DS_SLOT4", "DS_SLOT5", "DS_SLOT6" };
 	string arSub31[] = { "EXTRACT_DRAGON_SOUL", "EXTRACT_DRAGON_HEART" };
 
-	
-	string* arSubType[] = {0,	//0
+	string* arSubType[] = { 0,	//0
 		arSub1,		//1
 		arSub2,	//2
 		arSub3,	//3
@@ -138,7 +129,7 @@ int get_Item_SubType_Value(int type_value, string inputString)
 		arSub5,	//5
 		arSub6,	//6
 		arSub7,	//7
-		arSub8,	//8
+		0,			//8
 		0,			//9
 		arSub10,	//10
 		0,			//11
@@ -162,40 +153,47 @@ int get_Item_SubType_Value(int type_value, string inputString)
 		arSub29,		//29
 		arSub29,	//30
 		arSub31,	//31
-		};
-	int arNumberOfSubtype[32];
-	arNumberOfSubtype[0] = 0;
-	arNumberOfSubtype[1] = sizeof(arSub1)/sizeof(arSub1[0]);
-	arNumberOfSubtype[2] = sizeof(arSub2)/sizeof(arSub2[0]);
-	arNumberOfSubtype[3] = sizeof(arSub3)/sizeof(arSub3[0]);
-	arNumberOfSubtype[4] = sizeof(arSub4)/sizeof(arSub4[0]);
-	arNumberOfSubtype[5] = sizeof(arSub5)/sizeof(arSub5[0]);
-	arNumberOfSubtype[6] = sizeof(arSub6)/sizeof(arSub6[0]);
-	arNumberOfSubtype[7] = sizeof(arSub7)/sizeof(arSub7[0]);
-	arNumberOfSubtype[8] = sizeof(arSub8)/sizeof(arSub8[0]);
-	arNumberOfSubtype[9] = 0;
-	arNumberOfSubtype[10] = sizeof(arSub10)/sizeof(arSub10[0]);
-	arNumberOfSubtype[11] = 0;
-	arNumberOfSubtype[12] = sizeof(arSub12)/sizeof(arSub12[0]);
-	arNumberOfSubtype[13] = 0;
-	arNumberOfSubtype[14] = sizeof(arSub14)/sizeof(arSub14[0]);
-	arNumberOfSubtype[15] = 0;
-	arNumberOfSubtype[16] = sizeof(arSub16)/sizeof(arSub16[0]);
-	arNumberOfSubtype[17] = 0;
-	arNumberOfSubtype[18] = 0;
-	arNumberOfSubtype[19] = 0;
-	arNumberOfSubtype[20] = 0;
-	arNumberOfSubtype[21] = 0;
-	arNumberOfSubtype[22] = 0;
-	arNumberOfSubtype[23] = 0;
-	arNumberOfSubtype[24] = 0;
-	arNumberOfSubtype[25] = 0;
-	arNumberOfSubtype[26] = 0;
-	arNumberOfSubtype[27] = 0;
-	arNumberOfSubtype[28] = sizeof(arSub28)/sizeof(arSub28[0]);
-	arNumberOfSubtype[29] = sizeof(arSub29)/sizeof(arSub29[0]);
-	arNumberOfSubtype[30] = sizeof(arSub29)/sizeof(arSub29[0]);
-	arNumberOfSubtype[31] = sizeof(arSub31)/sizeof(arSub31[0]);
+		0,			//32
+		0,			//33 반지
+		0,			//34 벨트
+	};
+	int arNumberOfSubtype[_countof(arSubType)] = {
+		0,
+		sizeof(arSub1) / sizeof(arSub1[0]),
+		sizeof(arSub2) / sizeof(arSub2[0]),
+		sizeof(arSub3) / sizeof(arSub3[0]),
+		sizeof(arSub4) / sizeof(arSub4[0]),
+		sizeof(arSub5) / sizeof(arSub5[0]),
+		sizeof(arSub6) / sizeof(arSub6[0]),
+		sizeof(arSub7) / sizeof(arSub7[0]),
+		0,
+		0,
+		sizeof(arSub10) / sizeof(arSub10[0]),
+		0,
+		sizeof(arSub12) / sizeof(arSub12[0]),
+		0,
+		sizeof(arSub14) / sizeof(arSub14[0]),
+		0,
+		sizeof(arSub16) / sizeof(arSub16[0]),
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		sizeof(arSub28) / sizeof(arSub28[0]),
+		sizeof(arSub29) / sizeof(arSub29[0]),
+		sizeof(arSub29) / sizeof(arSub29[0]),
+		sizeof(arSub31) / sizeof(arSub31[0]),
+		0, // 32
+		0, // 33 반지
+		0, // 34 벨트
+	};
 	
 
 	//아이템 타입의 서브타입 어레이가 존재하는지 알아보고, 없으면 0 리턴
@@ -228,9 +226,9 @@ int get_Item_SubType_Value(int type_value, string inputString)
 int get_Item_AntiFlag_Value(string inputString) 
 {
 
-	string arAntiFlag[] = {"ANTI_FEMALE", "ANTI_MALE", "ANTI_MUSA", "ANTI_ASSASSIN", "ANTI_SURA", "ANTI_MUDANG",
+	string arAntiFlag[] = { "ANTI_FEMALE", "ANTI_MALE", "ANTI_MUSA", "ANTI_ASSASSIN", "ANTI_SURA", "ANTI_MUDANG",
 							"ANTI_GET", "ANTI_DROP", "ANTI_SELL", "ANTI_EMPIRE_A", "ANTI_EMPIRE_B", "ANTI_EMPIRE_C",
-							"ANTI_SAVE", "ANTI_GIVE", "ANTI_PKDROP", "ANTI_STACK", "ANTI_MYSHOP", "ANTI_SAFEBOX"};
+							"ANTI_SAVE", "ANTI_GIVE", "ANTI_PKDROP", "ANTI_STACK", "ANTI_MYSHOP", "ANTI_SAFEBOX" };
 
 
 	int retValue = 0;
@@ -257,9 +255,9 @@ int get_Item_AntiFlag_Value(string inputString)
 int get_Item_Flag_Value(string inputString) 
 {
 
-	string arFlag[] = {"ITEM_TUNABLE", "ITEM_SAVE", "ITEM_STACKABLE", "COUNT_PER_1GOLD", "ITEM_SLOW_QUERY", "ITEM_UNIQUE",
+	string arFlag[] = { "ITEM_TUNABLE", "ITEM_SAVE", "ITEM_STACKABLE", "COUNT_PER_1GOLD", "ITEM_SLOW_QUERY", "ITEM_UNIQUE",
 			"ITEM_MAKECOUNT", "ITEM_IRREMOVABLE", "CONFIRM_WHEN_USE", "QUEST_USE", "QUEST_USE_MULTIPLE",
-			"QUEST_GIVE", "ITEM_QUEST", "LOG", "STACKABLE", "SLOW_QUERY", "REFINEABLE", "IRREMOVABLE", "ITEM_APPLICABLE"};
+			"QUEST_GIVE", "ITEM_QUEST", "LOG", "STACKABLE", "SLOW_QUERY", "REFINEABLE", "IRREMOVABLE", "ITEM_APPLICABLE" };
 
 
 	int retValue = 0;
@@ -286,8 +284,8 @@ int get_Item_Flag_Value(string inputString)
 int get_Item_WearFlag_Value(string inputString) 
 {
 
-	string arWearrFlag[] = {"WEAR_BODY", "WEAR_HEAD", "WEAR_FOOTS", "WEAR_WRIST", "WEAR_WEAPON", "WEAR_NECK", "WEAR_EAR", "WEAR_SHIELD", "WEAR_UNIQUE",
-					"WEAR_ARROW", "WEAR_HAIR", "WEAR_ABILITY"};
+	string arWearrFlag[] = { "WEAR_BODY", "WEAR_HEAD", "WEAR_FOOTS", "WEAR_WRIST", "WEAR_WEAPON", "WEAR_NECK", "WEAR_EAR", "WEAR_SHIELD", "WEAR_UNIQUE",
+					"WEAR_ARROW", "WEAR_HAIR", "WEAR_ABILITY" };
 
 
 	int retValue = 0;
@@ -342,17 +340,17 @@ int get_Item_Immune_Value(string inputString)
 
 int get_Item_LimitType_Value(string inputString)
 {
-	string arLimitType[] = {"LIMIT_NONE", "LEVEL", "STR", "DEX", "INT", "CON", "PC_BANG", "REAL_TIME", "REAL_TIME_FIRST_USE", "TIMER_BASED_ON_WEAR"};
-	
+	string arLimitType[] = { "LIMIT_NONE", "LEVEL", "STR", "DEX", "INT", "CON", "REAL_TIME", "REAL_TIME_FIRST_USE", "TIMER_BASED_ON_WEAR" };
+
 	int retInt = -1;
 	//cout << "LimitType : " << limitTypeStr << " -> ";
-	for (int j=0;j<sizeof(arLimitType)/sizeof(arLimitType[0]);j++) {
+	for (int j = 0; j < sizeof(arLimitType) / sizeof(arLimitType[0]); j++) {
 		string tempString = arLimitType[j];
 		string tempInputString = trim(inputString);
-		if	(tempInputString.compare(tempString)==0)
+		if (tempInputString.compare(tempString) == 0)
 		{
 			//cout << j << " ";
-			retInt =  j;
+			retInt = j;
 			break;
 		}
 	}
@@ -364,7 +362,7 @@ int get_Item_LimitType_Value(string inputString)
 
 int get_Item_ApplyType_Value(string inputString)
 {
-	string arApplyType[] = {"APPLY_NONE", "APPLY_MAX_HP", "APPLY_MAX_SP", "APPLY_CON", "APPLY_INT", "APPLY_STR", "APPLY_DEX", "APPLY_ATT_SPEED",
+	string arApplyType[] = { "APPLY_NONE", "APPLY_MAX_HP", "APPLY_MAX_SP", "APPLY_CON", "APPLY_INT", "APPLY_STR", "APPLY_DEX", "APPLY_ATT_SPEED",
 			"APPLY_MOV_SPEED", "APPLY_CAST_SPEED", "APPLY_HP_REGEN", "APPLY_SP_REGEN", "APPLY_POISON_PCT", "APPLY_STUN_PCT",
 			"APPLY_SLOW_PCT", "APPLY_CRITICAL_PCT", "APPLY_PENETRATE_PCT", "APPLY_ATTBONUS_HUMAN", "APPLY_ATTBONUS_ANIMAL",
 			"APPLY_ATTBONUS_ORC", "APPLY_ATTBONUS_MILGYO", "APPLY_ATTBONUS_UNDEAD", "APPLY_ATTBONUS_DEVIL", "APPLY_STEAL_HP",
@@ -377,7 +375,7 @@ int get_Item_ApplyType_Value(string inputString)
 			"APPLY_MAX_STAMINA", "APPLY_ATTBONUS_WARRIOR", "APPLY_ATTBONUS_ASSASSIN", "APPLY_ATTBONUS_SURA", "APPLY_ATTBONUS_SHAMAN",
 			"APPLY_ATTBONUS_MONSTER", "APPLY_MALL_ATTBONUS", "APPLY_MALL_DEFBONUS", "APPLY_MALL_EXPBONUS", "APPLY_MALL_ITEMBONUS",
 			"APPLY_MALL_GOLDBONUS", "APPLY_MAX_HP_PCT", "APPLY_MAX_SP_PCT", "APPLY_SKILL_DAMAGE_BONUS", "APPLY_NORMAL_HIT_DAMAGE_BONUS",
-			"APPLY_SKILL_DEFEND_BONUS", "APPLY_NORMAL_HIT_DEFEND_BONUS", "APPLY_PC_BANG_EXP_BONUS", "APPLY_PC_BANG_DROP_BONUS",
+			"APPLY_SKILL_DEFEND_BONUS", "APPLY_NORMAL_HIT_DEFEND_BONUS",
 			"APPLY_EXTRACT_HP_PCT", "APPLY_RESIST_WARRIOR", "APPLY_RESIST_ASSASSIN", "APPLY_RESIST_SURA", "APPLY_RESIST_SHAMAN",
 			"APPLY_ENERGY",	"APPLY_DEF_GRADE", "APPLY_COSTUME_ATTR_BONUS", "APPLY_MAGIC_ATTBONUS_PER", "APPLY_MELEE_MAGIC_ATTBONUS_PER",
 			"APPLY_RESIST_ICE", "APPLY_RESIST_EARTH", "APPLY_RESIST_DARK", "APPLY_ANTI_CRITICAL_PCT", "APPLY_ANTI_PENETRATE_PCT",
