@@ -237,6 +237,7 @@ void CPythonApplication::UpdateGame()
 	m_GameEventManager.Update();
 
 	m_kEftMgr.Update();
+	m_kChrMgr.Update();
 	m_kEftMgr.UpdateSound();
 	m_FlyingManager.Update();
 	m_pyItem.Update(ptMouse);
